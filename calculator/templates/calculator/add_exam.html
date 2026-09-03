@@ -1,0 +1,600 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#151c5a"
+    >
+
+    <link
+        rel="manifest"
+        href="{% static 'calculator/manifest.json' %}"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="{% static 'calculator/icons/icon-192.png' %}"
+    >
+
+    <title>
+        Add Exam | A-DEVS CGPA Calculator
+    </title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #151c5a;
+
+            padding: 30px 15px;
+        }
+
+
+        .connection-status {
+
+            display: none;
+
+            width: 100%;
+
+            padding: 12px 20px;
+
+            text-align: center;
+
+            font-weight: bold;
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            z-index: 9999;
+        }
+
+
+        .connection-status.offline {
+
+            display: block;
+
+            background: #fff3cd;
+
+            color: #664d03;
+        }
+
+
+        .connection-status.online {
+
+            display: block;
+
+            background: #d1e7dd;
+
+            color: #0f5132;
+        }
+
+
+        .offline-disabled {
+
+            opacity: 0.55;
+
+            cursor: not-allowed;
+        }
+
+
+        .container {
+
+            max-width: 650px;
+
+            margin: auto;
+        }
+
+
+        .card {
+
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,0.15);
+        }
+
+
+        h1 {
+
+            color: #151c5a;
+
+            margin-top: 0;
+        }
+
+
+        .subtitle {
+
+            color: #666;
+
+            margin-bottom: 25px;
+        }
+
+
+        .form-group {
+
+            margin-bottom: 18px;
+        }
+
+
+        label {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-weight: bold;
+
+            color: #333;
+        }
+
+
+        input {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border:
+                1px solid #ddd;
+
+            border-radius: 7px;
+
+            font-size: 15px;
+        }
+
+
+        input:focus {
+
+            outline: none;
+
+            border-color: #0d6efd;
+        }
+
+
+        .required {
+
+            color: #dc3545;
+        }
+
+
+        .buttons {
+
+            display: flex;
+
+            gap: 12px;
+
+            margin-top: 25px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .btn {
+
+            padding: 13px 20px;
+
+            border-radius: 7px;
+
+            text-decoration: none;
+
+            border: none;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            font-size: 15px;
+        }
+
+
+        .save {
+
+            background: #198754;
+
+            color: white;
+        }
+
+
+        .back {
+
+            background: #6c757d;
+
+            color: white;
+        }
+
+
+        @media (max-width: 500px) {
+
+            .card {
+
+                padding: 20px;
+            }
+
+
+            .buttons {
+
+                flex-direction: column;
+            }
+
+
+            .btn {
+
+                width: 100%;
+
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div
+    id="connectionStatus"
+    class="connection-status"
+>
+</div>
+
+
+<div class="container">
+
+
+    <div class="card">
+
+
+        <h1>
+            📚 Add Exam Reminder
+        </h1>
+
+
+        <p class="subtitle">
+
+            Add your examination details so you can keep
+            track of your upcoming exams.
+
+        </p>
+
+
+        <form
+            method="POST"
+            action="{% url 'add_exam_reminder' %}"
+            id="examForm"
+        >
+
+            {% csrf_token %}
+
+
+            <div class="form-group">
+
+                <label for="course_code">
+
+                    Course Code
+
+                    <span class="required">
+                        *
+                    </span>
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="course_code"
+                    name="course_code"
+                    placeholder="e.g. CSC 401"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="course_name">
+
+                    Course Name
+
+                    <span class="required">
+                        *
+                    </span>
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="course_name"
+                    name="course_name"
+                    placeholder="e.g. Operating Systems"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="exam_date">
+
+                    Examination Date
+
+                    <span class="required">
+                        *
+                    </span>
+
+                </label>
+
+
+                <input
+                    type="date"
+                    id="exam_date"
+                    name="exam_date"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="exam_time">
+                    Examination Time
+                </label>
+
+
+                <input
+                    type="time"
+                    id="exam_time"
+                    name="exam_time"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="venue">
+                    Examination Venue
+                </label>
+
+
+                <input
+                    type="text"
+                    id="venue"
+                    name="venue"
+                    placeholder="e.g. ICT Hall"
+                >
+
+            </div>
+
+
+            <div class="buttons">
+
+
+                <button
+                    type="submit"
+                    class="btn save"
+                    id="saveExamBtn"
+                >
+                    💾 Save Exam
+                </button>
+
+
+                <a
+                    href="{% url 'exam_reminders' %}"
+                    class="btn back"
+                >
+                    ← Back to Exams
+                </a>
+
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+    if ("serviceWorker" in navigator) {
+
+        window.addEventListener(
+            "load",
+            async function () {
+
+                try {
+
+                    const registration =
+                        await navigator.serviceWorker.register(
+                            "/service-worker.js",
+                            {
+                                scope: "/"
+                            }
+                        );
+
+                    console.log(
+                        "Service Worker registered:",
+                        registration.scope
+                    );
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Service Worker registration failed:",
+                        error
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+</script>
+
+
+<script>
+
+    const connectionStatus =
+        document.getElementById(
+            "connectionStatus"
+        );
+
+    const examForm =
+        document.getElementById(
+            "examForm"
+        );
+
+    const saveExamBtn =
+        document.getElementById(
+            "saveExamBtn"
+        );
+
+    let onlineMessageTimer;
+
+
+    function showOfflineStatus() {
+
+        clearTimeout(
+            onlineMessageTimer
+        );
+
+        connectionStatus.textContent =
+            "📡 You are offline. Exam reminders cannot be saved until your connection returns.";
+
+        connectionStatus.className =
+            "connection-status offline";
+
+        saveExamBtn.disabled =
+            true;
+
+        saveExamBtn.classList.add(
+            "offline-disabled"
+        );
+
+    }
+
+
+    function showOnlineStatus() {
+
+        clearTimeout(
+            onlineMessageTimer
+        );
+
+        connectionStatus.textContent =
+            "✅ Internet connection restored. You can save exam reminders again.";
+
+        connectionStatus.className =
+            "connection-status online";
+
+        saveExamBtn.disabled =
+            false;
+
+        saveExamBtn.classList.remove(
+            "offline-disabled"
+        );
+
+        onlineMessageTimer =
+            setTimeout(
+                function () {
+
+                    connectionStatus.className =
+                        "connection-status";
+
+                    connectionStatus.textContent =
+                        "";
+
+                },
+                3000
+            );
+
+    }
+
+
+    window.addEventListener(
+        "offline",
+        showOfflineStatus
+    );
+
+    window.addEventListener(
+        "online",
+        showOnlineStatus
+    );
+
+
+    if (!navigator.onLine) {
+
+        showOfflineStatus();
+
+    }
+
+
+    examForm.addEventListener(
+        "submit",
+        function(event) {
+
+            if (!navigator.onLine) {
+
+                event.preventDefault();
+
+                alert(
+                    "You are offline. Please reconnect to the internet before saving this exam reminder."
+                );
+
+            }
+
+        }
+    );
+
+</script>
+
+
+</body>
+
+</html>

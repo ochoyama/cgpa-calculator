@@ -1,0 +1,889 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#151c5a"
+    >
+
+    <link
+        rel="manifest"
+        href="{% static 'calculator/manifest.json' %}"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="{% static 'calculator/icons/icon-192.png' %}"
+    >
+
+    <title>
+        Academic Record | A-DEVS CGPA Calculator
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #151c5a;
+            margin: 0;
+            padding: 0;
+        }
+
+        .connection-status {
+            display: none;
+            width: 100%;
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+        }
+
+        .connection-status.offline {
+            display: block;
+            background: #fff3cd;
+            color: #664d03;
+        }
+
+        .connection-status.online {
+            display: block;
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1100px;
+            margin: 40px auto;
+        }
+
+        .offline-disabled {
+            opacity: 0.55;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+
+        /* ===============================
+           HEADER
+        =============================== */
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow:
+                0 4px 15px
+                rgba(0,0,0,0.08);
+
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        /* ===============================
+           STUDENT INFORMATION
+        =============================== */
+
+        .student-info {
+            display: grid;
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        /* ===============================
+           SUMMARY
+        =============================== */
+
+        .summary {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .summary-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+
+            box-shadow:
+                0 4px 15px
+                rgba(0,0,0,0.08);
+        }
+
+        .summary-box h3 {
+            margin:
+                0 0 10px;
+
+            color: #666;
+            font-size: 15px;
+        }
+
+        .summary-box p {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .degree {
+            color: #2c7955;
+        }
+
+        /* ===============================
+           SEMESTER
+        =============================== */
+
+        .semester {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 4px 15px
+                rgba(0,0,0,0.08);
+        }
+
+        .semester-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .semester-header h2 {
+            margin: 0;
+        }
+
+        .semester-gpa {
+            background: #0d6efd;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        /* ===============================
+           COURSE TABLE
+        =============================== */
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom:
+                1px solid #ddd;
+
+            text-align: left;
+        }
+
+        th {
+            background: #f1f3f5;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* ===============================
+           BUTTONS
+        =============================== */
+
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .edit-btn {
+            background: #0d6efd;
+        }
+
+        .edit-btn:hover {
+            background: #0b5ed7;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+        }
+
+        .delete-btn:hover {
+            background: #bb2d3b;
+        }
+
+        .add-btn {
+            background: #226144;
+        }
+
+        .add-btn:hover {
+            background: #1b4f36;
+        }
+
+        .dashboard-btn {
+            background: #0d6efd;
+        }
+
+        .dashboard-btn:hover {
+            background: #0b5ed7;
+        }
+
+        .home-btn {
+            background: #6c757d;
+        }
+
+        .home-btn:hover {
+            background: #5c636a;
+        }
+
+        /* ===============================
+           ACTION AREAS
+        =============================== */
+
+        .action-buttons {
+            margin-top: 20px;
+
+            display: flex;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+
+            align-items: center;
+        }
+
+        .bottom-actions {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 15px;
+
+            flex-wrap: wrap;
+
+            margin: 30px 0;
+        }
+
+        /* ===============================
+           MOBILE
+        =============================== */
+
+        @media (max-width: 800px) {
+
+            .summary {
+                grid-template-columns:
+                    1fr 1fr;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .student-info {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .summary {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .semester-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .container {
+                width: 92%;
+            }
+
+            .bottom-actions {
+                flex-direction: column;
+            }
+
+            .bottom-actions .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div
+    id="connectionStatus"
+    class="connection-status"
+>
+</div>
+
+
+<div class="container">
+
+
+    <!-- STUDENT INFORMATION -->
+
+    <div class="header">
+
+        <h1>
+            Academic Record
+        </h1>
+
+
+        <div class="student-info">
+
+            <div class="info-box">
+
+                <strong>
+                    Student Name
+                </strong>
+
+                {{ student.name }}
+
+            </div>
+
+
+            <div class="info-box">
+
+                <strong>
+                    Matric Number
+                </strong>
+
+                {{ student.matric_number }}
+
+            </div>
+
+
+            <div class="info-box">
+
+                <strong>
+                    Department
+                </strong>
+
+                {{ student.department }}
+
+            </div>
+
+
+            <div class="info-box">
+
+                <strong>
+                    University
+                </strong>
+
+                {{ student.university }}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <div class="summary">
+
+
+        <div class="summary-box">
+
+            <h3>
+                CGPA
+            </h3>
+
+            <p>
+                {{ cgpa }}
+            </p>
+
+        </div>
+
+
+        <div class="summary-box">
+
+            <h3>
+                Total Units
+            </h3>
+
+            <p>
+                {{ total_units }}
+            </p>
+
+        </div>
+
+
+        <div class="summary-box">
+
+            <h3>
+                Quality Points
+            </h3>
+
+            <p>
+                {{ total_quality_points }}
+            </p>
+
+        </div>
+
+
+        <div class="summary-box">
+
+            <h3>
+                Class of Degree
+            </h3>
+
+            <p class="degree">
+                {{ class_of_degree }}
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- SEMESTERS -->
+
+    {% for semester_result in semester_results %}
+
+        <div class="semester">
+
+
+            <div class="semester-header">
+
+                <h2>
+
+                    {{ semester_result.semester.level }}
+                    Level -
+
+                    {{ semester_result.semester.semester }}
+
+                </h2>
+
+
+                <div class="semester-gpa">
+
+                    GPA:
+                    {{ semester_result.gpa }}
+
+                </div>
+
+            </div>
+
+
+            <!-- COURSE TABLE -->
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Course
+                            </th>
+
+                            <th>
+                                Units
+                            </th>
+
+                            <th>
+                                Grade
+                            </th>
+
+                            <th>
+                                Points
+                            </th>
+
+                            <th>
+                                Quality Points
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for course_item in semester_result.courses %}
+
+                            <tr>
+
+                                <td>
+                                    {{ course_item.course.course_code }}
+                                </td>
+
+                                <td>
+                                    {{ course_item.course.course_unit }}
+                                </td>
+
+                                <td>
+                                    {{ course_item.course.grade }}
+                                </td>
+
+                                <td>
+                                    {{ course_item.point }}
+                                </td>
+
+                                <td>
+                                    {{ course_item.quality_point }}
+                                </td>
+
+
+                                <td>
+
+                                    <a
+                                        href="{% url 'edit_course' course_item.course.id %}"
+                                        class="btn edit-btn requires-online"
+                                    >
+                                        Edit
+                                    </a>
+
+
+                                    <a
+                                        href="{% url 'delete_course' course_item.course.id %}"
+                                        class="btn delete-btn requires-online"
+                                    >
+                                        Delete
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                        {% empty %}
+
+                            <tr>
+
+                                <td colspan="6">
+                                    No courses recorded for this semester.
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- SEMESTER TOTAL -->
+
+            <div class="action-buttons">
+
+                <strong>
+                    Semester Units:
+                </strong>
+
+                {{ semester_result.units }}
+
+
+                <strong>
+                    Semester Quality Points:
+                </strong>
+
+                {{ semester_result.quality_points }}
+
+            </div>
+
+
+            <!-- DELETE SEMESTER -->
+
+            <div class="action-buttons">
+
+                <a
+                    href="{% url 'delete_semester' semester_result.semester.id %}"
+                    class="btn delete-btn requires-online"
+                >
+                    Delete Semester
+                </a>
+
+            </div>
+
+
+        </div>
+
+    {% empty %}
+
+        <div class="header">
+
+            <h2>
+                No academic records found.
+            </h2>
+
+        </div>
+
+    {% endfor %}
+
+
+    <!-- BOTTOM NAVIGATION -->
+
+    <div class="bottom-actions">
+
+
+        <a
+            href="{% url 'dashboard' student.matric_number %}"
+            class="btn dashboard-btn"
+        >
+            🎓 Student Dashboard
+        </a>
+
+
+        <a
+            href="{% url 'add_semester' student.matric_number %}"
+            class="btn add-btn requires-online"
+        >
+            + Add Another Semester
+        </a>
+
+
+        <a
+            href="{% url 'home' %}"
+            class="btn home-btn"
+        >
+            Back to Calculator
+        </a>
+
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+    if ("serviceWorker" in navigator) {
+
+        window.addEventListener(
+            "load",
+            async function () {
+
+                try {
+
+                    const registration =
+                        await navigator.serviceWorker.register(
+                            "/service-worker.js",
+                            {
+                                scope: "/"
+                            }
+                        );
+
+                    console.log(
+                        "Service Worker registered:",
+                        registration.scope
+                    );
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Service Worker registration failed:",
+                        error
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+</script>
+
+
+<script>
+
+    const connectionStatus =
+        document.getElementById(
+            "connectionStatus"
+        );
+
+    let onlineMessageTimer;
+
+
+    function updateOfflineControls() {
+
+        const controls =
+            document.querySelectorAll(
+                ".requires-online"
+            );
+
+        controls.forEach(
+            function(control) {
+
+                if (!navigator.onLine) {
+
+                    control.classList.add(
+                        "offline-disabled"
+                    );
+
+                    control.setAttribute(
+                        "aria-disabled",
+                        "true"
+                    );
+
+                }
+
+                else {
+
+                    control.classList.remove(
+                        "offline-disabled"
+                    );
+
+                    control.removeAttribute(
+                        "aria-disabled"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    function showOfflineStatus() {
+
+        clearTimeout(
+            onlineMessageTimer
+        );
+
+        connectionStatus.textContent =
+            "📡 You are offline. Your cached academic record can still be viewed, but Edit, Delete and Add Semester are disabled.";
+
+        connectionStatus.className =
+            "connection-status offline";
+
+        updateOfflineControls();
+
+    }
+
+
+    function showOnlineStatus() {
+
+        clearTimeout(
+            onlineMessageTimer
+        );
+
+        connectionStatus.textContent =
+            "✅ Internet connection restored. Academic editing features are available again.";
+
+        connectionStatus.className =
+            "connection-status online";
+
+        updateOfflineControls();
+
+        onlineMessageTimer =
+            setTimeout(
+                function () {
+
+                    connectionStatus.className =
+                        "connection-status";
+
+                    connectionStatus.textContent =
+                        "";
+
+                },
+                3000
+            );
+
+    }
+
+
+    window.addEventListener(
+        "offline",
+        showOfflineStatus
+    );
+
+    window.addEventListener(
+        "online",
+        showOnlineStatus
+    );
+
+
+    if (!navigator.onLine) {
+
+        showOfflineStatus();
+
+    }
+
+    else {
+
+        updateOfflineControls();
+
+    }
+
+</script>
+
+
+</body>
+
+</html>

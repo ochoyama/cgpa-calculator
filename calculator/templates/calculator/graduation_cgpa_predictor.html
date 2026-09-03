@@ -1,0 +1,607 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#151c5a"
+    >
+
+    <link
+        rel="manifest"
+        href="{% static 'calculator/manifest.json' %}"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="{% static 'calculator/icons/icon-192.png' %}"
+    >
+
+    <title>
+        Graduation CGPA Predictor | A-DEVS
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #151c5a;
+            color: #222;
+            padding: 30px 15px;
+        }
+
+        .container {
+            width: 94%;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow:
+                0 5px 20px
+                rgba(0, 0, 0, 0.12);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #151c5a;
+        }
+
+        .subtitle {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .summary-box {
+            background: #f8f9fa;
+            padding: 18px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .summary-box span {
+            display: block;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 7px;
+        }
+
+        .summary-box strong {
+            font-size: 24px;
+            color: #151c5a;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #0d6efd;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 13px 20px;
+            border-radius: 7px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .predict-btn {
+            width: 100%;
+            background: #198754;
+        }
+
+        .dashboard-btn {
+            background: #151c5a;
+        }
+
+        .planner-btn {
+            background: #0d6efd;
+        }
+
+        .simulator-btn {
+            background: #6f42c1;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .result-card {
+            margin-top: 25px;
+            padding: 22px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+        }
+
+        .result-card h2 {
+            margin-top: 0;
+            color: #151c5a;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .result-box {
+            background: white;
+            padding: 18px;
+            border-radius: 9px;
+            text-align: center;
+            border: 1px solid #e5e5e5;
+        }
+
+        .result-box span {
+            display: block;
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        .result-box strong {
+            font-size: 24px;
+            color: #151c5a;
+        }
+
+        .required-gpa {
+            font-size: 44px;
+            font-weight: bold;
+            color: #0d6efd;
+            margin: 15px 0;
+        }
+
+        .status {
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            line-height: 1.5;
+            margin-top: 15px;
+        }
+
+        .status.achievable {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .status.challenging {
+            background: #fff3cd;
+            color: #664d03;
+        }
+
+        .status.very_difficult {
+            background: #ffe5d0;
+            color: #8a3b00;
+        }
+
+        .status.impossible {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        .status.already_reached {
+            background: #cff4fc;
+            color: #055160;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #842029;
+            padding: 14px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .tip {
+            margin-top: 15px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 700px) {
+
+            .summary,
+            .form-grid,
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 500px) {
+
+            .card {
+                padding: 20px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .required-gpa {
+                font-size: 36px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>
+            🎓 Graduation CGPA Predictor
+        </h1>
+
+        <p class="subtitle">
+
+            Find out whether your target graduation CGPA is still
+            achievable and the average GPA you need across your
+            remaining course units.
+
+        </p>
+
+        <div class="summary">
+
+            <div class="summary-box">
+
+                <span>
+                    Current CGPA
+                </span>
+
+                <strong>
+                    {{ current_cgpa }}
+                </strong>
+
+            </div>
+
+            <div class="summary-box">
+
+                <span>
+                    Completed Units
+                </span>
+
+                <strong>
+                    {{ completed_units }}
+                </strong>
+
+            </div>
+
+            <div class="summary-box">
+
+                <span>
+                    Quality Points
+                </span>
+
+                <strong>
+                    {{ total_quality_points }}
+                </strong>
+
+            </div>
+
+        </div>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label for="target_cgpa">
+                        Target Graduation CGPA
+                    </label>
+
+                    <input
+                        type="number"
+                        id="target_cgpa"
+                        name="target_cgpa"
+                        min="0"
+                        max="5"
+                        step="0.01"
+                        placeholder="e.g. 4.00"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="remaining_units">
+                        Remaining Units Before Graduation
+                    </label>
+
+                    <input
+                        type="number"
+                        id="remaining_units"
+                        name="remaining_units"
+                        min="1"
+                        placeholder="e.g. 48"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+            <button
+                type="submit"
+                class="btn predict-btn"
+            >
+                🎓 Predict Graduation Target
+            </button>
+
+        </form>
+
+
+        {% if result %}
+
+            {% if result.error %}
+
+                <div class="error">
+                    {{ result.error }}
+                </div>
+
+            {% else %}
+
+                <div class="result-card">
+
+                    <h2>
+                        Graduation Prediction
+                    </h2>
+
+                    <div class="result-grid">
+
+                        <div class="result-box">
+
+                            <span>
+                                Target CGPA
+                            </span>
+
+                            <strong>
+                                {{ result.target_cgpa }}
+                            </strong>
+
+                        </div>
+
+                        <div class="result-box">
+
+                            <span>
+                                Remaining Units
+                            </span>
+
+                            <strong>
+                                {{ result.remaining_units }}
+                            </strong>
+
+                        </div>
+
+                        <div class="result-box">
+
+                            <span>
+                                Final Total Units
+                            </span>
+
+                            <strong>
+                                {{ result.final_total_units }}
+                            </strong>
+
+                        </div>
+
+                        <div class="result-box">
+
+                            <span>
+                                Current CGPA
+                            </span>
+
+                            <strong>
+                                {{ current_cgpa }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                    <p>
+                        Required average GPA across your remaining units:
+                    </p>
+
+                    <div class="required-gpa">
+                        {{ result.required_average_gpa }}
+                    </div>
+
+                    <div
+                        class="status {{ result.status }}"
+                    >
+                        {{ result.message }}
+                    </div>
+
+
+                    {% if result.status == "achievable" %}
+
+                        <p class="tip">
+                            ✅ This is a realistic target based on your
+                            current record. Aim slightly above the required
+                            GPA to create a safety margin.
+                        </p>
+
+                    {% elif result.status == "challenging" %}
+
+                        <p class="tip">
+                            💪 You can still reach this target, but you will
+                            need consistently strong grades across your
+                            remaining courses.
+                        </p>
+
+                    {% elif result.status == "very_difficult" %}
+
+                        <p class="tip">
+                            🔥 This target requires performance close to
+                            First-Class level across most of your remaining
+                            units.
+                        </p>
+
+                    {% elif result.status == "impossible" %}
+
+                        <p class="tip">
+                            ⚠️ The required average is above 5.00, so this
+                            target cannot be reached under a 5-point grading
+                            system with the remaining units entered.
+                        </p>
+
+                    {% elif result.status == "already_reached" %}
+
+                        <p class="tip">
+                            🎉 Your current academic performance already
+                            meets or exceeds this target.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
+
+        {% endif %}
+
+
+        <div class="buttons">
+
+            <a
+                href="{% url 'dashboard' student.matric_number %}"
+                class="btn dashboard-btn"
+            >
+                ← Student Dashboard
+            </a>
+
+            <a
+                href="{% url 'cgpa_goal_planner' %}"
+                class="btn planner-btn"
+            >
+                🎯 Goal Planner
+            </a>
+
+            <a
+                href="{% url 'grade_scenario_simulator' %}"
+                class="btn simulator-btn"
+            >
+                🧪 Grade Simulator
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    if ("serviceWorker" in navigator) {
+
+        window.addEventListener(
+            "load",
+            async function() {
+
+                try {
+
+                    await navigator
+                        .serviceWorker
+                        .register(
+                            "/service-worker.js",
+                            {
+                                scope: "/"
+                            }
+                        );
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Service Worker registration failed:",
+                        error
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+</script>
+
+</body>
+
+</html>

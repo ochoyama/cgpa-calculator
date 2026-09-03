@@ -1,0 +1,485 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#151c5a"
+    >
+
+    <link
+        rel="manifest"
+        href="{% static 'calculator/manifest.json' %}"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="{% static 'calculator/icons/icon-192.png' %}"
+    >
+
+    <title>
+        CGPA Progress | A-DEVS
+    </title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #151c5a;
+            color: #222;
+            padding: 30px 15px;
+        }
+
+        .container {
+            width: 94%;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,0.12);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #151c5a;
+        }
+
+        .subtitle {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            min-height: 420px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .empty h2 {
+            color: #151c5a;
+            margin-top: 0;
+        }
+
+        .empty p {
+            color: #666;
+        }
+
+        .legend-note {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 7px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+
+        .dashboard-btn {
+            background: #151c5a;
+        }
+
+        .record-btn {
+            background: #0d6efd;
+        }
+
+        .planner-btn {
+            background: #198754;
+        }
+
+        .simulator-btn {
+            background: #6f42c1;
+        }
+
+        @media (max-width: 600px) {
+
+            .card {
+                padding: 20px;
+            }
+
+            .chart-wrapper {
+                min-height: 350px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>
+            📈 CGPA Progress Chart
+        </h1>
+
+        <p class="subtitle">
+
+            Track how your semester GPA and cumulative CGPA
+            have changed throughout your academic journey.
+
+        </p>
+
+
+        {% if labels %}
+
+            <div class="chart-wrapper">
+
+                <canvas id="cgpaChart"></canvas>
+
+            </div>
+
+
+            <div class="legend-note">
+
+                <strong>Semester GPA</strong>
+                shows your performance for each individual semester.
+
+                <br><br>
+
+                <strong>Cumulative CGPA</strong>
+                shows your overall academic performance after each semester.
+
+            </div>
+
+        {% else %}
+
+            <div class="empty">
+
+                <h2>
+                    📊 No Academic Data Yet
+                </h2>
+
+                <p>
+
+                    Add your first semester result to start
+                    seeing your CGPA progress chart.
+
+                </p>
+
+            </div>
+
+        {% endif %}
+
+
+        <div class="buttons">
+
+            <a
+                href="{% url 'dashboard' student.matric_number %}"
+                class="btn dashboard-btn"
+            >
+                ← Student Dashboard
+            </a>
+
+            <a
+                href="{% url 'academic_record' student.matric_number %}"
+                class="btn record-btn"
+            >
+                Academic Record
+            </a>
+
+            <a
+                href="{% url 'cgpa_goal_planner' %}"
+                class="btn planner-btn"
+            >
+                🎯 Goal Planner
+            </a>
+
+            <a
+                href="{% url 'grade_scenario_simulator' %}"
+                class="btn simulator-btn"
+            >
+                🧪 Grade Simulator
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% if labels %}
+
+{{ labels|json_script:"chart-labels" }}
+{{ semester_gpas|json_script:"semester-gpas" }}
+{{ cumulative_cgpas|json_script:"cumulative-cgpas" }}
+
+<script>
+
+    const labels =
+        JSON.parse(
+            document.getElementById(
+                "chart-labels"
+            ).textContent
+        );
+
+    const semesterGpas =
+        JSON.parse(
+            document.getElementById(
+                "semester-gpas"
+            ).textContent
+        );
+
+    const cumulativeCgpas =
+        JSON.parse(
+            document.getElementById(
+                "cumulative-cgpas"
+            ).textContent
+        );
+
+
+    const chartCanvas =
+        document.getElementById(
+            "cgpaChart"
+        );
+
+
+    new Chart(
+        chartCanvas,
+        {
+            type: "line",
+
+            data: {
+
+                labels: labels,
+
+                datasets: [
+
+                    {
+                        label:
+                            "Semester GPA",
+
+                        data:
+                            semesterGpas,
+
+                        borderWidth:
+                            3,
+
+                        tension:
+                            0.25,
+
+                        pointRadius:
+                            5,
+
+                        pointHoverRadius:
+                            7
+                    },
+
+                    {
+                        label:
+                            "Cumulative CGPA",
+
+                        data:
+                            cumulativeCgpas,
+
+                        borderWidth:
+                            3,
+
+                        tension:
+                            0.25,
+
+                        pointRadius:
+                            5,
+
+                        pointHoverRadius:
+                            7
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive:
+                    true,
+
+                maintainAspectRatio:
+                    false,
+
+                interaction: {
+
+                    mode:
+                        "index",
+
+                    intersect:
+                        false
+
+                },
+
+                plugins: {
+
+                    legend: {
+
+                        position:
+                            "top"
+
+                    },
+
+                    tooltip: {
+
+                        enabled:
+                            true
+
+                    }
+
+                },
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero:
+                            true,
+
+                        min:
+                            0,
+
+                        max:
+                            5,
+
+                        ticks: {
+
+                            stepSize:
+                                0.5
+
+                        },
+
+                        title: {
+
+                            display:
+                                true,
+
+                            text:
+                                "GPA / CGPA"
+
+                        }
+
+                    },
+
+                    x: {
+
+                        title: {
+
+                            display:
+                                true,
+
+                            text:
+                                "Semester"
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+</script>
+
+{% endif %}
+
+
+<script>
+
+    if ("serviceWorker" in navigator) {
+
+        window.addEventListener(
+            "load",
+            async function() {
+
+                try {
+
+                    await navigator
+                        .serviceWorker
+                        .register(
+                            "/service-worker.js",
+                            {
+                                scope: "/"
+                            }
+                        );
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Service Worker registration failed:",
+                        error
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+</script>
+
+</body>
+
+</html>

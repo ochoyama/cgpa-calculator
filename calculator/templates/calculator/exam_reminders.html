@@ -1,0 +1,663 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#151c5a"
+    >
+
+    <link
+        rel="manifest"
+        href="{% static 'calculator/manifest.json' %}"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="{% static 'calculator/icons/icon-192.png' %}"
+    >
+
+    <title>
+        Exam Reminders | A-DEVS CGPA Calculator
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #151c5a;
+            padding: 30px 15px;
+        }
+
+        .connection-status {
+            display: none;
+            width: 100%;
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+        }
+
+        .connection-status.offline {
+            display: block;
+            background: #fff3cd;
+            color: #664d03;
+        }
+
+        .connection-status.online {
+            display: block;
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .header {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header h1 {
+            color: #151c5a;
+            margin: 0;
+        }
+
+        .header p {
+            color: #666;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .add {
+            background: #198754;
+            color: white;
+        }
+
+        .dashboard {
+            background: #6c757d;
+            color: white;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .exam-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+
+            box-shadow:
+                0 4px 15px
+                rgba(0,0,0,0.1);
+        }
+
+        .exam-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .course-code {
+            color: #0d6efd;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .course-name {
+            color: #333;
+            margin-top: 5px;
+        }
+
+        .exam-date {
+            background: #151c5a;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 7px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .details {
+            margin-top: 15px;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .exam-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .complete {
+            background: #198754;
+            color: white;
+        }
+
+        .delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .offline-disabled {
+            opacity: 0.55;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+
+        .empty {
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .empty h2 {
+            color: #151c5a;
+        }
+
+        .empty p {
+            color: #666;
+        }
+
+        @media (max-width: 600px) {
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .exam-header {
+                flex-direction: column;
+            }
+
+            .exam-date {
+                white-space: normal;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div
+    id="connectionStatus"
+    class="connection-status"
+>
+</div>
+
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div>
+
+            <h1>
+                📚 Exam Reminders
+            </h1>
+
+            <p>
+                Keep track of your upcoming examinations.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <a
+                href="{% url 'add_exam_reminder' %}"
+                class="btn add requires-online"
+            >
+                + Add Exam
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- UPCOMING EXAMS -->
+
+    <div class="section">
+
+        <h2 class="section-title">
+            Upcoming Exams
+        </h2>
+
+
+        {% if upcoming_exams %}
+
+            {% for exam in upcoming_exams %}
+
+                <div class="exam-card">
+
+                    <div class="exam-header">
+
+                        <div>
+
+                            <div class="course-code">
+                                {{ exam.course_code }}
+                            </div>
+
+                            <div class="course-name">
+                                {{ exam.course_name }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="exam-date">
+
+                            📅
+                            {{ exam.exam_date|date:"M d, Y" }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="details">
+
+                        {% if exam.exam_time %}
+
+                            🕐
+                            <strong>Time:</strong>
+
+                            {{ exam.exam_time|time:"h:i A" }}
+
+                            <br>
+
+                        {% endif %}
+
+
+                        {% if exam.venue %}
+
+                            📍
+                            <strong>Venue:</strong>
+
+                            {{ exam.venue }}
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="exam-actions">
+
+                        <a
+                            href="{% url 'complete_exam' exam.id %}"
+                            class="btn complete requires-online"
+                        >
+                            ✓ Mark Completed
+                        </a>
+
+
+                        <a
+                            href="{% url 'delete_exam_reminder' exam.id %}"
+                            class="btn delete requires-online"
+                            onclick="return confirm('Delete this exam reminder?');"
+                        >
+                            Delete
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty">
+
+                <h2>
+                    📚 No Upcoming Exams
+                </h2>
+
+                <p>
+                    You haven't added any upcoming exams yet.
+                </p>
+
+                <a
+                    href="{% url 'add_exam_reminder' %}"
+                    class="btn add requires-online"
+                >
+                    + Add Your First Exam
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- PAST EXAMS -->
+
+    {% if past_exams %}
+
+        <div class="section">
+
+            <h2 class="section-title">
+                Previous Exams
+            </h2>
+
+
+            {% for exam in past_exams %}
+
+                <div class="exam-card">
+
+                    <div class="exam-header">
+
+                        <div>
+
+                            <div class="course-code">
+                                {{ exam.course_code }}
+                            </div>
+
+                            <div class="course-name">
+                                {{ exam.course_name }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="exam-date">
+
+                            {{ exam.exam_date|date:"M d, Y" }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="details">
+
+                        {% if exam.exam_time %}
+
+                            🕐
+                            {{ exam.exam_time|time:"h:i A" }}
+
+                            <br>
+
+                        {% endif %}
+
+
+                        {% if exam.venue %}
+
+                            📍
+                            {{ exam.venue }}
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="exam-actions">
+
+                        <a
+                            href="{% url 'delete_exam_reminder' exam.id %}"
+                            class="btn delete requires-online"
+                            onclick="return confirm('Delete this exam reminder?');"
+                        >
+                            Delete
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- DASHBOARD -->
+
+    <div
+        style="
+            text-align:center;
+            margin-top:25px;
+        "
+    >
+
+        <a
+            href="{% url 'dashboard' student.matric_number %}"
+            class="btn dashboard"
+        >
+            ← Student Dashboard
+        </a>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    if ("serviceWorker" in navigator) {
+
+        window.addEventListener(
+            "load",
+            async function () {
+
+                try {
+
+                    const registration =
+                        await navigator.serviceWorker.register(
+                            "/service-worker.js",
+                            {
+                                scope: "/"
+                            }
+                        );
+
+                    console.log(
+                        "Service Worker registered:",
+                        registration.scope
+                    );
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Service Worker registration failed:",
+                        error
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+</script>
+
+
+<script>
+
+    const connectionStatus =
+        document.getElementById(
+            "connectionStatus"
+        );
+
+    let onlineMessageTimer;
+
+
+    function updateOfflineControls() {
+
+        const controls =
+            document.querySelectorAll(
+                ".requires-online"
+            );
+
+        controls.forEach(
+            function(control) {
+
+                if (!navigator.onLine) {
+
+                    control.classList.add(
+                        "offline-disabled"
+                    );
+
+                    control.setAttribute(
+                        "aria-disabled",
+                        "true"
+                    );
+
+                }
+
+                else {
+
+                    control.classList.remove(
+                        "offline-disabled"
+                    );
+
+                    control.removeAttribute(
+                        "aria-disabled"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    function showOfflineStatus() {
+
+        clearTimeout(
+            onlineMessageTimer
+        );
+
+        connectionStatus.textContent =
+            "📡 You are offline. Exam information can be viewed, but Add, Complete and Delete are disabled.";
+
+        connectionStatus.className =
+            "connection-status offline";
+
+        updateOfflineControls();
+
+    }
+
+
+    function showOnlineStatus() {
+
+        clearTimeout(
+            onlineMessageTimer
+        );
+
+        connectionStatus.textContent =
+            "✅ Internet connection restored. Exam actions are available again.";
+
+        connectionStatus.className =
+            "connection-status online";
+
+        updateOfflineControls();
+
+        onlineMessageTimer =
+            setTimeout(
+                function () {
+
+                    connectionStatus.className =
+                        "connection-status";
+
+                    connectionStatus.textContent =
+                        "";
+
+                },
+                3000
+            );
+
+    }
+
+
+    window.addEventListener(
+        "offline",
+        showOfflineStatus
+    );
+
+    window.addEventListener(
+        "online",
+        showOnlineStatus
+    );
+
+
+    if (!navigator.onLine) {
+
+        showOfflineStatus();
+
+    }
+
+    else {
+
+        updateOfflineControls();
+
+    }
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Academic Record</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #151c5a;
+            padding: 30px 15px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .header h1 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .student-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .student-info p {
+            margin: 5px 0;
+        }
+
+        .semester {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .semester h2 {
+            margin-top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #f1f3f5;
+        }
+
+        .semester-summary {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .final-result {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .cgpa {
+            font-size: 55px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .class {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 12px 20px;
+            background: #0d6efd;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        @media (max-width: 600px) {
+
+            .student-info {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            th,
+            td {
+                padding: 8px;
+            }
+
+            .cgpa {
+                font-size: 42px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>Academic Record</h1>
+
+        <div class="student-info">
+
+            <p>
+                <strong>Name:</strong>
+                {{ student.name }}
+            </p>
+
+            <p>
+                <strong>Matric Number:</strong>
+                {{ student.matric_number }}
+            </p>
+
+            <p>
+                <strong>Department:</strong>
+                {{ student.department }}
+            </p>
+
+            <p>
+                <strong>University:</strong>
+                {{ student.university }}
+            </p>
+
+        </div>
+
+    </div>
+
+
+    {% for item in semester_results %}
+
+    <div class="semester">
+
+        <h2>
+            {{ item.semester.level }} Level -
+            {{ item.semester.semester }}
+        </h2>
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Course
+                    </th>
+
+                    <th>
+                        Units
+                    </th>
+
+                    <th>
+                        Grade
+                    </th>
+
+                    <th>
+                        Quality Point
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for course in item.courses %}
+
+                <tr>
+
+                    <td>
+                        {{ course.course_code }}
+                    </td>
+
+                    <td>
+                        {{ course.course_unit }}
+                    </td>
+
+                    <td>
+                        {{ course.grade }}
+                    </td>
+
+                    <td>
+                        {% if course.grade == "A" %}
+                            {{ course.course_unit|add:"0" }}
+                        {% endif %}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+
+        <div class="semester-summary">
+
+            <p>
+                <strong>
+                    Total Units:
+                </strong>
+
+                {{ item.units }}
+            </p>
+
+            <p>
+                <strong>
+                    Total Quality Points:
+                </strong>
+
+                {{ item.quality_points }}
+            </p>
+
+            <p>
+                <strong>
+                    Semester GPA:
+                </strong>
+
+                {{ item.gpa }}
+            </p>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+
+    <div class="final-result">
+
+        <h2>
+            Final CGPA
+        </h2>
+
+        <div class="cgpa">
+            {{ cgpa }}
+        </div>
+
+        <p>
+            Total Credit Units:
+            <strong>
+                {{ total_units }}
+            </strong>
+        </p>
+
+        <p>
+            Total Quality Points:
+            <strong>
+                {{ total_quality_points }}
+            </strong>
+        </p>
+
+        <div class="class">
+            {{ class_of_degree }}
+        </div>
+
+        <a
+            href="/"
+            class="back-btn"
+        >
+            Back to Calculator
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

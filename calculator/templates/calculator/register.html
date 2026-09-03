@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Student Registration</title>
+
+<style>
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #151c5a;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 500px;
+        margin: 50px auto;
+    }
+
+    .card {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+
+        box-shadow:
+            0 4px 15px
+            rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .description {
+        text-align: center;
+        color: #666;
+        margin-bottom: 25px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 7px;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 18px;
+
+        border: 1px solid #ccc;
+        border-radius: 6px;
+
+        font-size: 15px;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #0d6efd;
+    }
+
+    button {
+        width: 100%;
+        padding: 13px;
+
+        background: #0d6efd;
+        color: white;
+
+        border: none;
+        border-radius: 6px;
+
+        font-size: 16px;
+        font-weight: bold;
+
+        cursor: pointer;
+    }
+
+    button:hover {
+        opacity: 0.9;
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .login-link a {
+        color: #0d6efd;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .message {
+        padding: 12px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    .error {
+        background: #f8d7da;
+        color: #842029;
+    }
+
+    .success {
+        background: #d1e7dd;
+        color: #0f5132;
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+    <h1>
+        Student Registration
+    </h1>
+
+    <p class="description">
+        Create your CGPA Calculator student account.
+    </p>
+
+
+    <!-- =========================================
+         DJANGO MESSAGES
+    ========================================== -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="message
+                {% if message.tags == 'error' %}
+                    error
+                {% else %}
+                    success
+                {% endif %}
+            ">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <!-- =========================================
+         ERROR FROM VIEW
+    ========================================== -->
+
+    {% if error %}
+
+        <div class="message error">
+
+            {{ error }}
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- =========================================
+         REGISTRATION FORM
+    ========================================== -->
+
+    <form
+        method="POST"
+        action="{% url 'register' %}"
+    >
+
+        {% csrf_token %}
+
+
+        <!-- FULL NAME -->
+
+        <label>
+            Full Name
+        </label>
+
+        <input
+            type="text"
+            name="name"
+            placeholder="Enter your full name"
+            required
+        >
+
+
+        <!-- MATRIC NUMBER -->
+
+        <label>
+            Matric Number
+        </label>
+
+        <input
+            type="text"
+            name="matric_number"
+            placeholder="Enter matric number"
+            required
+        >
+
+
+        <!-- DEPARTMENT -->
+
+        <label>
+            Department
+        </label>
+
+        <input
+            type="text"
+            name="department"
+            placeholder="e.g. Computer Science"
+            required
+        >
+
+        <label for="email">Email Address</label>
+
+        <input
+        type="email"
+        name="email"
+        placeholder="Enter your email"
+        required
+        >
+
+
+        <!-- UNIVERSITY -->
+
+        <label>
+            University
+        </label>
+
+        <input
+            type="text"
+            name="university"
+            placeholder="Enter university"
+            required
+        >
+
+
+
+        <!-- PASSWORD -->
+
+        <label>
+            Password
+        </label>
+
+        <input
+            type="password"
+            name="password"
+            placeholder="Create a password"
+            required
+        >
+
+
+        <!-- CONFIRM PASSWORD -->
+
+        <label>
+            Confirm Password
+        </label>
+
+        <input
+            type="password"
+            name="confirm_password"
+            placeholder="Confirm your password"
+            required
+        >
+
+
+        <!-- SUBMIT -->
+
+        <button type="submit">
+            Create Account
+        </button>
+
+    </form>
+
+
+    <!-- =========================================
+         LOGIN LINK
+    ========================================== -->
+
+    <div class="login-link">
+
+        Already have an account?
+
+        <a href="{% url 'login' %}">
+            Login
+        </a>
+
+    </div>
+
+</div>
+
+</div>
+
+</body>
+
+</html>
+
+
+
+

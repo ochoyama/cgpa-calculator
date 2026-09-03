@@ -1,0 +1,573 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#151c5a"
+    >
+
+    <link
+        rel="manifest"
+        href="{% static 'calculator/manifest.json' %}"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="{% static 'calculator/icons/icon-192.png' %}"
+    >
+
+    <title>
+        Notifications | A-DEVS CGPA Calculator
+    </title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #151c5a;
+            min-height: 100vh;
+            padding: 30px 15px;
+        }
+
+        .connection-status {
+            display: none;
+            width: 100%;
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+        }
+
+        .connection-status.offline {
+            display: block;
+            background: #fff3cd;
+            color: #664d03;
+        }
+
+        .connection-status.online {
+            display: block;
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header h1 {
+            color: #151c5a;
+            font-size: 28px;
+        }
+
+        .header p {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .read-all {
+            background: #151c5a;
+            color: white;
+        }
+
+        .dashboard {
+            background: #eee;
+            color: #151c5a;
+        }
+
+        .notification-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+
+            box-shadow:
+                0 5px 15px
+                rgba(0,0,0,0.08);
+        }
+
+        .notification-card.unread {
+            border-left: 5px solid #151c5a;
+            background: #f8f9ff;
+        }
+
+        .icon {
+            min-width: 45px;
+            height: 45px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+            background: #151c5a;
+            color: white;
+            font-size: 21px;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-content h3 {
+            color: #151c5a;
+            margin-bottom: 7px;
+        }
+
+        .notification-content p {
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .date {
+            color: #999;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .small-btn {
+            text-decoration: none;
+            padding: 7px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .mark {
+            background: #151c5a;
+            color: white;
+        }
+
+        .delete {
+            background: #eee;
+            color: #d00;
+        }
+
+        .offline-disabled {
+            opacity: 0.55;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+
+        .empty {
+            background: white;
+            border-radius: 15px;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .empty h2 {
+            color: #151c5a;
+            margin-bottom: 8px;
+        }
+
+        .empty p {
+            color: #777;
+        }
+
+        @media (max-width: 600px) {
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header h1 {
+                font-size: 23px;
+            }
+
+            .notification-card {
+                padding: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div
+    id="connectionStatus"
+    class="connection-status"
+>
+</div>
+
+
+<div class="container">
+
+    <div class="header">
+
+        <div>
+
+            <h1>
+                🔔 Notifications
+            </h1>
+
+            <p>
+                You have
+                {{ unread_count }}
+                unread notification{{ unread_count|pluralize }}.
+            </p>
+
+        </div>
+
+
+        <div class="actions">
+
+            {% if unread_count > 0 %}
+
+                <a
+                    href="{% url 'mark_all_notifications_read' %}"
+                    class="btn read-all requires-online"
+                >
+                    Mark All as Read
+                </a>
+
+            {% endif %}
+
+
+            <a
+                href="{% url 'dashboard' student.matric_number %}"
+                class="btn dashboard"
+            >
+                Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+
+    {% if notifications %}
+
+        {% for notification in notifications %}
+
+            <div
+                class="notification-card {% if not notification.is_read %}unread{% endif %}"
+            >
+
+                <div class="icon">
+
+                    {% if notification.notification_type == "exam" %}
+
+                        📚
+
+                    {% elif notification.notification_type == "cgpa" %}
+
+                        ⚠️
+
+                    {% elif notification.notification_type == "academic" %}
+
+                        🎓
+
+                    {% else %}
+
+                        🔔
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="notification-content">
+
+                    <h3>
+                        {{ notification.title }}
+                    </h3>
+
+                    <p>
+                        {{ notification.message }}
+                    </p>
+
+                    <div class="date">
+                        {{ notification.created_at|date:"M d, Y - h:i A" }}
+                    </div>
+
+
+                    <div class="notification-actions">
+
+                        {% if not notification.is_read %}
+
+                            <a
+                                href="{% url 'mark_notification_read' notification.id %}"
+                                class="small-btn mark requires-online"
+                            >
+                                Mark as Read
+                            </a>
+
+                        {% endif %}
+
+
+                        <a
+                            href="{% url 'delete_notification' notification.id %}"
+                            class="small-btn delete requires-online"
+                        >
+                            Delete
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                🔔
+            </div>
+
+            <h2>
+                No Notifications
+            </h2>
+
+            <p>
+                You don't have any notifications yet.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+<script>
+
+    if ("serviceWorker" in navigator) {
+
+        window.addEventListener(
+            "load",
+            async function () {
+
+                try {
+
+                    const registration =
+                        await navigator.serviceWorker.register(
+                            "/service-worker.js",
+                            {
+                                scope: "/"
+                            }
+                        );
+
+                    console.log(
+                        "Service Worker registered:",
+                        registration.scope
+                    );
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Service Worker registration failed:",
+                        error
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+</script>
+
+
+<script>
+
+    const connectionStatus =
+        document.getElementById(
+            "connectionStatus"
+        );
+
+    let onlineMessageTimer;
+
+
+    function updateOfflineControls() {
+
+        const controls =
+            document.querySelectorAll(
+                ".requires-online"
+            );
+
+        controls.forEach(
+            function(control) {
+
+                if (!navigator.onLine) {
+
+                    control.classList.add(
+                        "offline-disabled"
+                    );
+
+                    control.setAttribute(
+                        "aria-disabled",
+                        "true"
+                    );
+
+                }
+
+                else {
+
+                    control.classList.remove(
+                        "offline-disabled"
+                    );
+
+                    control.removeAttribute(
+                        "aria-disabled"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    function showOfflineStatus() {
+
+        clearTimeout(
+            onlineMessageTimer
+        );
+
+        connectionStatus.textContent =
+            "📡 You are offline. Notifications can be viewed, but changes are disabled.";
+
+        connectionStatus.className =
+            "connection-status offline";
+
+        updateOfflineControls();
+
+    }
+
+
+    function showOnlineStatus() {
+
+        clearTimeout(
+            onlineMessageTimer
+        );
+
+        connectionStatus.textContent =
+            "✅ Internet connection restored.";
+
+        connectionStatus.className =
+            "connection-status online";
+
+        updateOfflineControls();
+
+        onlineMessageTimer =
+            setTimeout(
+                function () {
+
+                    connectionStatus.className =
+                        "connection-status";
+
+                    connectionStatus.textContent =
+                        "";
+
+                },
+                3000
+            );
+
+    }
+
+
+    window.addEventListener(
+        "offline",
+        showOfflineStatus
+    );
+
+    window.addEventListener(
+        "online",
+        showOnlineStatus
+    );
+
+
+    if (!navigator.onLine) {
+
+        showOfflineStatus();
+
+    }
+
+    else {
+
+        updateOfflineControls();
+
+    }
+
+</script>
+
+</body>
+
+</html>

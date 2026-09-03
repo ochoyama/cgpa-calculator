@@ -1,0 +1,26 @@
+{
+    "id": "/",
+    "name": "A-DEVS CGPA Calculator",
+    "short_name": "A-DEVS CGPA",
+    "description": "Student CGPA Calculator, Academic Tracker, Exam Reminder and Notification System",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#151c5a",
+    "theme_color": "#151c5a",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/static/calculator/icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/static/calculator/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}

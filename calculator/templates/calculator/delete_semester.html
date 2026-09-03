@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Delete Semester</title>
+
+
+    <style>
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            background: #151c5a;
+
+            margin: 0;
+
+            padding: 0;
+        }
+
+
+        .container {
+
+            width: 90%;
+
+            max-width: 600px;
+
+            margin: 100px auto;
+
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 4px 15px
+                rgba(0, 0, 0, 0.1);
+
+            text-align: center;
+        }
+
+
+        h1 {
+
+            color: #dc3545;
+
+            margin-bottom: 20px;
+        }
+
+
+        p {
+
+            font-size: 17px;
+
+            line-height: 1.6;
+        }
+
+
+        .warning {
+
+            background: #fff3cd;
+
+            color: #664d03;
+
+            padding: 15px;
+
+            border-radius: 8px;
+
+            margin: 20px 0;
+        }
+
+
+        button {
+
+            border: none;
+
+            padding: 12px 25px;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-size: 16px;
+        }
+
+
+        .delete-btn {
+
+            background: #dc3545;
+
+            color: white;
+        }
+
+
+        .cancel-btn {
+
+            background: #6c757d;
+
+            color: white;
+
+            text-decoration: none;
+
+            padding: 12px 25px;
+
+            border-radius: 6px;
+
+            margin-left: 10px;
+
+            display: inline-block;
+        }
+
+
+        button:hover,
+        .cancel-btn:hover {
+
+            opacity: 0.9;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <h1>
+        Delete Semester?
+    </h1>
+
+
+    <p>
+
+        Are you sure you want to delete:
+
+    </p>
+
+
+    <h2>
+
+        {{ semester.level }} Level -
+        {{ semester.semester }}
+
+    </h2>
+
+
+    <div class="warning">
+
+        <strong>Warning:</strong>
+
+        <br>
+
+        This will permanently delete
+        this semester and all the courses
+        belonging to it.
+
+    </div>
+
+
+    <form
+        method="POST"
+    >
+
+        {% csrf_token %}
+
+
+        <button
+            type="submit"
+            class="delete-btn"
+        >
+
+            Yes, Delete Semester
+
+        </button>
+
+
+        <a
+            href="{% url 'academic_record' student.matric_number %}"
+            class="cancel-btn"
+        >
+
+            Cancel
+
+        </a>
+
+    </form>
+
+
+</div>
+
+
+</body>
+
+</html>

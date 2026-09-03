@@ -1,0 +1,1012 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#151c5a"
+    >
+
+    <link
+        rel="manifest"
+        href="{% static 'calculator/manifest.json' %}"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="{% static 'calculator/icons/icon-192.png' %}"
+    >
+
+    <title>
+        Add Academic Task | A-DEVS
+    </title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #151c5a;
+            color: #222;
+            padding: 30px 15px;
+        }
+
+
+        /* ==============================================
+           CONNECTION STATUS
+        ============================================== */
+
+        .connection-status {
+            display: none;
+            width: 100%;
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+        }
+
+
+        .connection-status.offline {
+            display: block;
+            background: #fff3cd;
+            color: #664d03;
+        }
+
+
+        .connection-status.online {
+            display: block;
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+
+        /* ==============================================
+           CONTAINER
+        ============================================== */
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            margin: auto;
+        }
+
+
+        /* ==============================================
+           HEADER
+        ============================================== */
+
+        .header {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow:
+                0 5px 20px
+                rgba(0, 0, 0, 0.12);
+        }
+
+
+        .header h1 {
+            margin: 0 0 8px;
+            color: #151c5a;
+        }
+
+
+        .header p {
+            margin: 0;
+            color: #666;
+            line-height: 1.6;
+        }
+
+
+        /* ==============================================
+           FORM CARD
+        ============================================== */
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow:
+                0 5px 20px
+                rgba(0, 0, 0, 0.12);
+        }
+
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+
+        .required {
+            color: #dc3545;
+        }
+
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-family: inherit;
+            font-size: 15px;
+            background: white;
+        }
+
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #0d6efd;
+            box-shadow:
+                0 0 0 3px
+                rgba(13, 110, 253, 0.10);
+        }
+
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+
+        .help-text {
+            color: #777;
+            font-size: 13px;
+            margin-top: 6px;
+            line-height: 1.4;
+        }
+
+
+        /* ==============================================
+           PRIORITY INFO
+        ============================================== */
+
+        .priority-info {
+            padding: 14px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+
+        .priority-info strong {
+            color: #151c5a;
+        }
+
+
+        /* ==============================================
+           MESSAGES
+        ============================================== */
+
+        .message {
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+
+        .message.success {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+
+        .message.error {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+
+        /* ==============================================
+           BUTTONS
+        ============================================== */
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+
+        .btn {
+            display: inline-block;
+            padding: 13px 20px;
+            border: none;
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+        }
+
+
+        .save-btn {
+            background: #198754;
+            color: white;
+        }
+
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+
+        .dashboard-btn {
+            background: #0d6efd;
+            color: white;
+        }
+
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+
+        .offline-disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+
+        /* ==============================================
+           FOOTER
+        ============================================== */
+
+        .footer {
+            color: #aaa;
+            text-align: center;
+            margin-top: 25px;
+            font-size: 13px;
+        }
+
+
+        /* ==============================================
+           MOBILE
+        ============================================== */
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 20px 12px;
+            }
+
+
+            .header,
+            .card {
+                padding: 20px;
+            }
+
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+
+            .buttons {
+                flex-direction: column;
+            }
+
+
+            .btn {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==============================================
+     INTERNET STATUS
+============================================== -->
+
+<div
+    id="connectionStatus"
+    class="connection-status"
+>
+</div>
+
+
+<div class="container">
+
+
+    <!-- ==============================================
+         HEADER
+    ============================================== -->
+
+    <div class="header">
+
+        <h1>
+            📅 Add Academic Task
+        </h1>
+
+        <p>
+            Add assignments, tests, projects, presentations,
+            study sessions and other academic deadlines.
+        </p>
+
+    </div>
+
+
+    <!-- ==============================================
+         FORM CARD
+    ============================================== -->
+
+    <div class="card">
+
+
+        <!-- DJANGO MESSAGES -->
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div
+                    class="message
+                    {% if message.tags == 'success' %}
+                        success
+                    {% else %}
+                        error
+                    {% endif %}"
+                >
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+
+        <form
+            method="POST"
+            id="academicTaskForm"
+        >
+
+            {% csrf_token %}
+
+
+            <!-- ==========================================
+                 TASK TITLE
+            =========================================== -->
+
+            <div class="form-group">
+
+                <label for="title">
+
+                    Task Title
+
+                    <span class="required">
+                        *
+                    </span>
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    placeholder="e.g. Submit Database Assignment"
+                    maxlength="200"
+                    required
+                >
+
+
+                <div class="help-text">
+                    Give the academic task a short,
+                    easy-to-understand title.
+                </div>
+
+            </div>
+
+
+            <!-- ==========================================
+                 COURSE CODE + TASK TYPE
+            =========================================== -->
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label for="course_code">
+                        Course Code
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="course_code"
+                        name="course_code"
+                        placeholder="e.g. CSC401"
+                        maxlength="30"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="task_type">
+
+                        Task Type
+
+                        <span class="required">
+                            *
+                        </span>
+
+                    </label>
+
+
+                    <select
+                        id="task_type"
+                        name="task_type"
+                        required
+                    >
+
+                        <option value="">
+                            Select Task Type
+                        </option>
+
+                        <option value="assignment">
+                            📝 Assignment
+                        </option>
+
+                        <option value="test">
+                            📖 Test
+                        </option>
+
+                        <option value="project">
+                            💻 Project
+                        </option>
+
+                        <option value="presentation">
+                            🎤 Presentation
+                        </option>
+
+                        <option value="study">
+                            📚 Study Session
+                        </option>
+
+                        <option value="exam">
+                            🎓 Examination
+                        </option>
+
+                        <option value="registration">
+                            📋 Registration
+                        </option>
+
+                        <option value="other">
+                            📌 Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ==========================================
+                 DATE + TIME
+            =========================================== -->
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label for="due_date">
+
+                        Due Date
+
+                        <span class="required">
+                            *
+                        </span>
+
+                    </label>
+
+
+                    <input
+                        type="date"
+                        id="due_date"
+                        name="due_date"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="due_time">
+                        Due Time
+                    </label>
+
+
+                    <input
+                        type="time"
+                        id="due_time"
+                        name="due_time"
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ==========================================
+                 PRIORITY
+            =========================================== -->
+
+            <div class="form-group">
+
+                <label for="priority">
+
+                    Priority
+
+                    <span class="required">
+                        *
+                    </span>
+
+                </label>
+
+
+                <select
+                    id="priority"
+                    name="priority"
+                    required
+                >
+
+                    <option value="">
+                        Select Priority
+                    </option>
+
+                    <option value="low">
+                        🟢 Low Priority
+                    </option>
+
+                    <option value="medium" selected>
+                        🟠 Medium Priority
+                    </option>
+
+                    <option value="high">
+                        🔴 High Priority
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="priority-info">
+
+                <strong>
+                    Priority guide:
+                </strong>
+
+                🟢 Low — normal academic activity.
+
+                <br>
+
+                🟠 Medium — important task or deadline.
+
+                <br>
+
+                🔴 High — urgent assignment, test,
+                project or examination preparation.
+
+            </div>
+
+
+            <!-- ==========================================
+                 DESCRIPTION
+            =========================================== -->
+
+            <div class="form-group">
+
+                <label for="description">
+                    Notes / Description
+                </label>
+
+
+                <textarea
+                    id="description"
+                    name="description"
+                    maxlength="1000"
+                    placeholder="Add instructions, topics to study, submission details or any other useful information..."
+                ></textarea>
+
+            </div>
+
+
+            <!-- ==========================================
+                 BUTTONS
+            =========================================== -->
+
+            <div class="buttons">
+
+
+                <button
+                    type="submit"
+                    id="saveTaskBtn"
+                    class="btn save-btn"
+                >
+                    💾 Save Academic Task
+                </button>
+
+
+                <a
+                    href="{% url 'academic_planner' %}"
+                    class="btn back-btn"
+                >
+                    ← Back to Planner
+                </a>
+
+
+                <a
+                    href="{% url 'dashboard' student.matric_number %}"
+                    class="btn dashboard-btn"
+                >
+                    🎓 Dashboard
+                </a>
+
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+
+    <div class="footer">
+
+        A-DEVS CGPA Calculator
+        &copy;
+        {% now "Y" %}
+
+    </div>
+
+
+</div>
+
+
+<!-- ==============================================
+     SET MINIMUM DATE
+============================================== -->
+
+<script>
+
+    const dueDateInput =
+        document.getElementById(
+            "due_date"
+        );
+
+
+    /*
+       Prevent students from accidentally
+       selecting a date before today.
+    */
+
+    const today =
+        new Date();
+
+
+    const year =
+        today.getFullYear();
+
+
+    const month =
+        String(
+            today.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    const day =
+        String(
+            today.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    dueDateInput.min =
+        `${year}-${month}-${day}`;
+
+</script>
+
+
+<!-- ==============================================
+     ONLINE / OFFLINE PROTECTION
+============================================== -->
+
+<script>
+
+    const connectionStatus =
+        document.getElementById(
+            "connectionStatus"
+        );
+
+
+    const academicTaskForm =
+        document.getElementById(
+            "academicTaskForm"
+        );
+
+
+    const saveTaskBtn =
+        document.getElementById(
+            "saveTaskBtn"
+        );
+
+
+    let onlineMessageTimer;
+
+
+    function showOfflineStatus() {
+
+        clearTimeout(
+            onlineMessageTimer
+        );
+
+
+        connectionStatus.textContent =
+            "📡 You are offline. Academic tasks cannot be saved until your internet connection returns.";
+
+
+        connectionStatus.className =
+            "connection-status offline";
+
+
+        saveTaskBtn.disabled =
+            true;
+
+
+        saveTaskBtn.classList.add(
+            "offline-disabled"
+        );
+
+    }
+
+
+    function showOnlineStatus() {
+
+        clearTimeout(
+            onlineMessageTimer
+        );
+
+
+        connectionStatus.textContent =
+            "✅ Internet connection restored. You can save your academic task now.";
+
+
+        connectionStatus.className =
+            "connection-status online";
+
+
+        saveTaskBtn.disabled =
+            false;
+
+
+        saveTaskBtn.classList.remove(
+            "offline-disabled"
+        );
+
+
+        onlineMessageTimer =
+            setTimeout(
+                function () {
+
+                    connectionStatus.className =
+                        "connection-status";
+
+
+                    connectionStatus.textContent =
+                        "";
+
+                },
+                3000
+            );
+
+    }
+
+
+    window.addEventListener(
+        "offline",
+        showOfflineStatus
+    );
+
+
+    window.addEventListener(
+        "online",
+        showOnlineStatus
+    );
+
+
+    if (!navigator.onLine) {
+
+        showOfflineStatus();
+
+    }
+
+
+    academicTaskForm.addEventListener(
+        "submit",
+        function(event) {
+
+            if (!navigator.onLine) {
+
+                event.preventDefault();
+
+
+                alert(
+                    "You are offline. Please reconnect to the internet before saving this academic task."
+                );
+
+                return;
+
+            }
+
+
+            const title =
+                document
+                    .getElementById(
+                        "title"
+                    )
+                    .value
+                    .trim();
+
+
+            const taskType =
+                document
+                    .getElementById(
+                        "task_type"
+                    )
+                    .value;
+
+
+            const dueDate =
+                document
+                    .getElementById(
+                        "due_date"
+                    )
+                    .value;
+
+
+            if (
+                !title ||
+                !taskType ||
+                !dueDate
+            ) {
+
+                event.preventDefault();
+
+
+                alert(
+                    "Please complete all required fields."
+                );
+
+            }
+
+        }
+    );
+
+</script>
+
+
+<!-- ==============================================
+     SERVICE WORKER
+============================================== -->
+
+<script>
+
+    if ("serviceWorker" in navigator) {
+
+        window.addEventListener(
+            "load",
+            async function() {
+
+                try {
+
+                    const registration =
+                        await navigator
+                            .serviceWorker
+                            .register(
+                                "/service-worker.js",
+                                {
+                                    scope: "/"
+                                }
+                            );
+
+
+                    console.log(
+                        "A-DEVS Service Worker registered:",
+                        registration.scope
+                    );
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Service Worker registration failed:",
+                        error
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+</script>
+
+
+</body>
+
+</html>

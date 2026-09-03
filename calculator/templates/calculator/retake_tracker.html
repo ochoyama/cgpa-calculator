@@ -1,0 +1,925 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#151c5a"
+    >
+
+    <link
+        rel="manifest"
+        href="{% static 'calculator/manifest.json' %}"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="{% static 'calculator/icons/icon-192.png' %}"
+    >
+
+    <title>
+        Carryover / Retake Tracker | A-DEVS
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #151c5a;
+            color: #222;
+            padding: 30px 15px;
+        }
+
+        .container {
+            width: 94%;
+            max-width: 1050px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+            margin-bottom: 22px;
+        }
+
+        h1,
+        h2 {
+            color: #151c5a;
+        }
+
+        h1 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        /* =====================================================
+           MESSAGES
+        ====================================================== */
+
+        .message {
+            padding: 13px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .message.success {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        .message.warning {
+            background: #fff3cd;
+            color: #664d03;
+        }
+
+        /* =====================================================
+           SUMMARY
+        ====================================================== */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .summary-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .summary-box span {
+            display: block;
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        .summary-box strong {
+            font-size: 26px;
+            color: #151c5a;
+        }
+
+        /* =====================================================
+           RETAKE CARD
+        ====================================================== */
+
+        .retake-card {
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+
+        .retake-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .retake-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .course-code {
+            font-size: 22px;
+            font-weight: bold;
+            color: #0d6efd;
+        }
+
+        .course-meta {
+            color: #666;
+            margin-top: 6px;
+            line-height: 1.6;
+        }
+
+        /* =====================================================
+           STATUS BADGES
+        ====================================================== */
+
+        .status-badge {
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #664d03;
+        }
+
+        .status-in-progress {
+            background: #cff4fc;
+            color: #055160;
+        }
+
+        .status-completed {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        /* =====================================================
+           FORM
+        ====================================================== */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        select,
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        select:focus,
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #0d6efd;
+        }
+
+        .save-btn {
+            width: 100%;
+            border: none;
+            border-radius: 7px;
+            padding: 13px;
+            background: #198754;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .save-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* =====================================================
+           EMPTY STATE
+        ====================================================== */
+
+        .empty {
+            text-align: center;
+            padding: 40px 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .empty-icon {
+            font-size: 50px;
+            margin-bottom: 12px;
+        }
+
+        .empty h2 {
+            margin-top: 0;
+        }
+
+        .empty p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* =====================================================
+           BUTTONS
+        ====================================================== */
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 7px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+
+        .dashboard-btn {
+            background: #151c5a;
+        }
+
+        .record-btn {
+            background: #0d6efd;
+        }
+
+        .planner-btn {
+            background: #198754;
+        }
+
+        /* =====================================================
+           OFFLINE
+        ====================================================== */
+
+        .offline-disabled {
+            opacity: 0.55;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+
+        .connection-status {
+            display: none;
+            width: 100%;
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+        }
+
+        .connection-status.offline {
+            display: block;
+            background: #fff3cd;
+            color: #664d03;
+        }
+
+        .connection-status.online {
+            display: block;
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ====================================================== */
+
+        @media (max-width: 850px) {
+
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+        }
+
+        @media (max-width: 650px) {
+
+            .form-grid,
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .retake-top {
+                flex-direction: column;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div
+    id="connectionStatus"
+    class="connection-status"
+>
+</div>
+
+<div class="container">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="card">
+
+        <h1>
+            🔁 Carryover / Retake Tracker
+        </h1>
+
+        <p class="subtitle">
+            Track failed courses, monitor your retake progress, and record
+            the grade you eventually earn after retaking each course.
+        </p>
+
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+
+        <div class="summary-grid">
+
+            <div class="summary-box">
+
+                <span>
+                    Failed Courses
+                </span>
+
+                <strong>
+                    {{ failed_courses_count }}
+                </strong>
+
+            </div>
+
+            <div class="summary-box">
+
+                <span>
+                    Pending
+                </span>
+
+                <strong>
+                    {{ pending_count }}
+                </strong>
+
+            </div>
+
+            <div class="summary-box">
+
+                <span>
+                    In Progress
+                </span>
+
+                <strong>
+                    {{ in_progress_count }}
+                </strong>
+
+            </div>
+
+            <div class="summary-box">
+
+                <span>
+                    Completed
+                </span>
+
+                <strong>
+                    {{ completed_count }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RETAKE RECORDS
+    ====================================================== -->
+
+    <div class="card">
+
+        <h2>
+            Your Retake Courses
+        </h2>
+
+
+        {% if retakes %}
+
+            {% for retake in retakes %}
+
+                <div class="retake-card">
+
+                    <div class="retake-top">
+
+                        <div>
+
+                            <div class="course-code">
+                                {{ retake.original_course.course_code }}
+                            </div>
+
+                            <div class="course-meta">
+
+                                Original Grade:
+                                <strong>
+                                    {{ retake.original_course.grade }}
+                                </strong>
+
+                                <br>
+
+                                Units:
+                                <strong>
+                                    {{ retake.original_course.course_unit }}
+                                </strong>
+
+                                <br>
+
+                                Semester:
+                                <strong>
+                                    {{ retake.original_course.semester.level }}
+                                    Level -
+                                    {{ retake.original_course.semester.semester }}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        {% if retake.status == "pending" %}
+
+                            <span class="status-badge status-pending">
+                                Pending Retake
+                            </span>
+
+                        {% elif retake.status == "in_progress" %}
+
+                            <span class="status-badge status-in-progress">
+                                In Progress
+                            </span>
+
+                        {% elif retake.status == "completed" %}
+
+                            <span class="status-badge status-completed">
+                                Completed
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <form
+                        method="POST"
+                        class="requires-online"
+                    >
+
+                        {% csrf_token %}
+
+                        <input
+                            type="hidden"
+                            name="retake_id"
+                            value="{{ retake.id }}"
+                        >
+
+
+                        <div class="form-grid">
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Retake Status
+                                </label>
+
+                                <select
+                                    name="status"
+                                    required
+                                >
+
+                                    <option
+                                        value="pending"
+                                        {% if retake.status == "pending" %}selected{% endif %}
+                                    >
+                                        Pending Retake
+                                    </option>
+
+                                    <option
+                                        value="in_progress"
+                                        {% if retake.status == "in_progress" %}selected{% endif %}
+                                    >
+                                        In Progress
+                                    </option>
+
+                                    <option
+                                        value="completed"
+                                        {% if retake.status == "completed" %}selected{% endif %}
+                                    >
+                                        Completed
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Retake Grade
+                                </label>
+
+                                <select
+                                    name="retake_grade"
+                                >
+
+                                    <option value="">
+                                        Select Grade
+                                    </option>
+
+                                    <option
+                                        value="A"
+                                        {% if retake.retake_grade == "A" %}selected{% endif %}
+                                    >
+                                        A
+                                    </option>
+
+                                    <option
+                                        value="B"
+                                        {% if retake.retake_grade == "B" %}selected{% endif %}
+                                    >
+                                        B
+                                    </option>
+
+                                    <option
+                                        value="C"
+                                        {% if retake.retake_grade == "C" %}selected{% endif %}
+                                    >
+                                        C
+                                    </option>
+
+                                    <option
+                                        value="D"
+                                        {% if retake.retake_grade == "D" %}selected{% endif %}
+                                    >
+                                        D
+                                    </option>
+
+                                    <option
+                                        value="E"
+                                        {% if retake.retake_grade == "E" %}selected{% endif %}
+                                    >
+                                        E
+                                    </option>
+
+                                    <option
+                                        value="F"
+                                        {% if retake.retake_grade == "F" %}selected{% endif %}
+                                    >
+                                        F
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Notes
+                            </label>
+
+                            <textarea
+                                name="notes"
+                                placeholder="Optional note, e.g. Retaking next semester..."
+                            >{{ retake.notes }}</textarea>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="save-btn"
+                        >
+                            💾 Update Retake Record
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    🎉
+                </div>
+
+                <h2>
+                    No Carryovers Found
+                </h2>
+
+                <p>
+                    No failed courses with grade F were found in your
+                    academic record.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =====================================================
+         NAVIGATION
+    ====================================================== -->
+
+    <div class="card">
+
+        <div class="buttons">
+
+            <a
+                href="{% url 'dashboard' student.matric_number %}"
+                class="btn dashboard-btn"
+            >
+                ← Student Dashboard
+            </a>
+
+            <a
+                href="{% url 'academic_record' student.matric_number %}"
+                class="btn record-btn"
+            >
+                Academic Record
+            </a>
+
+            <a
+                href="{% url 'cgpa_goal_planner' %}"
+                class="btn planner-btn"
+            >
+                🎯 Goal Planner
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     ONLINE / OFFLINE
+====================================================== -->
+
+<script>
+
+    const connectionStatus =
+        document.getElementById(
+            "connectionStatus"
+        );
+
+    let onlineMessageTimer;
+
+
+    function updateOnlineControls() {
+
+        const controls =
+            document.querySelectorAll(
+                ".requires-online"
+            );
+
+
+        controls.forEach(
+            function(control) {
+
+                if (!navigator.onLine) {
+
+                    control.classList.add(
+                        "offline-disabled"
+                    );
+
+                }
+                else {
+
+                    control.classList.remove(
+                        "offline-disabled"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    function showOfflineStatus() {
+
+        clearTimeout(
+            onlineMessageTimer
+        );
+
+        connectionStatus.textContent =
+            "📡 You are offline. Retake information cannot be updated until your connection returns.";
+
+        connectionStatus.className =
+            "connection-status offline";
+
+        updateOnlineControls();
+
+    }
+
+
+    function showOnlineStatus() {
+
+        clearTimeout(
+            onlineMessageTimer
+        );
+
+        connectionStatus.textContent =
+            "✅ Internet connection restored. Retake updates are available again.";
+
+        connectionStatus.className =
+            "connection-status online";
+
+        updateOnlineControls();
+
+
+        onlineMessageTimer =
+            setTimeout(
+                function() {
+
+                    connectionStatus.className =
+                        "connection-status";
+
+                    connectionStatus.textContent =
+                        "";
+
+                },
+                3000
+            );
+
+    }
+
+
+    window.addEventListener(
+        "offline",
+        showOfflineStatus
+    );
+
+
+    window.addEventListener(
+        "online",
+        showOnlineStatus
+    );
+
+
+    if (!navigator.onLine) {
+
+        showOfflineStatus();
+
+    }
+    else {
+
+        updateOnlineControls();
+
+    }
+
+</script>
+
+
+<!-- =====================================================
+     SERVICE WORKER
+====================================================== -->
+
+<script>
+
+    if ("serviceWorker" in navigator) {
+
+        window.addEventListener(
+            "load",
+            async function() {
+
+                try {
+
+                    await navigator
+                        .serviceWorker
+                        .register(
+                            "/service-worker.js",
+                            {
+                                scope: "/"
+                            }
+                        );
+
+                }
+                catch (error) {
+
+                    console.error(
+                        "Service Worker registration failed:",
+                        error
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Edit Course</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            background: #151c5a;
+
+            margin: 0;
+
+            padding: 0;
+        }
+
+
+        .container {
+
+            width: 90%;
+
+            max-width: 600px;
+
+            margin: 60px auto;
+
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 4px 15px
+                rgba(0, 0, 0, 0.1);
+        }
+
+
+        h1 {
+
+            text-align: center;
+
+            margin-bottom: 10px;
+        }
+
+
+        .semester-info {
+
+            text-align: center;
+
+            color: #666;
+
+            margin-bottom: 30px;
+        }
+
+
+        label {
+
+            display: block;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+        }
+
+
+        input,
+        select {
+
+            width: 100%;
+
+            padding: 12px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 6px;
+
+            margin-bottom: 20px;
+
+            font-size: 16px;
+        }
+
+
+        input:focus,
+        select:focus {
+
+            outline: none;
+
+            border-color: #0d6efd;
+        }
+
+
+        button {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 6px;
+
+            background: #0d6efd;
+
+            color: white;
+
+            font-size: 16px;
+
+            cursor: pointer;
+        }
+
+
+        button:hover {
+
+            opacity: 0.9;
+        }
+
+
+        .cancel {
+
+            display: block;
+
+            text-align: center;
+
+            margin-top: 15px;
+
+            padding: 12px;
+
+            background: #6c757d;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 6px;
+        }
+
+
+        .cancel:hover {
+
+            opacity: 0.9;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <h1>
+        Edit Course
+    </h1>
+
+
+    <div class="semester-info">
+
+        {{ semester.level }} Level -
+
+        {{ semester.semester }}
+
+    </div>
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        <!-- COURSE CODE -->
+
+        <label for="course_code">
+            Course Code
+        </label>
+
+        <input
+            type="text"
+            id="course_code"
+            name="course_code"
+            value="{{ course.course_code }}"
+            required
+        >
+
+
+        <!-- COURSE UNIT -->
+
+        <label for="course_unit">
+            Credit Units
+        </label>
+
+        <input
+            type="number"
+            id="course_unit"
+            name="course_unit"
+            value="{{ course.course_unit }}"
+            min="1"
+            max="10"
+            required
+        >
+
+
+        <!-- GRADE -->
+
+        <label for="grade">
+            Grade
+        </label>
+
+        <select
+            id="grade"
+            name="grade"
+            required
+        >
+
+            <option value="A"
+                {% if course.grade == "A" %}
+                    selected
+                {% endif %}
+            >
+                A
+            </option>
+
+
+            <option value="B"
+                {% if course.grade == "B" %}
+                    selected
+                {% endif %}
+            >
+                B
+            </option>
+
+
+            <option value="C"
+                {% if course.grade == "C" %}
+                    selected
+                {% endif %}
+            >
+                C
+            </option>
+
+
+            <option value="D"
+                {% if course.grade == "D" %}
+                    selected
+                {% endif %}
+            >
+                D
+            </option>
+
+
+            <option value="E"
+                {% if course.grade == "E" %}
+                    selected
+                {% endif %}
+            >
+                E
+            </option>
+
+
+            <option value="F"
+                {% if course.grade == "F" %}
+                    selected
+                {% endif %}
+            >
+                F
+            </option>
+
+        </select>
+
+
+        <button type="submit">
+            Save Changes
+        </button>
+
+
+        <a
+            href="{% url 'academic_record' student.matric_number %}"
+            class="cancel"
+        >
+            Cancel
+        </a>
+
+
+    </form>
+
+
+</div>
+
+
+</body>
+
+</html>

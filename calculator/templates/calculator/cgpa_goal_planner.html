@@ -1,0 +1,584 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#151c5a"
+    >
+
+    <link
+        rel="manifest"
+        href="{% static 'calculator/manifest.json' %}"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="{% static 'calculator/icons/icon-192.png' %}"
+    >
+
+    <title>
+        CGPA Goal Planner | A-DEVS
+    </title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #151c5a;
+            color: #222;
+            padding: 30px 15px;
+        }
+
+
+        .container {
+            width: 94%;
+            max-width: 850px;
+            margin: auto;
+        }
+
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow:
+                0 5px 20px
+                rgba(0, 0, 0, 0.12);
+            margin-bottom: 20px;
+        }
+
+
+        .title {
+            color: #151c5a;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+
+        .subtitle {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+
+        .summary-box {
+            background: #f8f9fa;
+            padding: 18px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+
+        .summary-box span {
+            display: block;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+
+        .summary-box strong {
+            font-size: 24px;
+            color: #151c5a;
+        }
+
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+
+        input:focus {
+            outline: none;
+            border-color: #0d6efd;
+        }
+
+
+        .btn {
+            display: inline-block;
+            padding: 13px 20px;
+            border-radius: 7px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+
+        .calculate-btn {
+            width: 100%;
+            background: #198754;
+            font-size: 16px;
+        }
+
+
+        .dashboard-btn {
+            background: #0d6efd;
+        }
+
+
+        .record-btn {
+            background: #6c757d;
+        }
+
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+
+        .result-card {
+            margin-top: 25px;
+            padding: 22px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+        }
+
+
+        .result-card h2 {
+            margin-top: 0;
+            color: #151c5a;
+        }
+
+
+        .required-gpa {
+            font-size: 42px;
+            font-weight: bold;
+            color: #0d6efd;
+            margin: 15px 0;
+        }
+
+
+        .status {
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+
+        .status.possible {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+
+        .status.impossible {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+
+        .status.already_reached {
+            background: #cff4fc;
+            color: #055160;
+        }
+
+
+        .error {
+            background: #f8d7da;
+            color: #842029;
+            padding: 14px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+
+        .tip {
+            margin-top: 15px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+
+        @media (max-width: 700px) {
+
+            .summary {
+                grid-template-columns: 1fr;
+            }
+
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .card {
+                padding: 20px;
+            }
+
+
+            .buttons {
+                flex-direction: column;
+            }
+
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+
+            .required-gpa {
+                font-size: 34px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <div class="card">
+
+
+        <h1 class="title">
+            🎯 CGPA Goal Planner
+        </h1>
+
+
+        <p class="subtitle">
+
+            Find out the GPA you need next semester
+            to reach your target CGPA.
+
+        </p>
+
+
+        <!-- CURRENT ACADEMIC SUMMARY -->
+
+        <div class="summary">
+
+
+            <div class="summary-box">
+
+                <span>
+                    Current CGPA
+                </span>
+
+                <strong>
+                    {{ current_cgpa }}
+                </strong>
+
+            </div>
+
+
+            <div class="summary-box">
+
+                <span>
+                    Total Units
+                </span>
+
+                <strong>
+                    {{ total_units }}
+                </strong>
+
+            </div>
+
+
+            <div class="summary-box">
+
+                <span>
+                    Quality Points
+                </span>
+
+                <strong>
+                    {{ total_quality_points }}
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- PLANNER FORM -->
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <div class="form-grid">
+
+
+                <div class="form-group">
+
+                    <label for="target_cgpa">
+                        Target CGPA
+                    </label>
+
+                    <input
+                        type="number"
+                        id="target_cgpa"
+                        name="target_cgpa"
+                        min="0"
+                        max="5"
+                        step="0.01"
+                        placeholder="e.g. 4.00"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="next_semester_units">
+                        Next Semester Units
+                    </label>
+
+                    <input
+                        type="number"
+                        id="next_semester_units"
+                        name="next_semester_units"
+                        min="1"
+                        max="50"
+                        placeholder="e.g. 20"
+                        required
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn calculate-btn"
+            >
+                🎯 Calculate Required GPA
+            </button>
+
+
+        </form>
+
+
+        <!-- RESULT -->
+
+        {% if result %}
+
+            {% if result.error %}
+
+                <div class="error">
+                    {{ result.error }}
+                </div>
+
+            {% else %}
+
+                <div class="result-card">
+
+                    <h2>
+                        Your Goal Analysis
+                    </h2>
+
+
+                    <p>
+                        Target CGPA:
+                        <strong>
+                            {{ result.target_cgpa }}
+                        </strong>
+                    </p>
+
+
+                    <p>
+                        Planned Next Semester Units:
+                        <strong>
+                            {{ result.next_semester_units }}
+                        </strong>
+                    </p>
+
+
+                    <p>
+                        Required GPA:
+                    </p>
+
+
+                    <div class="required-gpa">
+                        {{ result.required_gpa }}
+                    </div>
+
+
+                    <div
+                        class="status {{ result.status }}"
+                    >
+                        {{ result.message }}
+                    </div>
+
+
+                    {% if result.status == "possible" %}
+
+                        <p class="tip">
+
+                            Aim slightly above this GPA so you have
+                            some safety margin in case one course
+                            does not go as planned.
+
+                        </p>
+
+                    {% elif result.status == "impossible" %}
+
+                        <p class="tip">
+
+                            Try lowering the target CGPA or spreading
+                            the target across more than one semester.
+
+                        </p>
+
+                    {% elif result.status == "already_reached" %}
+
+                        <p class="tip">
+
+                            Your current academic performance already
+                            meets or exceeds this target.
+
+                        </p>
+
+                    {% endif %}
+
+
+                </div>
+
+            {% endif %}
+
+        {% endif %}
+
+
+        <!-- NAVIGATION -->
+
+        <div class="buttons">
+
+
+            <a
+                href="{% url 'dashboard' student.matric_number %}"
+                class="btn dashboard-btn"
+            >
+                ← Student Dashboard
+            </a>
+
+
+            <a
+                href="{% url 'academic_record' student.matric_number %}"
+                class="btn record-btn"
+            >
+                Academic Record
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+    if ("serviceWorker" in navigator) {
+
+        window.addEventListener(
+            "load",
+            async function() {
+
+                try {
+
+                    await navigator
+                        .serviceWorker
+                        .register(
+                            "/service-worker.js",
+                            {
+                                scope: "/"
+                            }
+                        );
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        "Service Worker registration failed:",
+                        error
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+</script>
+
+
+</body>
+
+</html>

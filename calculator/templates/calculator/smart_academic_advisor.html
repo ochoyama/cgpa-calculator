@@ -1,0 +1,610 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#151c5a"
+    >
+
+    <link
+        rel="manifest"
+        href="{% static 'calculator/manifest.json' %}"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="{% static 'calculator/icons/icon-192.png' %}"
+    >
+
+    <title>
+        Smart Academic Advisor | A-DEVS
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #151c5a;
+            color: #222;
+            padding: 30px 15px;
+        }
+
+        .container {
+            width: 94%;
+            max-width: 1050px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            border-radius: 14px;
+            box-shadow:
+                0 5px 20px
+                rgba(0, 0, 0, 0.12);
+            margin-bottom: 22px;
+        }
+
+        h1,
+        h2 {
+            color: #151c5a;
+        }
+
+        h1 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        /* =====================================================
+           SUMMARY
+        ====================================================== */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .summary-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .summary-box span {
+            display: block;
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        .summary-box strong {
+            font-size: 26px;
+            color: #151c5a;
+        }
+
+        /* =====================================================
+           ADVICE CARDS
+        ====================================================== */
+
+        .advice-card {
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .advice-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .advice-icon {
+            font-size: 30px;
+            flex-shrink: 0;
+        }
+
+        .advice-content {
+            flex: 1;
+        }
+
+        .advice-content h3 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .advice-content p {
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .advice-success {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .advice-warning {
+            background: #fff3cd;
+            color: #664d03;
+        }
+
+        .advice-danger {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        .advice-info {
+            background: #cff4fc;
+            color: #055160;
+        }
+
+        .advice-neutral {
+            background: #e2e3e5;
+            color: #41464b;
+        }
+
+        /* =====================================================
+           RECOMMENDED ACTIONS
+        ====================================================== */
+
+        .recommended-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .recommended-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .recommended-card h3 {
+            margin-top: 0;
+            color: #151c5a;
+        }
+
+        .recommended-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* =====================================================
+           BUTTONS
+        ====================================================== */
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 7px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+
+        .dashboard-btn {
+            background: #151c5a;
+        }
+
+        .planner-btn {
+            background: #198754;
+        }
+
+        .simulator-btn {
+            background: #6f42c1;
+        }
+
+        .retake-btn {
+            background: #dc3545;
+        }
+
+        .progress-btn {
+            background: #0d6efd;
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ====================================================== */
+
+        @media (max-width: 900px) {
+
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .recommended-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .advice-card {
+                flex-direction: column;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="card">
+
+        <h1>
+            🤖 Smart Academic Advisor
+        </h1>
+
+        <p class="subtitle">
+
+            A-DEVS analyzes your academic record and gives you
+            personalized guidance based on your CGPA, semester trend,
+            failed courses and completed units.
+
+        </p>
+
+
+        <div class="summary-grid">
+
+            <div class="summary-box">
+
+                <span>
+                    Current CGPA
+                </span>
+
+                <strong>
+                    {{ current_cgpa }}
+                </strong>
+
+            </div>
+
+
+            <div class="summary-box">
+
+                <span>
+                    Class of Degree
+                </span>
+
+                <strong>
+                    {{ class_of_degree }}
+                </strong>
+
+            </div>
+
+
+            <div class="summary-box">
+
+                <span>
+                    Completed Units
+                </span>
+
+                <strong>
+                    {{ total_units }}
+                </strong>
+
+            </div>
+
+
+            <div class="summary-box">
+
+                <span>
+                    Failed Courses
+                </span>
+
+                <strong>
+                    {{ failed_courses_count }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PERSONALIZED ADVICE
+    ====================================================== -->
+
+    <div class="card">
+
+        <h2>
+            💡 Your Academic Advice
+        </h2>
+
+
+        {% if advice %}
+
+            {% for item in advice %}
+
+                <div
+                    class="advice-card
+
+                    {% if item.type == 'success' %}
+                        advice-success
+                    {% elif item.type == 'warning' %}
+                        advice-warning
+                    {% elif item.type == 'danger' %}
+                        advice-danger
+                    {% elif item.type == 'info' %}
+                        advice-info
+                    {% else %}
+                        advice-neutral
+                    {% endif %}
+                    "
+                >
+
+                    <div class="advice-icon">
+                        {{ item.icon }}
+                    </div>
+
+                    <div class="advice-content">
+
+                        <h3>
+                            {{ item.title }}
+                        </h3>
+
+                        <p>
+                            {{ item.message }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="advice-card advice-info">
+
+                <div class="advice-icon">
+                    📚
+                </div>
+
+                <div class="advice-content">
+
+                    <h3>
+                        More Data Needed
+                    </h3>
+
+                    <p>
+                        Add semester results to receive personalized
+                        academic advice.
+                    </p>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =====================================================
+         RECOMMENDED TOOLS
+    ====================================================== -->
+
+    <div class="card">
+
+        <h2>
+            🎯 Recommended Actions
+        </h2>
+
+        <div class="recommended-grid">
+
+            <div class="recommended-card">
+
+                <h3>
+                    🎯 Set a CGPA Target
+                </h3>
+
+                <p>
+                    Use the Goal Planner to calculate the GPA you need
+                    next semester to reach a specific CGPA.
+                </p>
+
+                <a
+                    href="{% url 'cgpa_goal_planner' %}"
+                    class="btn planner-btn"
+                >
+                    Open Goal Planner
+                </a>
+
+            </div>
+
+
+            <div class="recommended-card">
+
+                <h3>
+                    🧪 Test Grade Scenarios
+                </h3>
+
+                <p>
+                    Try different A, B, C, D, E and F combinations
+                    without changing your real academic record.
+                </p>
+
+                <a
+                    href="{% url 'grade_scenario_simulator' %}"
+                    class="btn simulator-btn"
+                >
+                    Open Grade Simulator
+                </a>
+
+            </div>
+
+
+            <div class="recommended-card">
+
+                <h3>
+                    🔁 Manage Carryovers
+                </h3>
+
+                <p>
+                    Track failed courses and monitor whether each
+                    retake is pending, in progress or completed.
+                </p>
+
+                <a
+                    href="{% url 'retake_tracker' %}"
+                    class="btn retake-btn"
+                >
+                    Open Retake Tracker
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         NAVIGATION
+    ====================================================== -->
+
+    <div class="card">
+
+        <div class="buttons">
+
+            <a
+                href="{% url 'dashboard' student.matric_number %}"
+                class="btn dashboard-btn"
+            >
+                ← Student Dashboard
+            </a>
+
+
+            <a
+                href="{% url 'cgpa_progress_chart' %}"
+                class="btn progress-btn"
+            >
+                📈 CGPA Progress
+            </a>
+
+
+            <a
+                href="{% url 'cgpa_goal_planner' %}"
+                class="btn planner-btn"
+            >
+                🎯 Goal Planner
+            </a>
+
+
+            <a
+                href="{% url 'grade_scenario_simulator' %}"
+                class="btn simulator-btn"
+            >
+                🧪 Grade Simulator
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     SERVICE WORKER
+====================================================== -->
+
+<script>
+
+    if ("serviceWorker" in navigator) {
+
+        window.addEventListener(
+            "load",
+            async function() {
+
+                try {
+
+                    await navigator
+                        .serviceWorker
+                        .register(
+                            "/service-worker.js",
+                            {
+                                scope: "/"
+                            }
+                        );
+
+                }
+                catch (error) {
+
+                    console.error(
+                        "Service Worker registration failed:",
+                        error
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+</script>
+
+</body>
+
+</html>

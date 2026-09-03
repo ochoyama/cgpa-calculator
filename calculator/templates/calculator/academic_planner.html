@@ -1,0 +1,539 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#151c5a"
+    >
+
+    <link
+        rel="manifest"
+        href="{% static 'calculator/manifest.json' %}"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="{% static 'calculator/icons/icon-192.png' %}"
+    >
+
+    <title>
+        Academic Planner | A-DEVS
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #151c5a;
+            color: #222;
+            padding: 30px 15px;
+        }
+
+        .container {
+            width: 94%;
+            max-width: 1050px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+            margin-bottom: 22px;
+        }
+
+        h1,
+        h2 {
+            color: #151c5a;
+        }
+
+        h1 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .messages {
+            margin-bottom: 18px;
+        }
+
+        .message {
+            padding: 13px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .message.success {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .summary-box span {
+            display: block;
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        .summary-box strong {
+            font-size: 27px;
+            color: #151c5a;
+        }
+
+        .task-card {
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .task-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .task-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .task-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #151c5a;
+        }
+
+        .task-meta {
+            color: #666;
+            line-height: 1.7;
+            margin-top: 6px;
+        }
+
+        .priority {
+            padding: 7px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .priority-low {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .priority-medium {
+            background: #fff3cd;
+            color: #664d03;
+        }
+
+        .priority-high {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        .task-description {
+            margin-top: 12px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .task-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 11px 16px;
+            border-radius: 7px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .add-btn {
+            background: #198754;
+        }
+
+        .complete-btn {
+            background: #0d6efd;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+        }
+
+        .dashboard-btn {
+            background: #151c5a;
+        }
+
+        .completed {
+            opacity: 0.7;
+        }
+
+        .completed .task-title {
+            text-decoration: line-through;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 35px 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            color: #666;
+        }
+
+        .navigation {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        @media (max-width: 650px) {
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .task-top {
+                flex-direction: column;
+            }
+
+            .navigation,
+            .task-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>
+            📅 Academic Planner
+        </h1>
+
+        <p class="subtitle">
+            Keep track of assignments, tests, projects, study sessions,
+            presentations and other academic deadlines.
+        </p>
+
+        {% if messages %}
+
+            <div class="messages">
+
+                {% for message in messages %}
+
+                    <div class="message {{ message.tags }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+        <div class="summary-grid">
+
+            <div class="summary-box">
+
+                <span>
+                    Upcoming Tasks
+                </span>
+
+                <strong>
+                    {{ upcoming_count }}
+                </strong>
+
+            </div>
+
+            <div class="summary-box">
+
+                <span>
+                    Completed Tasks
+                </span>
+
+                <strong>
+                    {{ completed_count }}
+                </strong>
+
+            </div>
+
+        </div>
+
+        <a
+            href="{% url 'add_academic_task' %}"
+            class="btn add-btn"
+        >
+            + Add Academic Task
+        </a>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>
+            📌 Upcoming Tasks
+        </h2>
+
+        {% if upcoming_tasks %}
+
+            {% for task in upcoming_tasks %}
+
+                <div class="task-card">
+
+                    <div class="task-top">
+
+                        <div>
+
+                            <div class="task-title">
+                                {{ task.title }}
+                            </div>
+
+                            <div class="task-meta">
+
+                                {% if task.course_code %}
+                                    Course:
+                                    <strong>
+                                        {{ task.course_code }}
+                                    </strong>
+                                    <br>
+                                {% endif %}
+
+                                Type:
+                                <strong>
+                                    {{ task.get_task_type_display }}
+                                </strong>
+
+                                <br>
+
+                                Due:
+                                <strong>
+                                    {{ task.due_date|date:"M d, Y" }}
+                                </strong>
+
+                                {% if task.due_time %}
+                                    at
+                                    <strong>
+                                        {{ task.due_time|time:"h:i A" }}
+                                    </strong>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        {% if task.priority == "high" %}
+
+                            <span class="priority priority-high">
+                                High Priority
+                            </span>
+
+                        {% elif task.priority == "medium" %}
+
+                            <span class="priority priority-medium">
+                                Medium Priority
+                            </span>
+
+                        {% else %}
+
+                            <span class="priority priority-low">
+                                Low Priority
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                    {% if task.description %}
+
+                        <div class="task-description">
+                            {{ task.description }}
+                        </div>
+
+                    {% endif %}
+
+                    <div class="task-actions">
+
+                        <a
+                            href="{% url 'complete_academic_task' task.id %}"
+                            class="btn complete-btn"
+                        >
+                            ✓ Mark Completed
+                        </a>
+
+                        <a
+                            href="{% url 'delete_academic_task' task.id %}"
+                            class="btn delete-btn"
+                            onclick="return confirm('Delete this academic task?');"
+                        >
+                            Delete
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty">
+                No upcoming academic tasks yet.
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>
+            ✅ Completed Tasks
+        </h2>
+
+        {% if completed_tasks %}
+
+            {% for task in completed_tasks %}
+
+                <div class="task-card completed">
+
+                    <div class="task-title">
+                        {{ task.title }}
+                    </div>
+
+                    <div class="task-meta">
+
+                        {% if task.course_code %}
+                            {{ task.course_code }}
+                            —
+                        {% endif %}
+
+                        {{ task.get_task_type_display }}
+
+                    </div>
+
+                    <div class="task-actions">
+
+                        <a
+                            href="{% url 'delete_academic_task' task.id %}"
+                            class="btn delete-btn"
+                            onclick="return confirm('Delete this completed task?');"
+                        >
+                            Delete
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty">
+                No completed tasks yet.
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="navigation">
+
+            <a
+                href="{% url 'dashboard' student.matric_number %}"
+                class="btn dashboard-btn"
+            >
+                ← Student Dashboard
+            </a>
+
+            <a
+                href="{% url 'add_academic_task' %}"
+                class="btn add-btn"
+            >
+                + Add Task
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

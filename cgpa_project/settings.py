@@ -359,7 +359,6 @@ if not DEBUG:
         "https"
     )
 
-
     SESSION_COOKIE_SECURE = True
 
 

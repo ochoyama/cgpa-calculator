@@ -428,6 +428,64 @@
 
         }
 
+
+        /* ===== LANDING PAGE REDESIGN ===== */
+        html { scroll-behavior: smooth; }
+        body { background: #f5f7fb !important; color: #1f2937; }
+        .site-header { position: sticky; top: 0; z-index: 1000; background: rgba(255,255,255,.96); border-bottom: 1px solid #e5e7eb; backdrop-filter: blur(12px); }
+        .site-nav { width: min(1180px,92%); min-height: 74px; margin:auto; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+        .brand { text-decoration:none; color:#151c5a; font-weight:800; font-size:20px; display:flex; align-items:center; gap:10px; }
+        .brand-mark { width:40px; height:40px; border-radius:12px; display:grid; place-items:center; color:white; background:linear-gradient(135deg,#151c5a,#0d6efd); }
+        .nav-links { display:flex; align-items:center; gap:20px; }
+        .nav-links a { text-decoration:none; color:#374151; font-weight:700; font-size:14px; }
+        .nav-links a:hover { color:#0d6efd; }
+        .nav-cta { background:#151c5a; color:white !important; padding:10px 16px; border-radius:10px; }
+        .menu-btn { display:none; border:0; background:transparent; color:#151c5a; font-size:28px; cursor:pointer; }
+        .hero { background:radial-gradient(circle at top right,rgba(13,110,253,.28),transparent 36%),linear-gradient(135deg,#101642,#151c5a 48%,#243b8f); color:white; }
+        .hero-inner { width:min(1180px,92%); margin:auto; min-height:540px; padding:72px 0; display:grid; grid-template-columns:1.1fr .9fr; gap:54px; align-items:center; }
+        .eyebrow { display:inline-block; padding:7px 12px; border-radius:999px; border:1px solid rgba(255,255,255,.22); background:rgba(255,255,255,.08); font-size:13px; font-weight:700; margin-bottom:18px; }
+        .hero h1 { margin:0; font-size:clamp(42px,6vw,72px); line-height:1.03; letter-spacing:-2px; }
+        .hero p { color:#dbe4ff; font-size:18px; max-width:650px; margin:22px 0 0; }
+        .hero-actions { display:flex; flex-wrap:wrap; gap:14px; margin-top:30px; }
+        .hero-btn { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:0 20px; border-radius:11px; text-decoration:none; font-weight:800; }
+        .hero-btn.primary { background:white; color:#151c5a; }
+        .hero-btn.secondary { border:1px solid rgba(255,255,255,.32); background:rgba(255,255,255,.08); color:white; }
+        .hero-card { background:white; color:#1f2937; border-radius:22px; padding:28px; box-shadow:0 30px 80px rgba(0,0,0,.25); }
+        .hero-card h3 { margin:0 0 8px; color:#151c5a; }
+        .hero-card p { color:#6b7280; font-size:15px; margin:0 0 20px; }
+        .mini-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+        .mini-card { background:#f6f8fc; border:1px solid #e5e7eb; border-radius:14px; padding:18px; }
+        .mini-card strong { display:block; color:#151c5a; font-size:23px; margin-bottom:4px; }
+        .mini-card span { color:#6b7280; font-size:13px; }
+        .landing-section { width:min(1180px,92%); margin:auto; padding:76px 0; }
+        .section-heading { text-align:center; max-width:720px; margin:0 auto 38px; }
+        .section-heading h2 { color:#151c5a; font-size:clamp(30px,4vw,44px); margin:0 0 10px; }
+        .section-heading p { color:#6b7280; margin:0; }
+        .feature-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+        .feature-card { background:white; border:1px solid #e5e7eb; border-radius:18px; padding:26px; box-shadow:0 8px 24px rgba(17,24,39,.04); }
+        .feature-icon { width:48px; height:48px; display:grid; place-items:center; border-radius:13px; background:#edf4ff; font-size:22px; margin-bottom:16px; }
+        .feature-card h3 { margin:0 0 8px; }
+        .feature-card p { margin:0; color:#6b7280; }
+        #calculator { scroll-margin-top:90px; }
+        .container { margin:0 auto 50px !important; padding-top:76px; }
+        .calculator-card { background:white !important; border-radius:18px !important; box-shadow:0 16px 40px rgba(17,24,39,.08) !important; }
+        .steps-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+        .step-card { background:white; border:1px solid #e5e7eb; border-radius:18px; padding:26px; }
+        .step-number { width:42px; height:42px; border-radius:50%; display:grid; place-items:center; color:white; background:#151c5a; font-weight:800; margin-bottom:16px; }
+        .step-card h3 { margin:0 0 8px; }
+        .step-card p { margin:0; color:#6b7280; }
+        .site-cta { width:min(1180px,92%); margin:0 auto 76px; padding:54px 30px; border-radius:24px; text-align:center; color:white; background:linear-gradient(135deg,#151c5a,#243b8f); box-shadow:0 16px 40px rgba(17,24,39,.12); }
+        .site-cta h2 { font-size:34px; margin:0 0 10px; }
+        .site-cta p { max-width:680px; margin:0 auto 22px; color:#dbe4ff; }
+        .site-footer { background:#111827; color:#d1d5db; padding:48px 0 24px; }
+        .footer-grid { width:min(1180px,92%); margin:auto; display:grid; grid-template-columns:2fr 1fr 1fr; gap:36px; }
+        .site-footer h3,.site-footer h4 { color:white; margin-top:0; }
+        .footer-links { display:flex; flex-direction:column; gap:10px; }
+        .footer-links a { color:#d1d5db; text-decoration:none; }
+        .copyright { width:min(1180px,92%); margin:34px auto 0; padding-top:22px; border-top:1px solid #374151; color:#9ca3af; text-align:center; font-size:14px; }
+        @media(max-width:900px){ .hero-inner{grid-template-columns:1fr; min-height:auto;} .feature-grid,.steps-grid{grid-template-columns:repeat(2,1fr);} .footer-grid{grid-template-columns:1fr;} .menu-btn{display:block;} .nav-links{display:none; position:absolute; left:4%; right:4%; top:74px; background:white; border:1px solid #e5e7eb; border-radius:14px; padding:18px; box-shadow:0 16px 40px rgba(17,24,39,.12); flex-direction:column; align-items:stretch;} .nav-links.show{display:flex;} }
+        @media(max-width:600px){ .feature-grid,.steps-grid,.mini-grid{grid-template-columns:1fr;} .hero h1{letter-spacing:-1px;} }
+
     </style>
 
 </head>
@@ -447,7 +505,78 @@
 </div>
 
 
-<div class="container">
+
+<header class="site-header">
+  <nav class="site-nav">
+    <a href="#home" class="brand">
+      <span class="brand-mark">A</span>
+      <span>A-DEVS CGPA</span>
+    </a>
+
+    <button type="button" class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+
+    <div class="nav-links" id="navLinks">
+      <a href="#home">Home</a>
+      <a href="{% url 'about' %}">About</a>
+      <a href="{% url 'contact' %}">Contact</a>
+      <a href="{% url 'faq' %}">FAQ</a>
+      <a href="{% url 'privacy' %}">Privacy</a>
+      <a href="{% url 'terms' %}">Terms</a>
+      <a href="#features">Features</a>
+      <a href="#calculator">Calculator</a>
+      <a href="#how-it-works">How It Works</a>
+
+      {% if user.is_authenticated and student %}
+        <a href="{% url 'dashboard' student.matric_number %}" class="nav-cta">Dashboard</a>
+      {% elif not user.is_authenticated %}
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'register' %}" class="nav-cta">Get Started</a>
+      {% endif %}
+    </div>
+  </nav>
+</header>
+
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <div>
+      <span class="eyebrow">🎓 Built for university students</span>
+      <h1>Take control of your academic performance.</h1>
+      <p>Calculate your GPA and CGPA, save semester results, track academic progress and make better decisions about your studies.</p>
+      <div class="hero-actions">
+        <a href="#calculator" class="hero-btn primary">Calculate CGPA</a>
+        {% if user.is_authenticated and student %}
+          <a href="{% url 'dashboard' student.matric_number %}" class="hero-btn secondary">My Dashboard</a>
+        {% else %}
+          <a href="{% url 'register' %}" class="hero-btn secondary">Create Free Account</a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="hero-card">
+      <h3>Your academic progress in one place</h3>
+      <p>More than a calculator — A-DEVS helps you organize, understand and plan your academic journey.</p>
+      <div class="mini-grid">
+        <div class="mini-card"><strong>GPA</strong><span>Calculate semester performance</span></div>
+        <div class="mini-card"><strong>CGPA</strong><span>Track overall progress</span></div>
+        <div class="mini-card"><strong>Goals</strong><span>Plan toward your target</span></div>
+        <div class="mini-card"><strong>Offline</strong><span>Save drafts without internet</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="landing-section" id="features">
+  <div class="section-heading"><h2>Everything you need to understand your results</h2><p>Simple academic tools designed to help students calculate, track and improve their performance.</p></div>
+  <div class="feature-grid">
+    <div class="feature-card"><div class="feature-icon">📊</div><h3>CGPA Tracking</h3><p>Save semester results and monitor your cumulative academic performance over time.</p></div>
+    <div class="feature-card"><div class="feature-icon">🎯</div><h3>Goal Planner</h3><p>Estimate the performance you may need to work toward your target CGPA.</p></div>
+    <div class="feature-card"><div class="feature-icon">🧪</div><h3>Grade Simulator</h3><p>Test different grade scenarios and see how future results may affect your CGPA.</p></div>
+    <div class="feature-card"><div class="feature-icon">📚</div><h3>Academic Records</h3><p>Keep courses, units, grades and semester results organized in one account.</p></div>
+    <div class="feature-card"><div class="feature-icon">🔔</div><h3>Academic Reminders</h3><p>Stay aware of important exams and academic activities.</p></div>
+    <div class="feature-card"><div class="feature-icon">📱</div><h3>Offline Support</h3><p>Temporarily save result information on your device when your connection drops.</p></div>
+  </div>
+</section>
+
+<div class="container" id="calculator">
 
     <div class="calculator-card">
 
@@ -814,18 +943,77 @@
     </div>
 
 
-    <div class="footer">
+    <section class="landing-section" id="how-it-works">
+      <div class="section-heading"><h2>How it works</h2><p>Calculate and save your academic result in three simple steps.</p></div>
+      <div class="steps-grid">
+        <div class="step-card"><div class="step-number">1</div><h3>Select your semester</h3><p>Choose your academic level and semester.</p></div>
+        <div class="step-card"><div class="step-number">2</div><h3>Enter your courses</h3><p>Add each course code, credit unit and grade.</p></div>
+        <div class="step-card"><div class="step-number">3</div><h3>See your result</h3><p>Get your semester GPA, updated CGPA and class of degree.</p></div>
+      </div>
+    </section>
 
-        <p>
-            A-DEVS CGPA Calculator
-            —
-            Student Academic Management System
-        </p>
+    <section class="site-cta">
+      <h2>Make your academic progress easier to understand.</h2>
+      <p>Create an account to save your results and access your academic planning tools.</p>
+      {% if user.is_authenticated and student %}<a href="{% url 'dashboard' student.matric_number %}" class="hero-btn primary">Open Dashboard</a>{% else %}<a href="{% url 'register' %}" class="hero-btn primary">Create Free Account</a>{% endif %}
+    </section>
 
-    </div>
+    <footer class="site-footer">
+      <div class="footer-grid">
+
+        <div>
+          <h3>A-DEVS CGPA Calculator</h3>
+          <p>
+            A student academic platform for calculating, tracking
+            and planning academic performance.
+          </p>
+        </div>
+
+        <div>
+          <h4>Quick Links</h4>
+          <div class="footer-links">
+            <a href="#home">Home</a>
+            <a href="{% url 'about' %}">About</a>
+            <a href="{% url 'contact' %}">Contact</a>
+            <a href="{% url 'faq' %}">FAQ</a>
+            <a href="#features">Features</a>
+            <a href="#calculator">Calculator</a>
+            <a href="#how-it-works">How It Works</a>
+          </div>
+        </div>
+
+        <div>
+          <h4>Account</h4>
+          <div class="footer-links">
+            {% if user.is_authenticated and student %}
+              <a href="{% url 'dashboard' student.matric_number %}">Dashboard</a>
+            {% else %}
+              <a href="{% url 'login' %}">Login</a>
+              <a href="{% url 'register' %}">Register</a>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+
+      <div class="copyright">
+        &copy; 2026 A-DEVS CGPA Calculator. All rights reserved.
+      </div>
+    </footer>
+
 
 </div>
 
+
+
+<script>
+  const menuBtn = document.getElementById("menuBtn");
+  const navLinks = document.getElementById("navLinks");
+  if (menuBtn && navLinks) {
+    menuBtn.addEventListener("click", () => navLinks.classList.toggle("show"));
+    navLinks.querySelectorAll("a").forEach(link => link.addEventListener("click", () => navLinks.classList.remove("show")));
+  }
+</script>
 
 <!-- =====================================================
      MAIN JAVASCRIPT

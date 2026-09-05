@@ -1,0 +1,1199 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#151c5a"
+    >
+
+    <title>FAQ | A-DEVS CGPA Calculator</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f6f8fc;
+            color: #1f2937;
+            line-height: 1.7;
+        }
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        .site-header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav {
+            width: min(1180px, 92%);
+            margin: auto;
+            min-height: 74px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            text-decoration: none;
+            color: #151c5a;
+
+            font-weight: 800;
+            font-size: 20px;
+        }
+
+        .brand-mark {
+            width: 40px;
+            height: 40px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 12px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #151c5a,
+                    #0d6efd
+                );
+
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #374151;
+
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .nav-links a:hover,
+        .nav-links .active {
+            color: #0d6efd;
+        }
+
+        .nav-cta {
+            padding: 10px 16px;
+            border-radius: 10px;
+
+            background: #151c5a;
+
+            color: white !important;
+        }
+
+        .menu-btn {
+            display: none;
+
+            border: none;
+            background: transparent;
+
+            font-size: 28px;
+
+            color: #151c5a;
+
+            cursor: pointer;
+        }
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(13,110,253,0.28),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #101642,
+                    #151c5a,
+                    #243b8f
+                );
+
+            color: white;
+
+            padding: 95px 20px;
+
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .hero h1 {
+            margin: 0;
+
+            font-size:
+                clamp(
+                    40px,
+                    6vw,
+                    62px
+                );
+
+            line-height: 1.1;
+        }
+
+        .hero p {
+            max-width: 680px;
+
+            margin:
+                20px auto
+                0;
+
+            color: #dbe4ff;
+
+            font-size: 18px;
+        }
+
+        /* =========================
+           FAQ
+        ========================= */
+
+        .container {
+            width: min(900px, 92%);
+            margin: auto;
+
+            padding: 70px 0;
+        }
+
+        .intro {
+            text-align: center;
+
+            margin-bottom: 40px;
+        }
+
+        .intro h2 {
+            color: #151c5a;
+
+            font-size: 34px;
+
+            margin:
+                0 0
+                10px;
+        }
+
+        .intro p {
+            color: #6b7280;
+
+            margin: 0;
+        }
+
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+
+            gap: 15px;
+        }
+
+        .faq-item {
+            background: white;
+
+            border:
+                1px solid
+                #e5e7eb;
+
+            border-radius: 14px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 8px 25px
+                rgba(17,24,39,0.04);
+        }
+
+        .faq-question {
+            width: 100%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+
+            padding: 20px;
+
+            border: none;
+
+            background: white;
+
+            text-align: left;
+
+            font-size: 17px;
+            font-weight: bold;
+
+            color: #151c5a;
+
+            cursor: pointer;
+        }
+
+        .faq-question:hover {
+            background: #f8faff;
+        }
+
+        .faq-icon {
+            font-size: 23px;
+
+            color: #0d6efd;
+
+            transition:
+                transform
+                0.2s ease;
+        }
+
+        .faq-item.active
+        .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            display: none;
+
+            padding:
+                0 20px
+                20px;
+
+            color: #6b7280;
+        }
+
+        .faq-item.active
+        .faq-answer {
+            display: block;
+        }
+
+        .faq-answer p {
+            margin: 0;
+        }
+
+        /* =========================
+           HELP CTA
+        ========================= */
+
+        .help-card {
+            margin-top: 55px;
+
+            padding: 40px 25px;
+
+            border-radius: 20px;
+
+            text-align: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #151c5a,
+                    #243b8f
+                );
+
+            color: white;
+        }
+
+        .help-card h2 {
+            margin:
+                0 0
+                10px;
+
+            font-size: 30px;
+        }
+
+        .help-card p {
+            max-width: 600px;
+
+            margin:
+                0 auto
+                22px;
+
+            color: #dbe4ff;
+        }
+
+        .btn {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            min-height: 46px;
+
+            padding:
+                0 20px;
+
+            border-radius: 10px;
+
+            background: white;
+
+            color: #151c5a;
+
+            text-decoration: none;
+
+            font-weight: bold;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            background: #111827;
+
+            color: #d1d5db;
+
+            padding:
+                50px 0
+                25px;
+        }
+
+        .footer-inner {
+            width: min(1100px, 92%);
+            margin: auto;
+
+            display: grid;
+
+            grid-template-columns:
+                2fr 1fr 1fr;
+
+            gap: 35px;
+        }
+
+        footer h3,
+        footer h4 {
+            color: white;
+
+            margin-top: 0;
+        }
+
+        .footer-links {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 10px;
+        }
+
+        .footer-links a {
+            color: #d1d5db;
+
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .copyright {
+            width: min(1100px, 92%);
+            margin:
+                35px auto
+                0;
+
+            padding-top: 20px;
+
+            border-top:
+                1px solid
+                #374151;
+
+            text-align: center;
+
+            color: #9ca3af;
+
+            font-size: 14px;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 850px) {
+
+            .footer-inner {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+
+                position: absolute;
+
+                top: 74px;
+
+                left: 4%;
+                right: 4%;
+
+                background: white;
+
+                padding: 18px;
+
+                border-radius: 14px;
+
+                border:
+                    1px solid
+                    #e5e7eb;
+
+                box-shadow:
+                    0 15px 40px
+                    rgba(17,24,39,0.1);
+
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header class="site-header">
+
+    <nav class="nav">
+
+        <a
+            href="{% url 'home' %}"
+            class="brand"
+        >
+
+            <span class="brand-mark">
+                A
+            </span>
+
+            <span>
+                A-DEVS CGPA
+            </span>
+
+        </a>
+
+
+        <button
+            type="button"
+            class="menu-btn"
+            id="menuBtn"
+            aria-label="Open navigation menu"
+        >
+            ☰
+        </button>
+
+
+        <div
+            class="nav-links"
+            id="navLinks"
+        >
+
+            <a href="{% url 'home' %}">
+                Home
+            </a>
+
+            <a href="{% url 'about' %}">
+                About
+            </a>
+
+            <a href="{% url 'contact' %}">
+                Contact
+            </a>
+
+            <a
+                href="{% url 'faq' %}"
+                class="active"
+            >
+                FAQ
+            </a>
+
+            <a href="{% url 'privacy' %}">
+                Privacy
+            </a>
+
+            <a href="{% url 'terms' %}">
+                Terms
+            </a>
+
+
+            {% if user.is_authenticated and student %}
+
+                <a
+                    href="{% url 'dashboard' student.matric_number %}"
+                    class="nav-cta"
+                >
+                    Dashboard
+                </a>
+
+            {% elif not user.is_authenticated %}
+
+                <a href="{% url 'login' %}">
+                    Login
+                </a>
+
+                <a
+                    href="{% url 'register' %}"
+                    class="nav-cta"
+                >
+                    Get Started
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h1>
+            Frequently Asked Questions
+        </h1>
+
+        <p>
+            Find answers to common questions about
+            using A-DEVS CGPA Calculator.
+        </p>
+
+    </div>
+
+</section>
+
+
+<main class="container">
+
+
+    <div class="intro">
+
+        <h2>
+            How can we help?
+        </h2>
+
+        <p>
+            Click any question below to view the answer.
+        </p>
+
+    </div>
+
+
+    <div class="faq-list">
+
+
+        <div class="faq-item">
+
+            <button
+                type="button"
+                class="faq-question"
+            >
+
+                What is A-DEVS CGPA Calculator?
+
+                <span class="faq-icon">
+                    +
+                </span>
+
+            </button>
+
+            <div class="faq-answer">
+
+                <p>
+                    A-DEVS CGPA Calculator is an academic
+                    management platform that helps students
+                    calculate GPA and CGPA, save semester
+                    results and use academic planning tools.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="faq-item">
+
+            <button
+                type="button"
+                class="faq-question"
+            >
+
+                Is A-DEVS free to use?
+
+                <span class="faq-icon">
+                    +
+                </span>
+
+            </button>
+
+            <div class="faq-answer">
+
+                <p>
+                    The core CGPA calculation and academic
+                    management features are currently available
+                    for students to use without charge.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="faq-item">
+
+            <button
+                type="button"
+                class="faq-question"
+            >
+
+                How is GPA calculated?
+
+                <span class="faq-icon">
+                    +
+                </span>
+
+            </button>
+
+            <div class="faq-answer">
+
+                <p>
+                    GPA is calculated using your course units
+                    and grade points. Each course grade is
+                    converted to a grade point, multiplied by
+                    the course unit and divided by the total
+                    course units for the semester.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="faq-item">
+
+            <button
+                type="button"
+                class="faq-question"
+            >
+
+                What grading system does the calculator use?
+
+                <span class="faq-icon">
+                    +
+                </span>
+
+            </button>
+
+            <div class="faq-answer">
+
+                <p>
+                    The calculator currently uses a five-point
+                    grading scale where A = 5, B = 4, C = 3,
+                    D = 2, E = 1 and F = 0.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="faq-item">
+
+            <button
+                type="button"
+                class="faq-question"
+            >
+
+                Can I save my semester results?
+
+                <span class="faq-icon">
+                    +
+                </span>
+
+            </button>
+
+            <div class="faq-answer">
+
+                <p>
+                    Yes. Registered students can save semester
+                    results to their account and view them later
+                    from their academic record and dashboard.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="faq-item">
+
+            <button
+                type="button"
+                class="faq-question"
+            >
+
+                Can I use the calculator without internet?
+
+                <span class="faq-icon">
+                    +
+                </span>
+
+            </button>
+
+            <div class="faq-answer">
+
+                <p>
+                    The application includes offline support for
+                    saving result information temporarily on your
+                    device. When your connection returns, supported
+                    saved information can be synchronized with
+                    your account.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="faq-item">
+
+            <button
+                type="button"
+                class="faq-question"
+            >
+
+                What is the CGPA Goal Planner?
+
+                <span class="faq-icon">
+                    +
+                </span>
+
+            </button>
+
+            <div class="faq-answer">
+
+                <p>
+                    The CGPA Goal Planner helps you estimate the
+                    academic performance you may need in future
+                    semesters to work toward a target CGPA.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="faq-item">
+
+            <button
+                type="button"
+                class="faq-question"
+            >
+
+                What does the Grade Simulator do?
+
+                <span class="faq-icon">
+                    +
+                </span>
+
+            </button>
+
+            <div class="faq-answer">
+
+                <p>
+                    The Grade Simulator lets you experiment with
+                    possible future grades and see how different
+                    scenarios may affect your academic performance.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="faq-item">
+
+            <button
+                type="button"
+                class="faq-question"
+            >
+
+                Are my results stored online?
+
+                <span class="faq-icon">
+                    +
+                </span>
+
+            </button>
+
+            <div class="faq-answer">
+
+                <p>
+                    When you are logged in and save your results,
+                    your academic information is stored in the
+                    application's database so it can be associated
+                    with your account.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="faq-item">
+
+            <button
+                type="button"
+                class="faq-question"
+            >
+
+                Can I edit a course after saving it?
+
+                <span class="faq-icon">
+                    +
+                </span>
+
+            </button>
+
+            <div class="faq-answer">
+
+                <p>
+                    Yes. The academic record tools allow supported
+                    course information to be updated or removed
+                    when corrections are necessary.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="faq-item">
+
+            <button
+                type="button"
+                class="faq-question"
+            >
+
+                What should I do if my CGPA looks incorrect?
+
+                <span class="faq-icon">
+                    +
+                </span>
+
+            </button>
+
+            <div class="faq-answer">
+
+                <p>
+                    Check that every course unit and grade was
+                    entered correctly. If the problem continues,
+                    use the Contact page to report the issue.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="faq-item">
+
+            <button
+                type="button"
+                class="faq-question"
+            >
+
+                How can I contact support?
+
+                <span class="faq-icon">
+                    +
+                </span>
+
+            </button>
+
+            <div class="faq-answer">
+
+                <p>
+                    Visit the Contact page and submit your name,
+                    email address, subject and message. Your
+                    message will be sent to the platform support
+                    system for review.
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <section class="help-card">
+
+        <h2>
+            Still have a question?
+        </h2>
+
+        <p>
+            If you did not find the answer you need,
+            send us a message through the Contact page.
+        </p>
+
+        <a
+            href="{% url 'contact' %}"
+            class="btn"
+        >
+            Contact Us
+        </a>
+
+    </section>
+
+
+</main>
+
+
+<footer>
+
+    <div class="footer-inner">
+
+
+        <div>
+
+            <h3>
+                A-DEVS CGPA Calculator
+            </h3>
+
+            <p>
+                Helping students calculate, track and plan
+                their academic performance.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <h4>
+                Quick Links
+            </h4>
+
+            <div class="footer-links">
+
+                <a href="{% url 'home' %}">
+                    Home
+                </a>
+
+                <a href="{% url 'about' %}">
+                    About
+                </a>
+
+                <a href="{% url 'contact' %}">
+                    Contact
+                </a>
+
+                <a href="{% url 'faq' %}">
+                    FAQ
+                </a>
+
+                <a href="{% url 'privacy' %}">
+                    Privacy Policy
+                </a>
+
+                <a href="{% url 'terms' %}">
+                    Terms &amp; Conditions
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <h4>
+                Account
+            </h4>
+
+            <div class="footer-links">
+
+                {% if user.is_authenticated and student %}
+
+                    <a href="{% url 'dashboard' student.matric_number %}">
+                        Dashboard
+                    </a>
+
+                {% elif not user.is_authenticated %}
+
+                    <a href="{% url 'login' %}">
+                        Login
+                    </a>
+
+                    <a href="{% url 'register' %}">
+                        Register
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="copyright">
+
+        &copy; 2026
+        A-DEVS CGPA Calculator.
+        All rights reserved.
+
+    </div>
+
+</footer>
+
+
+<script>
+
+    const menuBtn =
+        document.getElementById(
+            "menuBtn"
+        );
+
+    const navLinks =
+        document.getElementById(
+            "navLinks"
+        );
+
+
+    if (menuBtn && navLinks) {
+
+        menuBtn.addEventListener(
+            "click",
+            function () {
+
+                navLinks
+                    .classList
+                    .toggle(
+                        "show"
+                    );
+
+            }
+        );
+
+        navLinks
+            .querySelectorAll("a")
+            .forEach(
+                function(link) {
+
+                    link.addEventListener(
+                        "click",
+                        function() {
+
+                            navLinks
+                                .classList
+                                .remove(
+                                    "show"
+                                );
+
+                        }
+                    );
+
+                }
+            );
+    }
+
+
+    const faqItems =
+        document.querySelectorAll(
+            ".faq-item"
+        );
+
+
+    faqItems.forEach(
+        function(item) {
+
+            const question =
+                item.querySelector(
+                    ".faq-question"
+                );
+
+            question.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            question.addEventListener(
+                "click",
+                function() {
+
+                    item
+                        .classList
+                        .toggle(
+                            "active"
+                        );
+
+                    question.setAttribute(
+                        "aria-expanded",
+                        item.classList.contains("active")
+                            ? "true"
+                            : "false"
+                    );
+
+                }
+            );
+
+        }
+    );
+
+</script>
+
+
+</body>
+
+</html>

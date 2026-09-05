@@ -33,1168 +33,871 @@
 
 
     <style>
-
         * {
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #151c5a;
+            --primary-2: #243b8f;
+            --accent: #0d6efd;
+            --success: #198754;
+            --danger: #dc3545;
+            --warning: #f59e0b;
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --text: #172033;
+            --muted: #6b7280;
+            --border: #e6eaf0;
+            --shadow: 0 12px 35px rgba(21, 28, 90, 0.08);
+            --shadow-soft: 0 5px 18px rgba(15, 23, 42, 0.06);
+            --radius: 18px;
+        }
 
         html {
             scroll-behavior: smooth;
         }
 
-
         body {
-
             margin: 0;
-
-            font-family:
-                Arial,
-                Helvetica,
-                sans-serif;
-
-            background: #151c5a;
-
-            color: #222;
-
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at top right, rgba(13,110,253,.08), transparent 28%),
+                var(--bg);
+            color: var(--text);
+            min-height: 100vh;
         }
 
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
 
         /* =====================================================
            CONNECTION STATUS
         ====================================================== */
 
         .connection-status {
-
             display: none;
-
             width: 100%;
-
             padding: 12px 20px;
-
             text-align: center;
-
-            font-weight: bold;
-
+            font-weight: 700;
             position: fixed;
-
             top: 0;
-
             left: 0;
-
             z-index: 12000;
-
+            box-shadow: 0 4px 16px rgba(0,0,0,.08);
         }
-
 
         .connection-status.offline {
-
             display: block;
-
             background: #fff3cd;
-
             color: #664d03;
-
         }
-
 
         .connection-status.online {
-
             display: block;
-
             background: #d1e7dd;
-
             color: #0f5132;
-
         }
 
-
         /* =====================================================
-           TOP NAVIGATION
+           TOP NAV
         ====================================================== */
 
         .top-nav {
-
             width: 100%;
-
-            min-height: 65px;
-
-            background: white;
-
+            min-height: 72px;
+            background: rgba(255,255,255,.96);
+            backdrop-filter: blur(12px);
             display: flex;
-
             align-items: center;
-
             justify-content: space-between;
-
-            gap: 15px;
-
-            padding: 10px 22px;
-
+            gap: 18px;
+            padding: 10px 28px;
             position: sticky;
-
             top: 0;
-
             z-index: 9000;
-
-            box-shadow:
-                0 2px 12px
-                rgba(0, 0, 0, 0.15);
-
+            border-bottom: 1px solid rgba(230,234,240,.9);
+            box-shadow: 0 4px 18px rgba(15,23,42,.04);
         }
-
 
         .top-nav-left {
-
             display: flex;
-
             align-items: center;
-
-            gap: 15px;
-
+            gap: 14px;
         }
-
 
         .hamburger {
-
             width: 46px;
-
             height: 46px;
-
-            border: none;
-
-            border-radius: 8px;
-
-            background: #151c5a;
-
-            color: white;
-
-            font-size: 25px;
-
+            border: 0;
+            border-radius: 13px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            color: #fff;
+            font-size: 24px;
             cursor: pointer;
-
             display: flex;
-
             align-items: center;
-
             justify-content: center;
-
+            box-shadow: 0 8px 18px rgba(21,28,90,.18);
+            transition: transform .2s ease, box-shadow .2s ease;
         }
-
 
         .hamburger:hover {
-
-            background: #0d6efd;
-
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(21,28,90,.24);
         }
-
 
         .nav-title {
-
             font-size: 18px;
-
-            font-weight: bold;
-
-            color: #151c5a;
-
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -.2px;
         }
-
 
         .nav-student {
-
-            color: #666;
-
-            font-size: 13px;
-
+            color: var(--muted);
+            font-size: 12px;
             text-align: right;
-
+            background: #f7f9fc;
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            border-radius: 12px;
         }
-
 
         .nav-student strong {
-
             display: block;
-
-            color: #151c5a;
-
+            color: var(--primary);
             font-size: 14px;
-
+            margin-bottom: 2px;
         }
 
-
         /* =====================================================
-           MENU OVERLAY
+           OVERLAY + SIDE MENU
         ====================================================== */
 
         .menu-overlay {
-
             position: fixed;
-
             inset: 0;
-
-            background:
-                rgba(0, 0, 0, 0.5);
-
+            background: rgba(15,23,42,.48);
+            backdrop-filter: blur(2px);
             opacity: 0;
-
             visibility: hidden;
-
-            transition:
-                opacity 0.3s ease,
-                visibility 0.3s ease;
-
+            transition: opacity .25s ease, visibility .25s ease;
             z-index: 9997;
-
         }
-
 
         .menu-overlay.show {
-
             opacity: 1;
-
             visibility: visible;
-
         }
-
-
-        /* =====================================================
-           SIDE MENU
-        ====================================================== */
 
         .side-menu {
-
             position: fixed;
-
             top: 0;
-
-            left: -340px;
-
-            width: 320px;
-
-            max-width: 88%;
-
+            left: -360px;
+            width: 330px;
+            max-width: 90%;
             height: 100vh;
-
-            background: white;
-
+            background: #fff;
             z-index: 9998;
-
             overflow-y: auto;
-
-            transition:
-                left 0.3s ease;
-
-            box-shadow:
-                5px 0 22px
-                rgba(0, 0, 0, 0.25);
-
+            transition: left .28s ease;
+            box-shadow: 8px 0 32px rgba(15,23,42,.22);
         }
-
 
         .side-menu.open {
-
             left: 0;
-
         }
-
-
-        /* =====================================================
-           MENU HEADER
-        ====================================================== */
 
         .menu-header {
-
-            background: #151c5a;
-
-            color: white;
-
-            padding: 22px 20px;
-
+            background:
+                radial-gradient(circle at top right, rgba(13,110,253,.28), transparent 42%),
+                linear-gradient(135deg, var(--primary), var(--primary-2));
+            color: #fff;
+            padding: 24px 20px;
             display: flex;
-
-            justify-content:
-                space-between;
-
+            justify-content: space-between;
             align-items: center;
-
             gap: 15px;
-
         }
-
 
         .menu-header h2 {
-
             margin: 0;
-
             font-size: 19px;
-
         }
-
 
         .close-menu {
-
-            background: transparent;
-
-            border: none;
-
-            color: white;
-
-            font-size: 32px;
-
+            width: 38px;
+            height: 38px;
+            border: 1px solid rgba(255,255,255,.22);
+            border-radius: 10px;
+            background: rgba(255,255,255,.1);
+            color: #fff;
+            font-size: 26px;
             cursor: pointer;
-
             line-height: 1;
-
         }
-
-
-        /* =====================================================
-           MENU STUDENT INFO
-        ====================================================== */
 
         .menu-student {
-
             padding: 20px;
-
-            background: #f8f9fa;
-
-            border-bottom:
-                1px solid #e5e5e5;
-
+            background: #f8faff;
+            border-bottom: 1px solid var(--border);
         }
-
 
         .menu-student strong {
-
             display: block;
-
-            color: #151c5a;
-
+            color: var(--primary);
             font-size: 17px;
-
             margin-bottom: 6px;
-
         }
-
 
         .menu-student span {
-
             display: block;
-
-            color: #666;
-
+            color: var(--muted);
             font-size: 13px;
-
-            line-height: 1.5;
-
+            line-height: 1.6;
         }
-
-
-        /* =====================================================
-           MENU LINKS
-        ====================================================== */
 
         .menu-links {
-
             display: flex;
-
             flex-direction: column;
-
-            padding: 10px;
-
+            padding: 12px;
         }
-
 
         .menu-section-title {
-
-            padding:
-                15px
-                12px
-                6px;
-
-            color: #999;
-
+            padding: 16px 12px 7px;
+            color: #9ca3af;
             font-size: 11px;
-
-            font-weight: bold;
-
+            font-weight: 800;
             text-transform: uppercase;
-
-            letter-spacing: 0.7px;
-
+            letter-spacing: .9px;
         }
-
 
         .menu-links a,
         .menu-install-button {
-
             width: 100%;
-
             display: flex;
-
             align-items: center;
-
             gap: 12px;
-
-            padding: 14px 15px;
-
-            margin-bottom: 3px;
-
-            border-radius: 8px;
-
+            padding: 13px 14px;
+            margin-bottom: 4px;
+            border-radius: 11px;
             text-decoration: none;
-
-            color: #333;
-
+            color: #344054;
             background: transparent;
-
-            border: none;
-
-            font-size: 15px;
-
+            border: 0;
+            font-size: 14px;
             cursor: pointer;
-
             text-align: left;
-
             font-family: inherit;
-
+            transition: background .2s ease, color .2s ease, transform .2s ease;
         }
-
 
         .menu-links a:hover,
         .menu-install-button:hover {
-
-            background: #eef1ff;
-
-            color: #151c5a;
-
+            background: #f0f4ff;
+            color: var(--primary);
+            transform: translateX(2px);
         }
-
 
         .menu-links .active {
-
-            background: #e7e9ff;
-
-            color: #151c5a;
-
-            font-weight: bold;
-
+            background: linear-gradient(135deg, #edf2ff, #e8edff);
+            color: var(--primary);
+            font-weight: 800;
+            box-shadow: inset 3px 0 0 var(--accent);
         }
-
 
         .menu-icon {
-
-            width: 24px;
-
+            width: 25px;
             text-align: center;
-
             font-size: 18px;
-
         }
-
 
         .menu-badge {
-
             margin-left: auto;
-
             min-width: 23px;
-
             height: 23px;
-
             padding: 2px 6px;
-
-            border-radius: 50%;
-
+            border-radius: 999px;
             display: inline-flex;
-
             align-items: center;
-
             justify-content: center;
-
-            background: #dc3545;
-
-            color: white;
-
+            background: var(--danger);
+            color: #fff;
             font-size: 11px;
-
-            font-weight: bold;
-
+            font-weight: 800;
         }
-
 
         .menu-divider {
-
             height: 1px;
-
-            background: #eee;
-
+            background: #edf0f4;
             margin: 8px 10px;
-
         }
-
 
         .menu-install-button {
-
-            color: #198754;
-
-            font-weight: bold;
-
+            color: var(--success);
+            font-weight: 800;
         }
 
+        .menu-share-button {
+            color: var(--accent);
+            font-weight: 800;
+        }
+
+        .share-panel {
+            position: fixed;
+            inset: 0;
+            z-index: 12000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(15, 23, 42, .58);
+            backdrop-filter: blur(4px);
+        }
+
+        .share-panel.show {
+            display: flex;
+        }
+
+        .share-card {
+            width: min(460px, 100%);
+            background: #fff;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 24px 65px rgba(15, 23, 42, .28);
+        }
+
+        .share-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .share-card h3 {
+            margin: 0 0 6px;
+            color: var(--primary);
+            font-size: 21px;
+        }
+
+        .share-card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .share-close {
+            width: 38px;
+            height: 38px;
+            border: 0;
+            border-radius: 10px;
+            background: #f1f4f8;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 22px;
+        }
+
+        .share-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .share-option {
+            min-height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #f8faff;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .share-option:hover {
+            background: #eef3ff;
+            border-color: #cfd8ff;
+        }
+
+        .share-copy {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            color: #fff;
+            border: 0;
+        }
+
+        .share-status {
+            display: none;
+            margin-top: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: #eaf8f0;
+            color: #12653f;
+            font-size: 12px;
+            font-weight: 700;
+        }
 
         .logout-menu {
-
-            color: #dc3545 !important;
-
-            font-weight: bold;
-
+            color: var(--danger) !important;
+            font-weight: 800;
         }
-
 
         .offline-disabled {
-
-            opacity: 0.5;
-
+            opacity: .5;
             pointer-events: none;
-
             cursor: not-allowed;
-
         }
 
-
         /* =====================================================
-           MAIN CONTAINER
+           MAIN LAYOUT
         ====================================================== */
 
         .container {
-
-            width: 92%;
-
-            max-width: 1100px;
-
-            margin: 35px auto;
-
+            width: min(1180px, 92%);
+            margin: 30px auto 42px;
         }
-
-
-        /* =====================================================
-           HEADER
-        ====================================================== */
 
         .header {
-
-            background: white;
-
-            padding: 30px;
-
-            border-radius: 12px;
-
-            box-shadow:
-                0 4px 15px
-                rgba(0, 0, 0, 0.08);
-
-            margin-bottom: 25px;
-
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 88% 20%, rgba(13,110,253,.35), transparent 27%),
+                linear-gradient(135deg, #11184c, var(--primary), var(--primary-2));
+            color: #fff;
+            padding: 34px;
+            border-radius: 24px;
+            box-shadow: 0 18px 45px rgba(21,28,90,.18);
+            margin-bottom: 24px;
         }
 
+        .header::after {
+            content: "";
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            right: -65px;
+            bottom: -85px;
+            border-radius: 50%;
+            border: 28px solid rgba(255,255,255,.06);
+        }
 
         .header h1 {
-
-            margin-top: 0;
-
-            margin-bottom: 10px;
-
-            font-size: 30px;
-
+            position: relative;
+            z-index: 1;
+            margin: 0 0 8px;
+            font-size: clamp(28px, 4vw, 38px);
+            letter-spacing: -.8px;
         }
 
-
-        .header p {
-
-            color: #666;
-
-            margin: 8px 0;
-
+        .header > p {
+            position: relative;
+            z-index: 1;
+            color: #dfe6ff;
+            margin: 7px 0;
         }
-
 
         .student-name {
-
-            color: #0d6efd;
-
+            color: #fff;
         }
-
-
-        /* =====================================================
-           ACCOUNT INFO
-        ====================================================== */
 
         .account-info {
-
+            position: relative;
+            z-index: 1;
             display: grid;
-
-            grid-template-columns:
-                1fr 1fr;
-
-            gap: 15px;
-
-            margin-top: 25px;
-
+            grid-template-columns: repeat(4, minmax(0,1fr));
+            gap: 12px;
+            margin-top: 26px;
         }
-
 
         .account-box {
-
-            background: #f8f9fa;
-
-            padding: 15px;
-
-            border-radius: 8px;
-
+            background: rgba(255,255,255,.10);
+            border: 1px solid rgba(255,255,255,.15);
+            padding: 15px 16px;
+            border-radius: 14px;
+            backdrop-filter: blur(8px);
         }
-
 
         .account-box strong {
-
             display: block;
-
-            margin-bottom: 5px;
-
-            color: #555;
-
-            font-size: 14px;
-
+            margin-bottom: 6px;
+            color: #cfd8ff;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .45px;
         }
-
 
         .account-box span {
-
-            font-size: 16px;
-
-            font-weight: bold;
-
+            font-size: 15px;
+            font-weight: 800;
+            color: #fff;
+            word-break: break-word;
         }
 
-
         /* =====================================================
-           STATISTICS
+           STATS
         ====================================================== */
 
         .stats {
-
             display: grid;
-
-            grid-template-columns:
-                repeat(4, 1fr);
-
-            gap: 20px;
-
-            margin-bottom: 25px;
-
+            grid-template-columns: repeat(4, minmax(0,1fr));
+            gap: 16px;
+            margin-bottom: 24px;
         }
-
 
         .stat-card {
-
-            background: white;
-
-            padding: 25px;
-
-            border-radius: 10px;
-
-            text-align: center;
-
-            box-shadow:
-                0 4px 15px
-                rgba(0, 0, 0, 0.08);
-
+            position: relative;
+            overflow: hidden;
+            background: #fff;
+            padding: 22px;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-soft);
+            text-align: left;
+            transition: transform .22s ease, box-shadow .22s ease;
         }
 
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-card::before {
+            content: "•";
+            position: absolute;
+            right: 18px;
+            top: 16px;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            background: #eef3ff;
+            color: var(--accent);
+            font-size: 24px;
+            font-weight: 900;
+        }
+
+        .stat-card:nth-child(1)::before { content: "↗"; }
+        .stat-card:nth-child(2)::before { content: "★"; color: var(--success); background: #eaf8f0; }
+        .stat-card:nth-child(3)::before { content: "Σ"; }
+        .stat-card:nth-child(4)::before { content: "▦"; }
 
         .stat-card h3 {
-
-            margin:
-                0
-                0
-                10px;
-
-            color: #666;
-
-            font-size: 15px;
-
+            margin: 0 0 14px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+            padding-right: 42px;
         }
-
 
         .stat-card .value {
-
-            font-size: 30px;
-
-            font-weight: bold;
-
+            font-size: 31px;
+            line-height: 1.15;
+            font-weight: 900;
+            letter-spacing: -.7px;
             word-break: break-word;
-
+            color: var(--primary);
         }
-
 
         .cgpa {
-
-            color: #0d6efd;
-
+            color: var(--accent) !important;
         }
-
 
         .class-degree {
-
-            color: #198754;
-
-            font-size:
-                20px !important;
-
+            color: var(--success) !important;
+            font-size: 20px !important;
+            line-height: 1.35 !important;
         }
-
 
         /* =====================================================
-           ACADEMIC OVERVIEW
+           TWO-COLUMN DASHBOARD AREA
         ====================================================== */
 
-        .actions {
-
-            background: white;
-
-            padding: 25px;
-
-            border-radius: 12px;
-
-            box-shadow:
-                0 4px 15px
-                rgba(0, 0, 0, 0.08);
-
-            margin-bottom: 25px;
-
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: minmax(280px,.82fr) minmax(0,1.65fr);
+            gap: 20px;
+            align-items: start;
         }
 
-
-        .actions h2 {
-
-            margin-top: 0;
-
-            margin-bottom: 20px;
-
+        .actions,
+        .performance {
+            background: #fff;
+            padding: 24px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-soft);
+            margin: 0;
         }
 
+        .actions h2,
+        .performance h2 {
+            margin: 0 0 20px;
+            color: var(--primary);
+            font-size: 20px;
+            letter-spacing: -.25px;
+        }
+
+        .actions h2::after,
+        .performance h2::after {
+            content: "";
+            display: block;
+            width: 38px;
+            height: 3px;
+            margin-top: 9px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--accent), var(--primary-2));
+        }
 
         .overview-item {
-
             display: flex;
-
-            justify-content:
-                space-between;
-
+            justify-content: space-between;
             align-items: center;
-
-            padding: 12px 0;
-
-            border-bottom:
-                1px solid #eee;
-
+            gap: 15px;
+            padding: 14px 0;
+            border-bottom: 1px solid #edf0f4;
         }
-
 
         .overview-item:last-child {
-
-            border-bottom: none;
-
+            border-bottom: 0;
         }
-
 
         .overview-item span {
-
-            color: #666;
-
+            color: var(--muted);
+            font-size: 14px;
         }
-
 
         .overview-item strong {
-
-            color: #222;
-
+            color: var(--primary);
+            font-size: 15px;
         }
-
 
         /* =====================================================
            SEMESTER PERFORMANCE
         ====================================================== */
 
-        .performance {
-
-            background: white;
-
-            padding: 25px;
-
-            border-radius: 12px;
-
-            box-shadow:
-                0 4px 15px
-                rgba(0, 0, 0, 0.08);
-
-            margin-top: 25px;
-
-        }
-
-
-        .performance h2 {
-
-            margin-top: 0;
-
-            margin-bottom: 20px;
-
-        }
-
-
         .semester-card {
-
-            border:
-                1px solid #e5e5e5;
-
-            border-radius: 10px;
-
+            border: 1px solid var(--border);
+            border-radius: 16px;
             padding: 20px;
-
-            margin-bottom: 15px;
-
+            margin-bottom: 14px;
+            background: #fbfcff;
+            transition: border-color .2s ease, box-shadow .2s ease;
         }
 
+        .semester-card:hover {
+            border-color: #cfd8ff;
+            box-shadow: 0 8px 22px rgba(21,28,90,.06);
+        }
 
         .semester-card:last-child {
-
             margin-bottom: 0;
-
         }
-
 
         .semester-title {
-
             display: flex;
-
-            justify-content:
-                space-between;
-
+            justify-content: space-between;
             align-items: center;
-
             gap: 15px;
-
-            margin-bottom: 20px;
-
+            margin-bottom: 18px;
         }
-
 
         .semester-title h3 {
-
             margin: 0;
-
+            color: var(--primary);
+            font-size: 17px;
         }
-
 
         .gpa-badge {
-
-            background: #0d6efd;
-
-            color: white;
-
+            background: linear-gradient(135deg, var(--accent), #3c82f6);
+            color: #fff;
             padding: 8px 13px;
-
-            border-radius: 6px;
-
-            font-weight: bold;
-
+            border-radius: 999px;
+            font-weight: 800;
+            font-size: 13px;
+            box-shadow: 0 6px 14px rgba(13,110,253,.18);
         }
-
 
         .performance-stats {
-
             display: grid;
-
-            grid-template-columns:
-                repeat(3, 1fr);
-
-            gap: 15px;
-
-            margin-bottom: 20px;
-
+            grid-template-columns: repeat(3, minmax(0,1fr));
+            gap: 12px;
+            margin-bottom: 18px;
         }
-
 
         .performance-stats div {
-
-            background: #f8f9fa;
-
-            padding: 15px;
-
-            border-radius: 8px;
-
+            background: #fff;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid #edf0f4;
         }
-
 
         .performance-stats span {
-
             display: block;
-
-            color: #666;
-
-            font-size: 13px;
-
-            margin-bottom: 7px;
-
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 6px;
         }
-
 
         .performance-stats strong {
-
-            font-size: 20px;
-
+            font-size: 18px;
+            color: var(--primary);
         }
-
 
         .progress-section {
-
-            margin-top: 10px;
-
+            margin-top: 8px;
         }
-
 
         .progress-label {
-
             display: flex;
-
-            justify-content:
-                space-between;
-
+            justify-content: space-between;
+            gap: 12px;
             margin-bottom: 8px;
-
-            font-size: 14px;
-
+            font-size: 13px;
+            color: var(--muted);
         }
 
+        .progress-label strong {
+            color: var(--primary);
+        }
 
         .progress-bar {
-
             width: 100%;
-
-            height: 12px;
-
-            background: #e9ecef;
-
-            border-radius: 20px;
-
+            height: 10px;
+            background: #e9edf5;
+            border-radius: 999px;
             overflow: hidden;
-
         }
-
 
         .progress-fill {
-
             height: 100%;
-
-            background: #198754;
-
-            border-radius: 20px;
-
-            transition:
-                width 0.5s ease;
-
+            background: linear-gradient(90deg, var(--success), #35b46f);
+            border-radius: 999px;
+            transition: width .5s ease;
         }
-
-
-        /* =====================================================
-           EMPTY PERFORMANCE
-        ====================================================== */
 
         .no-performance {
-
             text-align: center;
-
-            padding: 30px;
-
-            background: #f8f9fa;
-
-            border-radius: 10px;
-
+            padding: 35px 20px;
+            background: #f8faff;
+            border: 1px dashed #cfd7e6;
+            border-radius: 14px;
         }
-
 
         .no-performance h3 {
-
             margin-top: 0;
-
+            color: var(--primary);
         }
-
 
         .no-performance p {
-
-            color: #666;
-
+            color: var(--muted);
             margin-bottom: 0;
-
         }
-
-
-        /* =====================================================
-           FOOTER
-        ====================================================== */
 
         .footer {
-
             text-align: center;
-
             margin-top: 30px;
-
-            color: #aaa;
-
-            font-size: 14px;
-
+            color: #8b94a7;
+            font-size: 13px;
         }
-
 
         /* =====================================================
            RESPONSIVE
         ====================================================== */
 
-        @media (max-width: 900px) {
-
-            .stats {
-
-                grid-template-columns:
-                    1fr 1fr;
-
+        @media (max-width: 980px) {
+            .account-info {
+                grid-template-columns: repeat(2, minmax(0,1fr));
             }
 
-        }
+            .stats {
+                grid-template-columns: repeat(2, minmax(0,1fr));
+            }
 
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
 
         @media (max-width: 700px) {
-
-            .account-info {
-
-                grid-template-columns:
-                    1fr;
-
-            }
-
-
-            .overview-item {
-
-                flex-direction: column;
-
-                align-items: flex-start;
-
-                gap: 5px;
-
-            }
-
-
-            .performance-stats {
-
-                grid-template-columns:
-                    1fr;
-
-            }
-
-
-            .semester-title {
-
-                flex-direction: column;
-
-                align-items: flex-start;
-
-            }
-
-        }
-
-
-        @media (max-width: 500px) {
-
             .top-nav {
-
-                min-height: 60px;
-
-                padding:
-                    8px
-                    12px;
-
+                padding: 9px 14px;
             }
-
-
-            .hamburger {
-
-                width: 42px;
-
-                height: 42px;
-
-            }
-
-
-            .nav-title {
-
-                font-size: 15px;
-
-            }
-
 
             .nav-student {
-
                 display: none;
-
             }
-
 
             .container {
-
                 width: 94%;
-
-                margin:
-                    20px
-                    auto;
-
+                margin-top: 20px;
             }
-
 
             .header {
-
-                padding: 20px;
-
+                padding: 24px;
+                border-radius: 18px;
             }
 
-
-            .header h1 {
-
-                font-size: 24px;
-
+            .account-info {
+                grid-template-columns: 1fr;
             }
 
-
-            .stats {
-
-                grid-template-columns:
-                    1fr;
-
+            .performance-stats {
+                grid-template-columns: 1fr;
             }
 
-
-            .stat-card {
-
-                padding: 20px;
-
+            .semester-title {
+                align-items: flex-start;
+                flex-direction: column;
             }
 
-
+            .actions,
             .performance {
-
                 padding: 20px;
-
             }
-
         }
 
+        @media (max-width: 520px) {
+            .top-nav {
+                min-height: 62px;
+            }
+
+            .hamburger {
+                width: 42px;
+                height: 42px;
+                border-radius: 11px;
+            }
+
+            .nav-title {
+                font-size: 15px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+
+            .side-menu {
+                width: 310px;
+            }
+        }
     </style>
 
 </head>
@@ -1334,6 +1037,16 @@
             Dashboard
         </a>
 
+          <a
+            href="{% url 'home' %}"
+        >
+            <span class="menu-icon">
+                🌐
+            </span>
+
+            Public Home
+        </a>
+
 
         <a
             href="{% url 'profile' %}"
@@ -1397,15 +1110,7 @@
         </a>
 
 
-        <a
-            href="{% url 'home' %}"
-        >
-            <span class="menu-icon">
-                🧮
-            </span>
-
-            Calculator
-        </a>
+        
 
         <a
     href="{% url 'download_academic_report' %}"
@@ -1415,7 +1120,7 @@
         📄
     </span>
 
-    Download your academic Report
+    Download Academic Report
 </a>
 
 
@@ -1523,6 +1228,19 @@
         <div class="menu-section-title">
             App
         </div>
+
+
+        <button
+            type="button"
+            id="shareAppButton"
+            class="menu-install-button menu-share-button"
+        >
+            <span class="menu-icon">
+                🔗
+            </span>
+
+            Share A-DEVS
+        </button>
 
 
         <button
@@ -1734,6 +1452,8 @@
     <!-- =====================================================
          ACADEMIC OVERVIEW
     ====================================================== -->
+
+    <div class="dashboard-grid">
 
     <div class="actions">
 
@@ -1953,6 +1673,8 @@
 
     </div>
 
+    </div>
+
 
     <!-- =====================================================
          FOOTER
@@ -1971,6 +1693,115 @@
     </div>
 
 
+</div>
+
+
+
+<!-- =====================================================
+     SHARE APPLICATION
+====================================================== -->
+
+<div
+    id="sharePanel"
+    class="share-panel"
+    aria-hidden="true"
+>
+    <div
+        class="share-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="shareTitle"
+    >
+        <div class="share-card-header">
+            <div>
+                <h3 id="shareTitle">
+                    Share A-DEVS CGPA Calculator
+                </h3>
+
+                <p>
+                    Help another student discover A-DEVS.
+                    Choose a platform below or copy the application link.
+                </p>
+            </div>
+
+            <button
+                type="button"
+                id="closeShareButton"
+                class="share-close"
+                aria-label="Close share options"
+            >
+                &times;
+            </button>
+        </div>
+
+        <div class="share-grid">
+
+            <a
+                href="#"
+                id="shareWhatsApp"
+                class="share-option"
+                target="_blank"
+                rel="noopener"
+            >
+                💬 WhatsApp
+            </a>
+
+            <a
+                href="#"
+                id="shareFacebook"
+                class="share-option"
+                target="_blank"
+                rel="noopener"
+            >
+                📘 Facebook
+            </a>
+
+            <a
+                href="#"
+                id="shareTelegram"
+                class="share-option"
+                target="_blank"
+                rel="noopener"
+            >
+                ✈️ Telegram
+            </a>
+
+            <a
+                href="#"
+                id="shareTwitter"
+                class="share-option"
+                target="_blank"
+                rel="noopener"
+            >
+                𝕏 X / Twitter
+            </a>
+
+            <a
+                href="#"
+                id="shareEmail"
+                class="share-option"
+            >
+                ✉️ Email
+            </a>
+
+            <button
+                type="button"
+                id="copyShareLink"
+                class="share-option share-copy"
+            >
+                🔗 Copy Application Link
+            </button>
+
+        </div>
+
+        <div
+            id="shareStatus"
+            class="share-status"
+        >
+            Link copied successfully.
+        </div>
+
+    </div>
 </div>
 
 
@@ -2404,17 +2235,20 @@
     );
 
 
-    installMenuButton.addEventListener(
-        "click",
-        function() {
+    if (installMenuButton) {
 
-            closeMenu();
+        installMenuButton.addEventListener(
+            "click",
+            function() {
 
+                closeMenu();
 
-            triggerInstallPrompt();
+                triggerInstallPrompt();
 
-        }
-    );
+            }
+        );
+
+    }
 
 
     window.addEventListener(
@@ -2431,6 +2265,225 @@
 
         }
     );
+
+</script>
+
+
+
+<!-- =====================================================
+     SHARE APPLICATION
+====================================================== -->
+
+<script>
+
+    const shareAppButton =
+        document.getElementById("shareAppButton");
+
+    const sharePanel =
+        document.getElementById("sharePanel");
+
+    const closeShareButton =
+        document.getElementById("closeShareButton");
+
+    const copyShareLink =
+        document.getElementById("copyShareLink");
+
+    const shareStatus =
+        document.getElementById("shareStatus");
+
+    const appUrl =
+        window.location.origin + "/";
+
+    const shareTitle =
+        "A-DEVS CGPA Calculator";
+
+    const shareText =
+        "Check out A-DEVS CGPA Calculator — a student app for calculating CGPA, tracking academic records and planning academic performance.";
+
+    function configureShareLinks() {
+
+        const encodedUrl =
+            encodeURIComponent(appUrl);
+
+        const encodedText =
+            encodeURIComponent(
+                shareText + " " + appUrl
+            );
+
+        document.getElementById("shareWhatsApp").href =
+            "https://wa.me/?text=" + encodedText;
+
+        document.getElementById("shareFacebook").href =
+            "https://www.facebook.com/sharer/sharer.php?u=" +
+            encodedUrl;
+
+        document.getElementById("shareTelegram").href =
+            "https://t.me/share/url?url=" +
+            encodedUrl +
+            "&text=" +
+            encodeURIComponent(shareText);
+
+        document.getElementById("shareTwitter").href =
+            "https://twitter.com/intent/tweet?text=" +
+            encodeURIComponent(shareText) +
+            "&url=" +
+            encodedUrl;
+
+        document.getElementById("shareEmail").href =
+            "mailto:?subject=" +
+            encodeURIComponent(shareTitle) +
+            "&body=" +
+            encodedText;
+
+    }
+
+    function openSharePanel() {
+
+        configureShareLinks();
+
+        sharePanel.classList.add("show");
+
+        sharePanel.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+        document.body.style.overflow =
+            "hidden";
+
+    }
+
+    function closeSharePanel() {
+
+        sharePanel.classList.remove("show");
+
+        sharePanel.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        document.body.style.overflow =
+            "";
+
+    }
+
+    async function shareApplication() {
+
+        closeMenu();
+
+        if (
+            navigator.share
+        ) {
+
+            try {
+
+                await navigator.share({
+                    title: shareTitle,
+                    text: shareText,
+                    url: appUrl
+                });
+
+                return;
+
+            }
+
+            catch (error) {
+
+                if (
+                    error.name === "AbortError"
+                ) {
+                    return;
+                }
+
+            }
+
+        }
+
+        openSharePanel();
+
+    }
+
+    if (
+        shareAppButton
+    ) {
+
+        shareAppButton.addEventListener(
+            "click",
+            shareApplication
+        );
+
+    }
+
+    if (
+        closeShareButton
+    ) {
+
+        closeShareButton.addEventListener(
+            "click",
+            closeSharePanel
+        );
+
+    }
+
+    if (
+        sharePanel
+    ) {
+
+        sharePanel.addEventListener(
+            "click",
+            function(event) {
+
+                if (
+                    event.target === sharePanel
+                ) {
+                    closeSharePanel();
+                }
+
+            }
+        );
+
+    }
+
+    if (
+        copyShareLink
+    ) {
+
+        copyShareLink.addEventListener(
+            "click",
+            async function() {
+
+                try {
+
+                    await navigator.clipboard.writeText(
+                        appUrl
+                    );
+
+                    shareStatus.style.display =
+                        "block";
+
+                    setTimeout(
+                        function() {
+                            shareStatus.style.display =
+                                "none";
+                        },
+                        2500
+                    );
+
+                }
+
+                catch (error) {
+
+                    window.prompt(
+                        "Copy this link:",
+                        appUrl
+                    );
+
+                }
+
+            }
+        );
+
+    }
 
 </script>
 

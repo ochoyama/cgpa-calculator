@@ -1,0 +1,1275 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#151c5a"
+    >
+
+    <title>About Us | A-DEVS CGPA Calculator</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f6f8fc;
+            color: #1f2937;
+            line-height: 1.7;
+        }
+
+        /* =========================
+           NAVIGATION
+        ========================= */
+
+        .site-header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav {
+            width: min(1180px, 92%);
+            margin: auto;
+            min-height: 74px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 25px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            text-decoration: none;
+            color: #151c5a;
+
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .brand-mark {
+            width: 40px;
+            height: 40px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 12px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #151c5a,
+                    #0d6efd
+                );
+
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #374151;
+
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .nav-links a:hover {
+            color: #0d6efd;
+        }
+
+        .nav-links .active {
+            color: #0d6efd;
+        }
+
+        .nav-cta {
+            padding: 10px 16px;
+
+            border-radius: 10px;
+
+            background: #151c5a;
+
+            color: white !important;
+        }
+
+        .menu-btn {
+            display: none;
+
+            border: none;
+            background: transparent;
+
+            color: #151c5a;
+
+            font-size: 28px;
+
+            cursor: pointer;
+        }
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(13, 110, 253, 0.28),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #101642,
+                    #151c5a,
+                    #243b8f
+                );
+
+            color: white;
+
+            padding: 100px 20px;
+
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 850px;
+            margin: auto;
+        }
+
+        .hero-badge {
+            display: inline-block;
+
+            padding: 7px 14px;
+
+            border-radius: 30px;
+
+            background: rgba(255,255,255,0.1);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.2);
+
+            margin-bottom: 20px;
+
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .hero h1 {
+            margin: 0;
+
+            font-size:
+                clamp(
+                    40px,
+                    6vw,
+                    64px
+                );
+
+            line-height: 1.1;
+        }
+
+        .hero p {
+            max-width: 700px;
+
+            margin:
+                22px auto 0;
+
+            color: #dbe4ff;
+
+            font-size: 18px;
+        }
+
+        /* =========================
+           MAIN CONTENT
+        ========================= */
+
+        .container {
+            width: min(1100px, 92%);
+            margin: auto;
+
+            padding: 75px 0;
+        }
+
+        .section {
+            margin-bottom: 70px;
+        }
+
+        .section-heading {
+            text-align: center;
+
+            max-width: 720px;
+
+            margin:
+                0 auto
+                40px;
+        }
+
+        .section-heading h2 {
+            color: #151c5a;
+
+            font-size: 36px;
+
+            margin:
+                0 0
+                12px;
+        }
+
+        .section-heading p {
+            color: #6b7280;
+
+            margin: 0;
+        }
+
+        /* =========================
+           STORY
+        ========================= */
+
+        .story {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 40px;
+
+            align-items: center;
+        }
+
+        .story-text h2 {
+            color: #151c5a;
+
+            font-size: 36px;
+
+            margin-top: 0;
+        }
+
+        .story-text p {
+            color: #4b5563;
+        }
+
+        .story-card {
+            background: white;
+
+            padding: 35px;
+
+            border-radius: 20px;
+
+            border:
+                1px solid
+                #e5e7eb;
+
+            box-shadow:
+                0 15px 40px
+                rgba(17,24,39,0.07);
+        }
+
+        .story-card h3 {
+            color: #151c5a;
+
+            margin-top: 0;
+        }
+
+        .story-card p {
+            color: #6b7280;
+        }
+
+        /* =========================
+           MISSION CARDS
+        ========================= */
+
+        .cards {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+
+            border:
+                1px solid
+                #e5e7eb;
+
+            border-radius: 18px;
+
+            padding: 28px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(17,24,39,0.04);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 14px;
+
+            background: #edf4ff;
+
+            font-size: 24px;
+
+            margin-bottom: 18px;
+        }
+
+        .card h3 {
+            color: #151c5a;
+
+            margin:
+                0 0
+                10px;
+        }
+
+        .card p {
+            color: #6b7280;
+
+            margin: 0;
+        }
+
+        /* =========================
+           FEATURES
+        ========================= */
+
+        .feature-list {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 18px;
+        }
+
+        .feature-item {
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 14px;
+
+            border:
+                1px solid
+                #e5e7eb;
+
+            display: flex;
+
+            gap: 15px;
+        }
+
+        .check {
+            min-width: 34px;
+            height: 34px;
+
+            border-radius: 50%;
+
+            background: #d1e7dd;
+
+            color: #0f5132;
+
+            display: grid;
+            place-items: center;
+
+            font-weight: bold;
+        }
+
+        .feature-item h3 {
+            margin:
+                0 0
+                5px;
+
+            color: #151c5a;
+        }
+
+        .feature-item p {
+            margin: 0;
+
+            color: #6b7280;
+
+            font-size: 14px;
+        }
+
+        /* =========================
+           CTA
+        ========================= */
+
+        .cta {
+            background:
+                linear-gradient(
+                    135deg,
+                    #151c5a,
+                    #243b8f
+                );
+
+            color: white;
+
+            text-align: center;
+
+            border-radius: 24px;
+
+            padding: 55px 25px;
+        }
+
+        .cta h2 {
+            margin:
+                0 0
+                12px;
+
+            font-size: 34px;
+        }
+
+        .cta p {
+            max-width: 650px;
+
+            margin:
+                0 auto
+                25px;
+
+            color: #dbe4ff;
+        }
+
+        .btn {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            min-height: 48px;
+
+            padding:
+                0 22px;
+
+            border-radius: 10px;
+
+            background: white;
+
+            color: #151c5a;
+
+            text-decoration: none;
+
+            font-weight: bold;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            background: #111827;
+
+            color: #d1d5db;
+
+            padding:
+                50px 0
+                25px;
+        }
+
+        .footer-inner {
+            width: min(1100px, 92%);
+
+            margin: auto;
+
+            display: grid;
+
+            grid-template-columns:
+                2fr 1fr 1fr;
+
+            gap: 35px;
+        }
+
+        footer h3,
+        footer h4 {
+            color: white;
+
+            margin-top: 0;
+        }
+
+        .footer-links {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 10px;
+        }
+
+        .footer-links a {
+            color: #d1d5db;
+
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .copyright {
+            width: min(1100px, 92%);
+
+            margin:
+                35px auto 0;
+
+            padding-top: 20px;
+
+            border-top:
+                1px solid
+                #374151;
+
+            text-align: center;
+
+            color: #9ca3af;
+
+            font-size: 14px;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 850px) {
+
+            .story {
+                grid-template-columns: 1fr;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-inner {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+
+                position: absolute;
+
+                top: 74px;
+
+                left: 4%;
+                right: 4%;
+
+                background: white;
+
+                padding: 18px;
+
+                border-radius: 14px;
+
+                border:
+                    1px solid
+                    #e5e7eb;
+
+                box-shadow:
+                    0 15px 40px
+                    rgba(17,24,39,0.1);
+
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .hero {
+                padding:
+                    75px 20px;
+            }
+
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+
+            .section-heading h2,
+            .story-text h2 {
+                font-size: 30px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =============================
+     NAVIGATION
+============================= -->
+
+<header class="site-header">
+
+    <nav class="nav">
+
+        <a
+            href="{% url 'home' %}"
+            class="brand"
+        >
+
+            <span class="brand-mark">
+                A
+            </span>
+
+            <span>
+                A-DEVS CGPA
+            </span>
+
+        </a>
+
+
+        <button
+            type="button"
+            class="menu-btn"
+            id="menuBtn"
+            aria-label="Open navigation menu"
+        >
+            ☰
+        </button>
+
+
+        <div
+            class="nav-links"
+            id="navLinks"
+        >
+
+            <a href="{% url 'home' %}">
+                Home
+            </a>
+
+            <a
+                href="{% url 'about' %}"
+                class="active"
+            >
+                About
+            </a>
+
+            <a href="{% url 'contact' %}">
+                Contact
+            </a>
+
+            <a href="{% url 'faq' %}">
+                FAQ
+            </a>
+
+            <a href="{% url 'privacy' %}">
+                Privacy
+            </a>
+
+            <a href="{% url 'terms' %}">
+                Terms
+            </a>
+
+
+            {% if user.is_authenticated and student %}
+
+                <a
+                    href="{% url 'dashboard' student.matric_number %}"
+                    class="nav-cta"
+                >
+                    Dashboard
+                </a>
+
+            {% else %}
+
+                <a href="{% url 'login' %}">
+                    Login
+                </a>
+
+                <a
+                    href="{% url 'register' %}"
+                    class="nav-cta"
+                >
+                    Get Started
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+<!-- =============================
+     HERO
+============================= -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <span class="hero-badge">
+            🎓 About A-DEVS
+        </span>
+
+        <h1>
+            Helping students understand their academic progress.
+        </h1>
+
+        <p>
+            A-DEVS CGPA Calculator provides students with simple
+            academic tools for calculating, tracking and planning
+            their university performance.
+        </p>
+
+    </div>
+
+</section>
+
+
+<main class="container">
+
+
+    <!-- =========================
+         OUR STORY
+    ========================== -->
+
+    <section class="section story">
+
+        <div class="story-text">
+
+            <h2>
+                Why A-DEVS was created
+            </h2>
+
+            <p>
+                University students often need to calculate their GPA
+                and CGPA manually or rely on tools that only provide
+                a single calculation without helping them understand
+                their overall academic progress.
+            </p>
+
+            <p>
+                A-DEVS CGPA Calculator was created to make this process
+                simpler. Students can calculate semester results,
+                maintain academic records and use planning tools to
+                better understand how their academic decisions may
+                affect their progress.
+            </p>
+
+            <p>
+                Our goal is to make academic information easier for
+                students to understand and manage.
+            </p>
+
+        </div>
+
+
+        <div class="story-card">
+
+            <h3>
+                More than a CGPA calculator
+            </h3>
+
+            <p>
+                A-DEVS combines CGPA calculation with academic
+                record keeping and planning tools.
+            </p>
+
+            <p>
+                Students can keep track of semester results,
+                experiment with possible future grades, set CGPA
+                goals and organize important academic information
+                from one account.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         MISSION / VISION
+    ========================== -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <h2>
+                What we stand for
+            </h2>
+
+            <p>
+                A-DEVS is designed around simplicity,
+                accessibility and useful academic planning.
+            </p>
+
+        </div>
+
+
+        <div class="cards">
+
+
+            <article class="card">
+
+                <div class="card-icon">
+                    🎯
+                </div>
+
+                <h3>
+                    Our Mission
+                </h3>
+
+                <p>
+                    To provide students with simple and accessible
+                    tools that help them calculate, understand and
+                    plan their academic performance.
+                </p>
+
+            </article>
+
+
+            <article class="card">
+
+                <div class="card-icon">
+                    🚀
+                </div>
+
+                <h3>
+                    Our Vision
+                </h3>
+
+                <p>
+                    To grow into a useful academic platform that
+                    supports university students with tools for
+                    academic planning and performance tracking.
+                </p>
+
+            </article>
+
+
+            <article class="card">
+
+                <div class="card-icon">
+                    💡
+                </div>
+
+                <h3>
+                    Our Approach
+                </h3>
+
+                <p>
+                    Keep academic tools straightforward, practical
+                    and easy to use on both computers and mobile
+                    devices.
+                </p>
+
+            </article>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         WHAT STUDENTS CAN DO
+    ========================== -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <h2>
+                What students can do with A-DEVS
+            </h2>
+
+            <p>
+                Tools designed to support different parts
+                of your academic journey.
+            </p>
+
+        </div>
+
+
+        <div class="feature-list">
+
+
+            <div class="feature-item">
+
+                <div class="check">
+                    ✓
+                </div>
+
+                <div>
+
+                    <h3>
+                        Calculate GPA and CGPA
+                    </h3>
+
+                    <p>
+                        Calculate semester GPA and track
+                        cumulative academic performance.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="feature-item">
+
+                <div class="check">
+                    ✓
+                </div>
+
+                <div>
+
+                    <h3>
+                        Store Academic Records
+                    </h3>
+
+                    <p>
+                        Keep semester courses, units and
+                        grades organized in your account.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="feature-item">
+
+                <div class="check">
+                    ✓
+                </div>
+
+                <div>
+
+                    <h3>
+                        Plan CGPA Goals
+                    </h3>
+
+                    <p>
+                        Estimate the performance you may
+                        need to work toward a target CGPA.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="feature-item">
+
+                <div class="check">
+                    ✓
+                </div>
+
+                <div>
+
+                    <h3>
+                        Simulate Future Grades
+                    </h3>
+
+                    <p>
+                        Experiment with possible grades and
+                        understand how they may affect CGPA.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="feature-item">
+
+                <div class="check">
+                    ✓
+                </div>
+
+                <div>
+
+                    <h3>
+                        Organize Academic Reminders
+                    </h3>
+
+                    <p>
+                        Keep track of exams and important
+                        academic activities.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="feature-item">
+
+                <div class="check">
+                    ✓
+                </div>
+
+                <div>
+
+                    <h3>
+                        Access From Mobile Devices
+                    </h3>
+
+                    <p>
+                        Use the platform through a responsive
+                        interface designed for phones,
+                        tablets and computers.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         CTA
+    ========================== -->
+
+    <section class="cta">
+
+        <h2>
+            Start tracking your academic progress
+        </h2>
+
+        <p>
+            Use A-DEVS CGPA Calculator to calculate
+            your results and organize your academic
+            performance.
+        </p>
+
+
+        {% if user.is_authenticated and student %}
+
+            <a
+                href="{% url 'dashboard' student.matric_number %}"
+                class="btn"
+            >
+                Go to Dashboard
+            </a>
+
+        {% else %}
+
+            <a
+                href="{% url 'register' %}"
+                class="btn"
+            >
+                Create Free Account
+            </a>
+
+        {% endif %}
+
+    </section>
+
+
+</main>
+
+
+<!-- =============================
+     FOOTER
+============================= -->
+
+<footer>
+
+    <div class="footer-inner">
+
+
+        <div>
+
+            <h3>
+                A-DEVS CGPA Calculator
+            </h3>
+
+            <p>
+                Helping students calculate, track and
+                plan their academic performance.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <h4>
+                Quick Links
+            </h4>
+
+            <div class="footer-links">
+
+                <a href="{% url 'home' %}">
+                    Home
+                </a>
+
+                <a href="{% url 'about' %}">
+                    About
+                </a>
+
+                <a href="{% url 'contact' %}">
+                    Contact
+                </a>
+
+                <a href="{% url 'faq' %}">
+                    FAQ
+                </a>
+
+                <a href="{% url 'privacy' %}">
+                    Privacy Policy
+                </a>
+
+                <a href="{% url 'terms' %}">
+                    Terms &amp; Conditions
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <h4>
+                Account
+            </h4>
+
+            <div class="footer-links">
+
+                {% if user.is_authenticated and student %}
+
+                    <a href="{% url 'dashboard' student.matric_number %}">
+                        Dashboard
+                    </a>
+
+                {% else %}
+
+                    <a href="{% url 'login' %}">
+                        Login
+                    </a>
+
+                    <a href="{% url 'register' %}">
+                        Register
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="copyright">
+
+        &copy; 2026
+        A-DEVS CGPA Calculator.
+        All rights reserved.
+
+    </div>
+
+</footer>
+
+
+<script>
+
+    const menuBtn =
+        document.getElementById(
+            "menuBtn"
+        );
+
+    const navLinks =
+        document.getElementById(
+            "navLinks"
+        );
+
+
+    if (menuBtn && navLinks) {
+
+        menuBtn.addEventListener(
+            "click",
+            function () {
+
+                navLinks.classList.toggle(
+                    "show"
+                );
+
+            }
+        );
+
+
+        navLinks
+            .querySelectorAll("a")
+            .forEach(
+                function(link) {
+
+                    link.addEventListener(
+                        "click",
+                        function() {
+
+                            navLinks
+                                .classList
+                                .remove(
+                                    "show"
+                                );
+
+                        }
+                    );
+
+                }
+            );
+    }
+
+</script>
+
+
+</body>
+
+</html>

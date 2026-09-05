@@ -1,0 +1,908 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#151c5a"
+    >
+
+    <title>Terms and Conditions | A-DEVS CGPA Calculator</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f6f8fc;
+            color: #1f2937;
+            line-height: 1.75;
+        }
+
+        /* =========================
+           NAVIGATION
+        ========================= */
+
+        .site-header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav {
+            width: min(1180px, 92%);
+            min-height: 74px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #151c5a;
+            font-weight: 800;
+            font-size: 20px;
+        }
+
+        .brand-mark {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: linear-gradient(
+                135deg,
+                #151c5a,
+                #0d6efd
+            );
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #374151;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover,
+        .nav-links .active {
+            color: #0d6efd;
+        }
+
+        .nav-cta {
+            padding: 10px 16px;
+            border-radius: 10px;
+            background: #151c5a;
+            color: white !important;
+        }
+
+        .menu-btn {
+            display: none;
+            border: 0;
+            background: transparent;
+            color: #151c5a;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(13,110,253,0.27),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #101642,
+                    #151c5a,
+                    #243b8f
+                );
+
+            color: white;
+            text-align: center;
+            padding: 90px 20px;
+        }
+
+        .hero-content {
+            max-width: 780px;
+            margin: auto;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(40px, 6vw, 62px);
+            line-height: 1.1;
+        }
+
+        .hero p {
+            max-width: 720px;
+            margin: 18px auto 0;
+            color: #dbe4ff;
+            font-size: 18px;
+        }
+
+        /* =========================
+           TERMS CONTENT
+        ========================= */
+
+        .container {
+            width: min(900px, 92%);
+            margin: auto;
+            padding: 70px 0;
+        }
+
+        .terms-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow:
+                0 15px 40px
+                rgba(17,24,39,0.06);
+        }
+
+        .updated {
+            background: #edf4ff;
+            color: #084298;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .terms-section {
+            margin-bottom: 35px;
+        }
+
+        .terms-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .terms-section h2 {
+            color: #151c5a;
+            margin: 0 0 12px;
+            font-size: 25px;
+        }
+
+        .terms-section p {
+            color: #4b5563;
+            margin: 0 0 12px;
+        }
+
+        .terms-section ul {
+            padding-left: 22px;
+            color: #4b5563;
+        }
+
+        .terms-section li {
+            margin-bottom: 8px;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            background: #111827;
+            color: #d1d5db;
+            padding: 50px 0 25px;
+        }
+
+        .footer-inner {
+            width: min(1100px, 92%);
+            margin: auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 35px;
+        }
+
+        footer h3,
+        footer h4 {
+            color: white;
+            margin-top: 0;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-links a {
+            color: #d1d5db;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .copyright {
+            width: min(1100px, 92%);
+            margin: 35px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid #374151;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 850px) {
+
+            .footer-inner {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 74px;
+                left: 4%;
+                right: 4%;
+                background: white;
+                padding: 18px;
+                border-radius: 14px;
+                border: 1px solid #e5e7eb;
+                box-shadow:
+                    0 15px 40px
+                    rgba(17,24,39,0.1);
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .terms-card {
+                padding: 25px;
+            }
+
+            .hero {
+                padding: 75px 20px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<header class="site-header">
+
+    <nav class="nav">
+
+        <a
+            href="{% url 'home' %}"
+            class="brand"
+        >
+
+            <span class="brand-mark">
+                A
+            </span>
+
+            <span>
+                A-DEVS CGPA
+            </span>
+
+        </a>
+
+        <button
+            type="button"
+            class="menu-btn"
+            id="menuBtn"
+            aria-label="Open navigation menu"
+        >
+            ☰
+        </button>
+
+        <div
+            class="nav-links"
+            id="navLinks"
+        >
+
+            <a href="{% url 'home' %}">
+                Home
+            </a>
+
+            <a href="{% url 'about' %}">
+                About
+            </a>
+
+            <a href="{% url 'contact' %}">
+                Contact
+            </a>
+
+            <a href="{% url 'faq' %}">
+                FAQ
+            </a>
+
+            <a href="{% url 'privacy' %}">
+                Privacy
+            </a>
+
+            <a
+                href="{% url 'terms' %}"
+                class="active"
+            >
+                Terms
+            </a>
+
+            {% if user.is_authenticated and student %}
+
+                <a
+                    href="{% url 'dashboard' student.matric_number %}"
+                    class="nav-cta"
+                >
+                    Dashboard
+                </a>
+
+            {% elif not user.is_authenticated %}
+
+                <a href="{% url 'login' %}">
+                    Login
+                </a>
+
+                <a
+                    href="{% url 'register' %}"
+                    class="nav-cta"
+                >
+                    Get Started
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </nav>
+
+</header>
+
+<!-- =========================
+     HERO
+========================= -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h1>
+            Terms and Conditions
+        </h1>
+
+        <p>
+            These terms explain the rules and conditions
+            that apply when using A-DEVS CGPA Calculator.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =========================
+     TERMS
+========================= -->
+
+<main class="container">
+
+    <article class="terms-card">
+
+        <div class="updated">
+            Last updated: September 5, 2026
+        </div>
+
+        <section class="terms-section">
+
+            <h2>
+                1. Acceptance of Terms
+            </h2>
+
+            <p>
+                By accessing or using A-DEVS CGPA Calculator,
+                you agree to follow these Terms and Conditions.
+            </p>
+
+            <p>
+                If you do not agree with these terms,
+                you should stop using the platform.
+            </p>
+
+        </section>
+
+        <section class="terms-section">
+
+            <h2>
+                2. Purpose of the Platform
+            </h2>
+
+            <p>
+                A-DEVS CGPA Calculator is designed to help
+                students calculate, organize, track and plan
+                their academic performance.
+            </p>
+
+            <p>
+                Features may include GPA and CGPA calculation,
+                academic record management, goal planning,
+                grade simulation, reminders and related
+                academic tools.
+            </p>
+
+        </section>
+
+        <section class="terms-section">
+
+            <h2>
+                3. Academic Information Disclaimer
+            </h2>
+
+            <p>
+                Results generated by the platform are intended
+                to help students understand and estimate
+                academic performance.
+            </p>
+
+            <p>
+                The platform does not replace official results,
+                transcripts, academic records or decisions
+                issued by your university or educational
+                institution.
+            </p>
+
+            <p>
+                Users should confirm important academic
+                information with their institution.
+            </p>
+
+        </section>
+
+        <section class="terms-section">
+
+            <h2>
+                4. User Accounts
+            </h2>
+
+            <p>
+                Some features require a registered account.
+                When creating an account, users should provide
+                accurate information where required.
+            </p>
+
+            <p>
+                You are responsible for protecting your login
+                credentials and for activity carried out through
+                your account.
+            </p>
+
+            <p>
+                You should not knowingly allow another person
+                to use your account without authorization.
+            </p>
+
+        </section>
+
+        <section class="terms-section">
+
+            <h2>
+                5. Acceptable Use
+            </h2>
+
+            <p>
+                Users must not use the platform to:
+            </p>
+
+            <ul>
+
+                <li>
+                    Attempt to gain unauthorized access to
+                    accounts, databases or systems.
+                </li>
+
+                <li>
+                    Interfere with the normal operation of
+                    the website.
+                </li>
+
+                <li>
+                    Upload, submit or distribute harmful
+                    software or malicious code.
+                </li>
+
+                <li>
+                    Use automated methods to abuse or overload
+                    the platform.
+                </li>
+
+                <li>
+                    Use the platform for unlawful activities.
+                </li>
+
+            </ul>
+
+        </section>
+
+        <section class="terms-section">
+
+            <h2>
+                6. Accuracy of Calculations
+            </h2>
+
+            <p>
+                The platform attempts to provide accurate
+                calculations based on the information entered
+                by the user and the grading rules configured
+                in the system.
+            </p>
+
+            <p>
+                Incorrect course units, grades, semester
+                information or other input may produce
+                inaccurate results.
+            </p>
+
+            <p>
+                Users are responsible for checking the
+                information they enter.
+            </p>
+
+        </section>
+
+        <section class="terms-section">
+
+            <h2>
+                7. Availability of the Service
+            </h2>
+
+            <p>
+                We aim to keep the platform available,
+                but uninterrupted access cannot be guaranteed.
+            </p>
+
+            <p>
+                The website may occasionally become unavailable
+                because of maintenance, internet problems,
+                hosting issues, upgrades or other technical
+                circumstances.
+            </p>
+
+        </section>
+
+        <section class="terms-section">
+
+            <h2>
+                8. Features and Changes
+            </h2>
+
+            <p>
+                Features may be added, changed, improved or
+                removed as the platform develops.
+            </p>
+
+            <p>
+                The appearance and functionality of the
+                service may therefore change over time.
+            </p>
+
+        </section>
+
+        <section class="terms-section">
+
+            <h2>
+                9. User Data
+            </h2>
+
+            <p>
+                Some features allow users to store academic
+                information, account information and other
+                data associated with their use of the platform.
+            </p>
+
+            <p>
+                Information is handled according to the
+                platform's Privacy Policy.
+            </p>
+
+        </section>
+
+        <section class="terms-section">
+
+            <h2>
+                10. Third-Party Services
+            </h2>
+
+            <p>
+                A-DEVS CGPA Calculator may rely on third-party
+                services for hosting, databases, infrastructure,
+                analytics, advertising or other functionality.
+            </p>
+
+            <p>
+                Those services may operate under their own
+                terms and privacy policies.
+            </p>
+
+        </section>
+
+        <section class="terms-section">
+
+            <h2>
+                11. Limitation of Liability
+            </h2>
+
+            <p>
+                A-DEVS CGPA Calculator is provided as an
+                academic support and planning tool.
+            </p>
+
+            <p>
+                To the extent permitted by applicable law,
+                the platform is not responsible for academic,
+                financial or other decisions made solely on
+                the basis of calculations or information
+                generated by the website.
+            </p>
+
+            <p>
+                Users should verify important academic
+                decisions with their educational institution.
+            </p>
+
+        </section>
+
+        <section class="terms-section">
+
+            <h2>
+                12. Termination or Restriction
+            </h2>
+
+            <p>
+                Access may be restricted where there is
+                suspected misuse, abuse, unauthorized access
+                or activity that threatens the security or
+                operation of the platform.
+            </p>
+
+        </section>
+
+        <section class="terms-section">
+
+            <h2>
+                13. Changes to These Terms
+            </h2>
+
+            <p>
+                These Terms and Conditions may be updated when
+                the platform, its features or its policies
+                change.
+            </p>
+
+            <p>
+                The latest revision date will be displayed
+                near the top of this page.
+            </p>
+
+        </section>
+
+        <section class="terms-section">
+
+            <h2>
+                14. Contact
+            </h2>
+
+            <p>
+                If you have questions about these Terms and
+                Conditions, please use the Contact page to
+                send a message.
+            </p>
+
+        </section>
+
+    </article>
+
+</main>
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    <div class="footer-inner">
+
+        <div>
+
+            <h3>
+                A-DEVS CGPA Calculator
+            </h3>
+
+            <p>
+                Helping students calculate, track and plan
+                their academic performance.
+            </p>
+
+        </div>
+
+        <div>
+
+            <h4>
+                Quick Links
+            </h4>
+
+            <div class="footer-links">
+
+                <a href="{% url 'home' %}">
+                    Home
+                </a>
+
+                <a href="{% url 'about' %}">
+                    About
+                </a>
+
+                <a href="{% url 'contact' %}">
+                    Contact
+                </a>
+
+                <a href="{% url 'faq' %}">
+                    FAQ
+                </a>
+
+                <a href="{% url 'privacy' %}">
+                    Privacy Policy
+                </a>
+
+                <a href="{% url 'terms' %}">
+                    Terms & Conditions
+                </a>
+
+            </div>
+
+        </div>
+
+        <div>
+
+            <h4>
+                Account
+            </h4>
+
+            <div class="footer-links">
+
+                {% if user.is_authenticated and student %}
+
+                    <a href="{% url 'dashboard' student.matric_number %}">
+                        Dashboard
+                    </a>
+
+                {% elif not user.is_authenticated %}
+
+                    <a href="{% url 'login' %}">
+                        Login
+                    </a>
+
+                    <a href="{% url 'register' %}">
+                        Register
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="copyright">
+
+        &copy; 2026
+        A-DEVS CGPA Calculator.
+        All rights reserved.
+
+    </div>
+
+</footer>
+
+<script>
+
+    const menuBtn =
+        document.getElementById(
+            "menuBtn"
+        );
+
+    const navLinks =
+        document.getElementById(
+            "navLinks"
+        );
+
+
+    if (menuBtn && navLinks) {
+
+        menuBtn.addEventListener(
+            "click",
+            function() {
+
+                navLinks.classList.toggle(
+                    "show"
+                );
+
+            }
+        );
+
+
+        navLinks
+            .querySelectorAll("a")
+            .forEach(
+                function(link) {
+
+                    link.addEventListener(
+                        "click",
+                        function() {
+
+                            navLinks.classList.remove(
+                                "show"
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+    }
+
+</script>
+
+</body>
+
+</html>

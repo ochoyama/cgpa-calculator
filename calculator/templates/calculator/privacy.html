@@ -1,0 +1,322 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#151c5a">
+    <title>Privacy Policy | A-DEVS CGPA Calculator</title>
+
+    <style>
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f6f8fc;
+            color: #1f2937;
+            line-height: 1.75;
+        }
+        .site-header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .nav {
+            width: min(1180px, 92%);
+            min-height: 74px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #151c5a;
+            font-weight: 800;
+            font-size: 20px;
+        }
+        .brand-mark {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #151c5a, #0d6efd);
+            color: white;
+        }
+        .nav-links { display: flex; align-items: center; gap: 20px; }
+        .nav-links a {
+            text-decoration: none;
+            color: #374151;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .nav-links a:hover, .nav-links .active { color: #0d6efd; }
+        .nav-cta {
+            padding: 10px 16px;
+            border-radius: 10px;
+            background: #151c5a;
+            color: white !important;
+        }
+        .menu-btn {
+            display: none;
+            border: 0;
+            background: transparent;
+            font-size: 28px;
+            color: #151c5a;
+            cursor: pointer;
+        }
+        .hero {
+            background:
+                radial-gradient(circle at top right, rgba(13,110,253,.27), transparent 35%),
+                linear-gradient(135deg, #101642, #151c5a, #243b8f);
+            color: white;
+            text-align: center;
+            padding: 90px 20px;
+        }
+        .hero h1 { margin: 0; font-size: clamp(40px,6vw,62px); line-height: 1.1; }
+        .hero p { max-width: 720px; margin: 18px auto 0; color: #dbe4ff; font-size: 18px; }
+        .container { width: min(900px,92%); margin: auto; padding: 70px 0; }
+        .policy-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 40px rgba(17,24,39,.06);
+        }
+        .updated {
+            background: #edf4ff;
+            color: #084298;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .policy-section { margin-bottom: 35px; }
+        .policy-section:last-child { margin-bottom: 0; }
+        .policy-section h2 { color: #151c5a; margin: 0 0 12px; font-size: 25px; }
+        .policy-section p { color: #4b5563; margin: 0 0 12px; }
+        .policy-section ul { color: #4b5563; padding-left: 22px; }
+        .policy-section li { margin-bottom: 8px; }
+        footer { background: #111827; color: #d1d5db; padding: 50px 0 25px; }
+        .footer-inner {
+            width: min(1100px,92%);
+            margin: auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 35px;
+        }
+        footer h3, footer h4 { color: white; margin-top: 0; }
+        .footer-links { display: flex; flex-direction: column; gap: 10px; }
+        .footer-links a { color: #d1d5db; text-decoration: none; }
+        .footer-links a:hover { color: white; }
+        .copyright {
+            width: min(1100px,92%);
+            margin: 35px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid #374151;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        @media (max-width: 850px) {
+            .footer-inner { grid-template-columns: 1fr; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 74px;
+                left: 4%;
+                right: 4%;
+                background: white;
+                padding: 18px;
+                border-radius: 14px;
+                border: 1px solid #e5e7eb;
+                box-shadow: 0 15px 40px rgba(17,24,39,.1);
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .nav-links.show { display: flex; }
+            .menu-btn { display: block; }
+        }
+        @media (max-width: 600px) {
+            .policy-card { padding: 25px; }
+            .hero { padding: 75px 20px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="site-header">
+    <nav class="nav">
+        <a href="{% url 'home' %}" class="brand">
+            <span class="brand-mark">A</span>
+            <span>A-DEVS CGPA</span>
+        </a>
+
+        <button type="button" class="menu-btn" id="menuBtn" aria-label="Open navigation menu">☰</button>
+
+        <div class="nav-links" id="navLinks">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'about' %}">About</a>
+            <a href="{% url 'contact' %}">Contact</a>
+            <a href="{% url 'faq' %}">FAQ</a>
+            <a href="{% url 'privacy' %}" class="active">Privacy</a>
+            <a href="{% url 'terms' %}">Terms</a>
+
+            {% if user.is_authenticated and student %}
+                <a href="{% url 'dashboard' student.matric_number %}" class="nav-cta">Dashboard</a>
+            {% elif not user.is_authenticated %}
+                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'register' %}" class="nav-cta">Get Started</a>
+            {% endif %}
+        </div>
+    </nav>
+</header>
+
+<section class="hero">
+    <h1>Privacy Policy</h1>
+    <p>This page explains how A-DEVS CGPA Calculator handles information when students use the platform.</p>
+</section>
+
+<main class="container">
+    <article class="policy-card">
+        <div class="updated">Last updated: September 5, 2026</div>
+
+        <section class="policy-section">
+            <h2>1. Introduction</h2>
+            <p>A-DEVS CGPA Calculator provides academic tools that help students calculate GPA and CGPA, maintain academic records and plan their academic performance.</p>
+            <p>This Privacy Policy explains the types of information that may be collected when you use the platform and how that information is used.</p>
+        </section>
+
+        <section class="policy-section">
+            <h2>2. Information We Collect</h2>
+            <p>Depending on how you use the platform, information may include:</p>
+            <ul>
+                <li>Account information such as your username, email address or other registration details.</li>
+                <li>Student information used to manage your academic profile.</li>
+                <li>Course information including course codes, credit units, grades and semester results.</li>
+                <li>Academic planning information such as CGPA goals, reminders and related study data.</li>
+                <li>Profile images you choose to upload.</li>
+                <li>Messages submitted through the Contact page.</li>
+            </ul>
+        </section>
+
+        <section class="policy-section">
+            <h2>3. How We Use Information</h2>
+            <ul>
+                <li>Provide GPA and CGPA calculation services.</li>
+                <li>Save and display your academic records.</li>
+                <li>Provide planning and reminder tools.</li>
+                <li>Maintain, secure and improve the platform.</li>
+                <li>Respond to support messages and feedback.</li>
+            </ul>
+        </section>
+
+        <section class="policy-section">
+            <h2>4. Local Device Storage</h2>
+            <p>Some features may temporarily store information on your device using browser storage. This can include unfinished calculator drafts or information waiting to synchronize when a connection becomes available.</p>
+        </section>
+
+        <section class="policy-section">
+            <h2>5. Cookies and Sessions</h2>
+            <p>The platform may use cookies that are necessary for authentication, session management and security protections such as CSRF protection.</p>
+            <p>If analytics or advertising services are introduced later, this policy may be updated to explain any additional cookies or technologies they use.</p>
+        </section>
+
+        <section class="policy-section">
+            <h2>6. Third-Party Service Providers</h2>
+            <p>The platform may rely on hosting, database and infrastructure providers to operate the service. Those providers may process information as necessary to provide their services.</p>
+        </section>
+
+        <section class="policy-section">
+            <h2>7. Data Security</h2>
+            <p>Reasonable technical measures are used to help protect information, but no online service can guarantee absolute security. Users should protect their passwords and login credentials.</p>
+        </section>
+
+        <section class="policy-section">
+            <h2>8. Data Retention</h2>
+            <p>Information may be retained for as long as reasonably necessary to provide the service, maintain records, respond to support requests, protect the platform and comply with applicable obligations.</p>
+        </section>
+
+        <section class="policy-section">
+            <h2>9. Sale of Personal Information</h2>
+            <p>A-DEVS CGPA Calculator does not intentionally sell users' personal information.</p>
+        </section>
+
+        <section class="policy-section">
+            <h2>10. Changes to This Policy</h2>
+            <p>This Privacy Policy may be updated when the platform, its features or service providers change. The latest revision date will be shown near the top of this page.</p>
+        </section>
+
+        <section class="policy-section">
+            <h2>11. Contact Us</h2>
+            <p>If you have questions about this Privacy Policy or how the platform handles information, please use the Contact page.</p>
+        </section>
+    </article>
+</main>
+
+<footer>
+    <div class="footer-inner">
+        <div>
+            <h3>A-DEVS CGPA Calculator</h3>
+            <p>Helping students calculate, track and plan their academic performance.</p>
+        </div>
+
+        <div>
+            <h4>Quick Links</h4>
+            <div class="footer-links">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'about' %}">About</a>
+                <a href="{% url 'contact' %}">Contact</a>
+                <a href="{% url 'faq' %}">FAQ</a>
+                <a href="{% url 'privacy' %}">Privacy Policy</a>
+                <a href="{% url 'terms' %}">Terms &amp; Conditions</a>
+            </div>
+        </div>
+
+        <div>
+            <h4>Account</h4>
+            <div class="footer-links">
+                {% if user.is_authenticated and student %}
+                    <a href="{% url 'dashboard' student.matric_number %}">Dashboard</a>
+                {% elif not user.is_authenticated %}
+                    <a href="{% url 'login' %}">Login</a>
+                    <a href="{% url 'register' %}">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="copyright">
+        &copy; 2026 A-DEVS CGPA Calculator. All rights reserved.
+    </div>
+</footer>
+
+<script>
+    const menuBtn = document.getElementById("menuBtn");
+    const navLinks = document.getElementById("navLinks");
+
+    if (menuBtn && navLinks) {
+        menuBtn.addEventListener("click", function () {
+            navLinks.classList.toggle("show");
+        });
+
+        navLinks.querySelectorAll("a").forEach(function (link) {
+            link.addEventListener("click", function () {
+                navLinks.classList.remove("show");
+            });
+        });
+    }
+</script>
+
+</body>
+</html>

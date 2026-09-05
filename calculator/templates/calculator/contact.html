@@ -1,0 +1,684 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#151c5a">
+
+    <title>Contact Us | A-DEVS CGPA Calculator</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f6f8fc;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+
+        .site-header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav {
+            width: min(1180px, 92%);
+            margin: auto;
+            min-height: 74px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #151c5a;
+            font-weight: 800;
+            font-size: 20px;
+        }
+
+        .brand-mark {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #151c5a, #0d6efd);
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #374151;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover,
+        .nav-links .active {
+            color: #0d6efd;
+        }
+
+        .nav-cta {
+            padding: 10px 16px;
+            border-radius: 10px;
+            background: #151c5a;
+            color: white !important;
+        }
+
+        .menu-btn {
+            display: none;
+            border: 0;
+            background: transparent;
+            font-size: 28px;
+            cursor: pointer;
+            color: #151c5a;
+        }
+
+        .hero {
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(13,110,253,0.25),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #101642,
+                    #151c5a,
+                    #243b8f
+                );
+
+            color: white;
+            text-align: center;
+            padding: 90px 20px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(40px, 6vw, 60px);
+        }
+
+        .hero p {
+            max-width: 700px;
+            margin: 18px auto 0;
+            color: #dbe4ff;
+            font-size: 18px;
+        }
+
+        .container {
+            width: min(1100px, 92%);
+            margin: auto;
+            padding: 70px 0;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 0.8fr 1.2fr;
+            gap: 35px;
+            align-items: start;
+        }
+
+        .info-card,
+        .form-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(17,24,39,0.06);
+        }
+
+        .info-card h2,
+        .form-card h2 {
+            margin-top: 0;
+            color: #151c5a;
+        }
+
+        .info-card p,
+        .form-card p {
+            color: #6b7280;
+        }
+
+        .contact-item {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .contact-item strong {
+            display: block;
+            color: #151c5a;
+            margin-bottom: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 700;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
+            font-size: 15px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 3px rgba(13,110,253,0.1);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-message {
+            margin-bottom: 20px;
+            padding: 13px 15px;
+            border-radius: 9px;
+            font-weight: 600;
+        }
+
+        .form-message.success {
+            background: #d1e7dd;
+            color: #0f5132;
+            border: 1px solid #badbcc;
+        }
+
+        .form-message.error {
+            background: #f8d7da;
+            color: #842029;
+            border: 1px solid #f1aeb5;
+        }
+
+        .form-message.warning {
+            background: #fff3cd;
+            color: #664d03;
+            border: 1px solid #ffecb5;
+        }
+
+        .form-message.info {
+            background: #cff4fc;
+            color: #055160;
+            border: 1px solid #b6effb;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: #0d6efd;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: #0b5ed7;
+        }
+
+        footer {
+            background: #111827;
+            color: #d1d5db;
+            padding: 50px 0 25px;
+        }
+
+        .footer-inner {
+            width: min(1100px, 92%);
+            margin: auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 35px;
+        }
+
+        footer h3,
+        footer h4 {
+            color: white;
+            margin-top: 0;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-links a {
+            color: #d1d5db;
+            text-decoration: none;
+        }
+
+        .copyright {
+            width: min(1100px, 92%);
+            margin: 35px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid #374151;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        @media (max-width: 850px) {
+            .contact-grid,
+            .footer-inner {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 74px;
+                left: 4%;
+                right: 4%;
+                background: white;
+                padding: 18px;
+                border-radius: 14px;
+                border: 1px solid #e5e7eb;
+                box-shadow: 0 15px 40px rgba(17,24,39,0.1);
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="site-header">
+    <nav class="nav">
+
+        <a href="{% url 'home' %}" class="brand">
+            <span class="brand-mark">A</span>
+            <span>A-DEVS CGPA</span>
+        </a>
+
+        <button
+            type="button"
+            class="menu-btn"
+            id="menuBtn"
+            aria-label="Open navigation menu"
+        >
+            ☰
+        </button>
+
+        <div class="nav-links" id="navLinks">
+
+            <a href="{% url 'home' %}">
+                Home
+            </a>
+
+            <a href="{% url 'about' %}">
+                About
+            </a>
+
+            <a href="{% url 'contact' %}" class="active">
+                Contact
+            </a>
+
+            <a href="{% url 'faq' %}">
+               FAQ
+            </a>
+
+            {% if user.is_authenticated and student %}
+
+                <a
+                    href="{% url 'dashboard' student.matric_number %}"
+                    class="nav-cta"
+                >
+                    Dashboard
+                </a>
+
+            {% else %}
+
+                <a href="{% url 'login' %}">
+                    Login
+                </a>
+
+                <a href="{% url 'register' %}" class="nav-cta">
+                    Get Started
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </nav>
+</header>
+
+<section class="hero">
+
+    <h1>
+        Contact Us
+    </h1>
+
+    <p>
+        Have a question, suggestion or problem with A-DEVS CGPA Calculator?
+        Send us a message and we will review it.
+    </p>
+
+</section>
+
+<main class="container">
+
+    <div class="contact-grid">
+
+        <section class="info-card">
+
+            <h2>
+                Get in touch
+            </h2>
+
+            <p>
+                We welcome feedback from students using the platform.
+                Your suggestions can help us improve A-DEVS CGPA Calculator.
+            </p>
+
+            <div class="contact-item">
+                <strong>
+                    General Support
+                </strong>
+
+                <span>
+                    Questions about using the platform or your account.
+                </span>
+            </div>
+
+            <div class="contact-item">
+                <strong>
+                    Report a Problem
+                </strong>
+
+                <span>
+                    Tell us if you notice an error or something is not working properly.
+                </span>
+            </div>
+
+            <div class="contact-item">
+                <strong>
+                    Suggestions
+                </strong>
+
+                <span>
+                    Share ideas for features that could help students.
+                </span>
+            </div>
+
+        </section>
+
+
+        <section class="form-card">
+
+            <h2>
+                Send us a message
+            </h2>
+
+            <p>
+                Fill in the form below.
+            </p>
+
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div class="form-message {{ message.tags|default:'info' }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="form-group">
+
+                    <label for="name">
+                        Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="name"
+                        id="name"
+                        maxlength="150"
+                        autocomplete="name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        name="email"
+                        id="email"
+                        maxlength="254"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="subject">
+                        Subject
+                    </label>
+
+                    <input
+                        type="text"
+                        name="subject"
+                        id="subject"
+                        maxlength="200"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="message">
+                        Message
+                    </label>
+
+                    <textarea
+                        name="message"
+                        id="message"
+                        maxlength="5000"
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                >
+                    Send Message
+                </button>
+
+            </form>
+
+        </section>
+
+    </div>
+
+</main>
+
+<footer>
+
+    <div class="footer-inner">
+
+        <div>
+            <h3>
+                A-DEVS CGPA Calculator
+            </h3>
+
+            <p>
+                Helping students calculate, track and plan
+                their academic performance.
+            </p>
+        </div>
+
+        <div>
+
+            <h4>
+                Quick Links
+            </h4>
+
+            <div class="footer-links">
+
+                <a href="{% url 'home' %}">
+                    Home
+                </a>
+
+                <a href="{% url 'about' %}">
+                    About
+                </a>
+
+                <a href="{% url 'contact' %}">
+                    Contact
+                </a>
+
+                <a href="{% url 'faq' %}">
+                    FAQ
+                </a>
+
+                <a href="{% url 'privacy' %}">
+                    Privacy Policy
+                </a>
+
+                <a href="{% url 'terms' %}">
+                    Terms &amp; Conditions
+                </a>
+
+            </div>
+
+        </div>
+
+        <div>
+
+            <h4>
+                Account
+            </h4>
+
+            <div class="footer-links">
+
+                {% if user.is_authenticated and student %}
+
+                    <a href="{% url 'dashboard' student.matric_number %}">
+                        Dashboard
+                    </a>
+
+                {% else %}
+
+                    <a href="{% url 'login' %}">
+                        Login
+                    </a>
+
+                    <a href="{% url 'register' %}">
+                        Register
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="copyright">
+        &copy; 2026 A-DEVS CGPA Calculator. All rights reserved.
+    </div>
+
+</footer>
+
+<script>
+
+    const menuBtn =
+        document.getElementById("menuBtn");
+
+    const navLinks =
+        document.getElementById("navLinks");
+
+    if (menuBtn && navLinks) {
+
+        menuBtn.addEventListener(
+            "click",
+            function () {
+                navLinks.classList.toggle("show");
+            }
+        );
+
+        navLinks
+            .querySelectorAll("a")
+            .forEach(
+                function(link) {
+                    link.addEventListener(
+                        "click",
+                        function() {
+                            navLinks.classList.remove("show");
+                        }
+                    );
+                }
+            );
+    }
+
+</script>
+
+</body>
+</html>

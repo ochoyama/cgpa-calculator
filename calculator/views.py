@@ -23,6 +23,7 @@ from .models import (
     ExamReminder,
     CourseRetake,
     AcademicTask,
+    ContactMessage,
 )
 from .notifications import (
     check_cgpa_risk,
@@ -6166,6 +6167,9 @@ def academic_planner(request):
         context
     )
 
+def about(request):
+    return render(request, "calculator/about.html")    
+
 # =========================================================
 # ADD ACADEMIC TASK
 # =========================================================
@@ -6613,4 +6617,154 @@ def delete_academic_task(
 
     return redirect(
         "academic_planner"
-    )     
+    )  
+
+def about(request):
+
+    student = None
+
+    if request.user.is_authenticated:
+        try:
+            student = Student.objects.get(
+                user=request.user
+            )
+        except Student.DoesNotExist:
+            student = None
+
+    return render(
+        request,
+        "calculator/about.html",
+        {
+            "student": student
+        }
+    )  
+
+def contact(request):
+
+    student = None
+
+    if request.user.is_authenticated:
+        try:
+            student = Student.objects.get(
+                user=request.user
+            )
+        except Student.DoesNotExist:
+            student = None
+
+    if request.method == "POST":
+
+        name = request.POST.get(
+            "name",
+            ""
+        ).strip()
+
+        email = request.POST.get(
+            "email",
+            ""
+        ).strip()
+
+        subject = request.POST.get(
+            "subject",
+            ""
+        ).strip()
+
+        message_text = request.POST.get(
+            "message",
+            ""
+        ).strip()
+
+        if (
+            name
+            and email
+            and subject
+            and message_text
+        ):
+
+            ContactMessage.objects.create(
+                name=name,
+                email=email,
+                subject=subject,
+                message=message_text
+            )
+
+            messages.success(
+                request,
+                "Thank you. Your message has been received."
+            )
+
+            return redirect(
+                "contact"
+            )
+
+        messages.error(
+            request,
+            "Please complete all fields."
+        )
+
+    return render(
+        request,
+        "calculator/contact.html",
+        {
+            "student": student
+        }
+    )
+
+def faq(request):
+
+    student = None
+
+    if request.user.is_authenticated:
+        try:
+            student = Student.objects.get(
+                user=request.user
+            )
+        except Student.DoesNotExist:
+            student = None
+
+    return render(
+        request,
+        "calculator/faq.html",
+        {
+            "student": student
+        }
+    )
+
+def privacy(request):
+
+    student = None
+
+    if request.user.is_authenticated:
+        try:
+            student = Student.objects.get(
+                user=request.user
+            )
+        except Student.DoesNotExist:
+            student = None
+
+    return render(
+        request,
+        "calculator/privacy.html",
+        {
+            "student": student
+        }
+    )
+
+def terms(request):
+
+    student = None
+
+    if request.user.is_authenticated:
+        try:
+            student = Student.objects.get(
+                user=request.user
+            )
+        except Student.DoesNotExist:
+            student = None
+
+    return render(
+        request,
+        "calculator/terms.html",
+        {
+            "student": student
+        }
+    )        

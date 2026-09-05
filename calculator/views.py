@@ -14,6 +14,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from .models import (
     Student,
@@ -312,37 +313,37 @@ def calculate_student_cgpa(student):
 
 
 # =========================================================
-# HOME / CGPA CALCULATOR
+# HOME / PUBLIC CGPA CALCULATOR
 # =========================================================
 
-@login_required
 def home(request):
 
     result = None
+    student = None
 
     # -----------------------------------------------------
-    # GET LOGGED-IN STUDENT
+    # OPTIONAL LOGGED-IN STUDENT
+    # -----------------------------------------------------
+    # The home page is public. If the visitor is already
+    # logged in as a student, we also load their profile so
+    # the navbar and calculator can use student features.
     # -----------------------------------------------------
 
-    try:
+    if request.user.is_authenticated:
 
-        student = Student.objects.get(
-            user=request.user
-        )
+        try:
 
-    except Student.DoesNotExist:
+            student = Student.objects.get(
+                user=request.user
+            )
 
-        messages.error(
-            request,
-            "Student profile was not found."
-        )
+        except Student.DoesNotExist:
 
-        logout(request)
+            student = None
 
-        return redirect("login")
 
     # -----------------------------------------------------
-    # PROCESS FORM
+    # PROCESS CALCULATOR FORM
     # -----------------------------------------------------
 
     if request.method == "POST":
@@ -356,6 +357,7 @@ def home(request):
         units = request.POST.getlist("unit")
 
         grades = request.POST.getlist("grade")
+
 
         # -------------------------------------------------
         # REQUIRED FIELDS
@@ -377,60 +379,34 @@ def home(request):
                 }
             )
 
-        # -------------------------------------------------
-        # CHECK DUPLICATE SEMESTER
-        # -------------------------------------------------
-
-        semester_exists = Semester.objects.filter(
-            student=student,
-            level=level,
-            semester=semester_name
-        ).exists()
-
-        if semester_exists:
-
-            result = {
-                "error": (
-                    f"{level} Level - "
-                    f"{semester_name} already exists "
-                    "for this student."
-                ),
-                "matric_number":
-                    student.matric_number
-            }
-
-            return render(
-                request,
-                "calculator/home.html",
-                {
-                    "result": result,
-                    "student": student,
-                }
-            )
 
         # -------------------------------------------------
-        # CREATE SEMESTER
+        # VALIDATE COURSES AND CALCULATE SEMESTER GPA
         # -------------------------------------------------
 
-        semester = Semester.objects.create(
-            student=student,
-            level=level,
-            semester=semester_name
-        )
+        cleaned_courses = []
 
         semester_units = 0
         semester_quality_points = 0
-        courses_added = 0
 
-        # -------------------------------------------------
-        # SAVE COURSES
-        # -------------------------------------------------
 
         for course, unit, grade in zip(
             courses,
             units,
             grades
         ):
+
+            course = (
+                course.strip()
+                if course
+                else ""
+            )
+
+            grade = (
+                grade.strip().upper()
+                if grade
+                else ""
+            )
 
             if not course or not unit:
                 continue
@@ -457,22 +433,20 @@ def home(request):
 
             semester_quality_points += quality_point
 
-            Course.objects.create(
-                semester=semester,
-                course_code=course.strip(),
-                course_unit=unit,
-                grade=grade
+            cleaned_courses.append(
+                {
+                    "course_code": course,
+                    "course_unit": unit,
+                    "grade": grade,
+                }
             )
 
-            courses_added += 1
 
         # -------------------------------------------------
-        # CHECK COURSES
+        # AT LEAST ONE VALID COURSE
         # -------------------------------------------------
 
-        if courses_added == 0:
-
-            semester.delete()
+        if not cleaned_courses:
 
             result = {
                 "error":
@@ -488,41 +462,173 @@ def home(request):
                 }
             )
 
-        # -------------------------------------------------
-        # SEMESTER GPA
-        # -----------------------------------------------------
 
         semester_gpa = (
             semester_quality_points /
             semester_units
         )
 
+        semester_gpa = round(
+            semester_gpa,
+            2
+        )
+
+
+        # =================================================
+        # PUBLIC / GUEST CALCULATION
+        # =================================================
+        # Visitors can calculate a semester GPA without
+        # creating an account. Nothing is saved to the DB.
+        # =================================================
+
+        if student is None:
+
+            result = {
+                "cgpa":
+                    semester_gpa,
+
+                "semester_gpa":
+                    semester_gpa,
+
+                "total_units":
+                    semester_units,
+
+                "total_quality_points":
+                    semester_quality_points,
+
+                "class_of_degree":
+                    get_class_of_degree(
+                        semester_gpa
+                    ),
+
+                "level":
+                    level,
+
+                "semester":
+                    semester_name,
+
+                "student_name":
+                    "Guest Student",
+
+                "matric_number":
+                    "",
+
+                "is_guest_result":
+                    True,
+            }
+
+            return render(
+                request,
+                "calculator/home.html",
+                {
+                    "result": result,
+                    "student": student,
+                }
+            )
+
+
+        # =================================================
+        # LOGGED-IN STUDENT
+        # =================================================
+        # A logged-in student's semester can be saved to
+        # their academic record as before.
+        # =================================================
+
+        semester_exists = Semester.objects.filter(
+            student=student,
+            level=level,
+            semester=semester_name
+        ).exists()
+
+
+        if semester_exists:
+
+            result = {
+                "error": (
+                    f"{level} Level - "
+                    f"{semester_name} already exists "
+                    "for this student."
+                ),
+                "matric_number":
+                    student.matric_number
+            }
+
+            return render(
+                request,
+                "calculator/home.html",
+                {
+                    "result": result,
+                    "student": student,
+                }
+            )
+
+
         # -------------------------------------------------
-        # CUMULATIVE CGPA
+        # SAVE SEMESTER AND COURSES ATOMICALLY
         # -------------------------------------------------
 
-        cgpa_data = calculate_student_cgpa(student)
+        try:
+
+            with transaction.atomic():
+
+                semester = Semester.objects.create(
+                    student=student,
+                    level=level,
+                    semester=semester_name
+                )
+
+                for course_data in cleaned_courses:
+
+                    Course.objects.create(
+                        semester=semester,
+                        course_code=
+                            course_data["course_code"],
+                        course_unit=
+                            course_data["course_unit"],
+                        grade=
+                            course_data["grade"]
+                    )
+
+        except Exception:
+
+            result = {
+                "error": (
+                    "Your result could not be saved. "
+                    "Please try again."
+                )
+            }
+
+            return render(
+                request,
+                "calculator/home.html",
+                {
+                    "result": result,
+                    "student": student,
+                }
+            )
+
+
+        # -------------------------------------------------
+        # UPDATED CUMULATIVE CGPA
+        # -------------------------------------------------
+
+        cgpa_data = calculate_student_cgpa(
+            student
+        )
 
         cgpa = cgpa_data["cgpa"]
 
-        # -------------------------------------------------
-        # CLASS OF DEGREE
-        # -------------------------------------------------
+        class_of_degree = get_class_of_degree(
+            cgpa
+        )
 
-        class_of_degree = get_class_of_degree(cgpa)
-
-        # -------------------------------------------------
-        # RESULT
-        # -------------------------------------------------
 
         result = {
-            "cgpa": cgpa,
+            "cgpa":
+                cgpa,
 
             "semester_gpa":
-                round(
-                    semester_gpa,
-                    2
-                ),
+                semester_gpa,
 
             "total_units":
                 cgpa_data["total_units"],
@@ -544,10 +650,14 @@ def home(request):
 
             "matric_number":
                 student.matric_number,
+
+            "is_guest_result":
+                False,
         }
 
+
     # -----------------------------------------------------
-    # RENDER HOME
+    # RENDER PUBLIC HOME
     # -----------------------------------------------------
 
     return render(
@@ -1373,11 +1483,346 @@ def dashboard(request, matric_number):
     )
 
 
+
 # =========================================================
 # STUDENT REGISTRATION
 # =========================================================
 
 def register(request):
+
+    # -----------------------------------------------------
+    # IF ALREADY LOGGED IN
+    # -----------------------------------------------------
+
+    if request.user.is_authenticated:
+
+        try:
+
+            student = Student.objects.get(
+                user=request.user
+            )
+
+            return redirect(
+                "dashboard",
+                matric_number=student.matric_number
+            )
+
+        except Student.DoesNotExist:
+
+            logout(request)
+
+
+    # -----------------------------------------------------
+    # PROCESS REGISTRATION
+    # -----------------------------------------------------
+
+    if request.method == "POST":
+
+        # -------------------------------------------------
+        # GET FORM DATA
+        # -------------------------------------------------
+
+        matric_number = request.POST.get(
+            "matric_number"
+        )
+
+        password = request.POST.get(
+            "password"
+        )
+
+        confirm_password = request.POST.get(
+            "confirm_password"
+        )
+
+        name = request.POST.get(
+            "name"
+        )
+
+        department = request.POST.get(
+            "department"
+        )
+
+        university = request.POST.get(
+            "university"
+        )
+
+        email = request.POST.get(
+            "email"
+        )
+
+
+        # -------------------------------------------------
+        # CLEAN DATA
+        # -------------------------------------------------
+
+        matric_number = (
+            matric_number.strip()
+            if matric_number
+            else ""
+        )
+
+        name = (
+            name.strip()
+            if name
+            else ""
+        )
+
+        department = (
+            department.strip()
+            if department
+            else ""
+        )
+
+        university = (
+            university.strip()
+            if university
+            else ""
+        )
+
+        email = (
+            email.strip().lower()
+            if email
+            else ""
+        )
+
+
+        # -------------------------------------------------
+        # REQUIRED FIELDS
+        # -------------------------------------------------
+
+        if not matric_number:
+
+            messages.error(
+                request,
+                "Please enter your matric number."
+            )
+
+            return render(
+                request,
+                "calculator/register.html"
+            )
+
+
+        if not password:
+
+            messages.error(
+                request,
+                "Please enter a password."
+            )
+
+            return render(
+                request,
+                "calculator/register.html"
+            )
+
+
+        if not confirm_password:
+
+            messages.error(
+                request,
+                "Please confirm your password."
+            )
+
+            return render(
+                request,
+                "calculator/register.html"
+            )
+
+
+        if not name:
+
+            messages.error(
+                request,
+                "Please enter your name."
+            )
+
+            return render(
+                request,
+                "calculator/register.html"
+            )
+
+
+        if not department:
+
+            messages.error(
+                request,
+                "Please enter your department."
+            )
+
+            return render(
+                request,
+                "calculator/register.html"
+            )
+
+
+        if not email:
+
+            messages.error(
+                request,
+                "Please enter your email."
+            )
+
+            return render(
+                request,
+                "calculator/register.html"
+            )
+
+
+        # -------------------------------------------------
+        # PASSWORD MATCH
+        # -------------------------------------------------
+
+        if password != confirm_password:
+
+            messages.error(
+                request,
+                "Passwords do not match."
+            )
+
+            return render(
+                request,
+                "calculator/register.html"
+            )
+
+
+        # -------------------------------------------------
+        # CHECK MATRIC NUMBER
+        # -------------------------------------------------
+
+        if Student.objects.filter(
+            matric_number=matric_number
+        ).exists():
+
+            messages.error(
+                request,
+                "This matric number is already registered."
+            )
+
+            return render(
+                request,
+                "calculator/register.html"
+            )
+
+
+        # -------------------------------------------------
+        # CHECK USERNAME
+        # -------------------------------------------------
+
+        if User.objects.filter(
+            username=matric_number
+        ).exists():
+
+            messages.error(
+                request,
+                "This matric number is already associated with an account."
+            )
+
+            return render(
+                request,
+                "calculator/register.html"
+            )
+
+
+        # -------------------------------------------------
+        # CHECK EMAIL
+        # -------------------------------------------------
+
+        if Student.objects.filter(
+            email=email
+        ).exists():
+
+            messages.error(
+                request,
+                "This email is already registered."
+            )
+
+            return render(
+                request,
+                "calculator/register.html"
+            )
+
+
+        if User.objects.filter(
+            email=email
+        ).exists():
+
+            messages.error(
+                request,
+                "This email is already associated with an account."
+            )
+
+            return render(
+                request,
+                "calculator/register.html"
+            )
+
+
+        # -------------------------------------------------
+        # CREATE USER AND STUDENT
+        # -------------------------------------------------
+
+        user = None
+
+        try:
+
+            user = User.objects.create_user(
+                username=matric_number,
+                email=email,
+                password=password
+            )
+
+            Student.objects.create(
+                user=user,
+                name=name,
+                matric_number=matric_number,
+                department=department,
+                email=email,
+                university=university
+            )
+
+        except Exception as e:
+
+            if user is not None:
+                user.delete()
+
+            messages.error(
+                request,
+                f"Registration failed: {str(e)}"
+            )
+
+            return render(
+                request,
+                "calculator/register.html"
+            )
+
+
+        # -------------------------------------------------
+        # DO NOT AUTOMATICALLY LOGIN
+        # -------------------------------------------------
+
+        messages.success(
+            request,
+            "Registration successful! Please log in with your matric number and password."
+        )
+
+
+        # -------------------------------------------------
+        # SEND NEW STUDENT TO LOGIN PAGE
+        # -------------------------------------------------
+
+        return redirect(
+            "login"
+        )
+
+
+    # -----------------------------------------------------
+    # DISPLAY REGISTRATION PAGE
+    # -----------------------------------------------------
+
+    return render(
+        request,
+        "calculator/register.html"
+    )
 
     # -----------------------------------------------------
     # IF ALREADY LOGGED IN
@@ -1714,6 +2159,25 @@ def register(request):
 def login_view(request):
 
     # -----------------------------------------------------
+    # READ OPTIONAL NEXT DESTINATION
+    # -----------------------------------------------------
+    # @login_required automatically sends visitors to:
+    # /login/?next=/protected-page/
+    #
+    # We preserve that destination and return the student
+    # there after a successful login.
+    # -----------------------------------------------------
+
+    next_url = (
+        request.POST.get("next")
+        or
+        request.GET.get("next")
+        or
+        ""
+    )
+
+
+    # -----------------------------------------------------
     # IF ALREADY LOGGED IN
     # -----------------------------------------------------
 
@@ -1725,6 +2189,22 @@ def login_view(request):
                 user=request.user
             )
 
+            if (
+                next_url
+                and
+                url_has_allowed_host_and_scheme(
+                    url=next_url,
+                    allowed_hosts={
+                        request.get_host()
+                    },
+                    require_https=request.is_secure(),
+                )
+            ):
+
+                return redirect(
+                    next_url
+                )
+
             return redirect(
                 "dashboard",
                 matric_number=student.matric_number
@@ -1732,7 +2212,10 @@ def login_view(request):
 
         except Student.DoesNotExist:
 
+            # Non-student authenticated accounts should not
+            # be treated as student accounts here.
             logout(request)
+
 
     # -----------------------------------------------------
     # PROCESS LOGIN
@@ -1750,6 +2233,7 @@ def login_view(request):
             ""
         )
 
+
         # -------------------------------------------------
         # CHECK MATRIC NUMBER
         # -------------------------------------------------
@@ -1763,8 +2247,12 @@ def login_view(request):
 
             return render(
                 request,
-                "calculator/login.html"
+                "calculator/login.html",
+                {
+                    "next": next_url
+                }
             )
+
 
         # -------------------------------------------------
         # CHECK PASSWORD
@@ -1779,8 +2267,12 @@ def login_view(request):
 
             return render(
                 request,
-                "calculator/login.html"
+                "calculator/login.html",
+                {
+                    "next": next_url
+                }
             )
+
 
         # -------------------------------------------------
         # FIND STUDENT
@@ -1803,8 +2295,12 @@ def login_view(request):
 
             return render(
                 request,
-                "calculator/login.html"
+                "calculator/login.html",
+                {
+                    "next": next_url
+                }
             )
+
 
         # -------------------------------------------------
         # AUTHENTICATE
@@ -1816,9 +2312,6 @@ def login_view(request):
             password=password
         )
 
-        # -------------------------------------------------
-        # INVALID LOGIN
-        # -------------------------------------------------
 
         if user is None:
 
@@ -1829,8 +2322,12 @@ def login_view(request):
 
             return render(
                 request,
-                "calculator/login.html"
+                "calculator/login.html",
+                {
+                    "next": next_url
+                }
             )
+
 
         # -------------------------------------------------
         # LOGIN USER
@@ -1841,17 +2338,35 @@ def login_view(request):
             user
         )
 
-        # -------------------------------------------------
-        # SUCCESS
-        # -------------------------------------------------
-
         messages.success(
             request,
             "Login successful. Welcome back!"
         )
 
+
         # -------------------------------------------------
-        # GO TO DASHBOARD
+        # RETURN TO REQUESTED PROTECTED FEATURE
+        # -------------------------------------------------
+
+        if (
+            next_url
+            and
+            url_has_allowed_host_and_scheme(
+                url=next_url,
+                allowed_hosts={
+                    request.get_host()
+                },
+                require_https=request.is_secure(),
+            )
+        ):
+
+            return redirect(
+                next_url
+            )
+
+
+        # -------------------------------------------------
+        # DEFAULT: GO TO DASHBOARD
         # -------------------------------------------------
 
         return redirect(
@@ -1859,13 +2374,17 @@ def login_view(request):
             matric_number=student.matric_number
         )
 
+
     # -----------------------------------------------------
     # DISPLAY LOGIN PAGE
     # -----------------------------------------------------
 
     return render(
         request,
-        "calculator/login.html"
+        "calculator/login.html",
+        {
+            "next": next_url
+        }
     )
 
 
@@ -1884,7 +2403,7 @@ def logout_view(request):
     )
 
     return redirect(
-        "login"
+        "home"
     )
 
 

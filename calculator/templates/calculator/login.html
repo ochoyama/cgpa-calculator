@@ -43,46 +43,142 @@
 
             margin: 0;
 
+            min-height: 100vh;
+
             font-family:
                 Arial,
                 sans-serif;
 
-            background: #151c5a;
+            background:
+                linear-gradient(
+                    135deg,
+                    #151c5a,
+                    #243b8f
+                );
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 30px 15px;
 
         }
 
+
+        /* ================================================
+           CONTAINER
+        ================================================= */
 
         .container {
 
-            width: 90%;
+            width: 100%;
 
             max-width: 450px;
 
-            margin: 70px auto;
-
         }
 
+
+        /* ================================================
+           LOGIN CARD
+        ================================================= */
 
         .card {
 
             background: white;
 
-            padding: 30px;
+            padding: 35px;
 
-            border-radius: 12px;
+            border-radius: 16px;
 
             box-shadow:
-                0 4px 15px
-                rgba(0,0,0,0.08);
+                0 15px 40px
+                rgba(0, 0, 0, 0.18);
 
         }
 
+
+        /* ================================================
+           BRAND
+        ================================================= */
+
+        .brand {
+
+            text-align: center;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .brand-icon {
+
+            width: 60px;
+
+            height: 60px;
+
+            margin:
+                0 auto
+                12px;
+
+            border-radius: 16px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #151c5a,
+                    #0d6efd
+                );
+
+            color: white;
+
+            font-size: 28px;
+
+            font-weight: bold;
+
+            box-shadow:
+                0 8px 20px
+                rgba(21, 28, 90, 0.25);
+
+        }
+
+
+        .brand-name {
+
+            color: #151c5a;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            letter-spacing: 0.5px;
+
+        }
+
+
+        /* ================================================
+           HEADING
+        ================================================= */
 
         h1 {
 
             text-align: center;
 
-            margin-bottom: 10px;
+            margin:
+                0
+                0
+                10px;
+
+            color: #172033;
+
+            font-size: 28px;
 
         }
 
@@ -93,7 +189,126 @@
 
             color: #666;
 
-            margin-bottom: 25px;
+            line-height: 1.6;
+
+            margin:
+                0
+                0
+                25px;
+
+        }
+
+
+        /* ================================================
+           OFFLINE STATUS
+        ================================================= */
+
+        .offline-status {
+
+            display: none;
+
+            background: #fff3cd;
+
+            color: #664d03;
+
+            padding: 12px;
+
+            margin-bottom: 18px;
+
+            border-radius: 8px;
+
+            text-align: center;
+
+            font-weight: bold;
+
+            font-size: 14px;
+
+        }
+
+
+        /* ================================================
+           OLD ERROR VARIABLE
+        ================================================= */
+
+        .error {
+
+            background: #f8d7da;
+
+            color: #842029;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            margin-bottom: 18px;
+
+            line-height: 1.5;
+
+        }
+
+
+        /* ================================================
+           DJANGO MESSAGES
+        ================================================= */
+
+        .message {
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            margin-bottom: 18px;
+
+            line-height: 1.5;
+
+            font-size: 14px;
+
+        }
+
+
+        .message.success {
+
+            background: #d1e7dd;
+
+            color: #0f5132;
+
+        }
+
+
+        .message.error {
+
+            background: #f8d7da;
+
+            color: #842029;
+
+        }
+
+
+        .message.warning {
+
+            background: #fff3cd;
+
+            color: #664d03;
+
+        }
+
+
+        .message.info {
+
+            background: #cff4fc;
+
+            color: #055160;
+
+        }
+
+
+        /* ================================================
+           FORM
+        ================================================= */
+
+        .form-group {
+
+            margin-bottom: 18px;
 
         }
 
@@ -104,100 +319,121 @@
 
             font-weight: bold;
 
-            margin-bottom: 7px;
+            margin-bottom: 8px;
+
+            color: #172033;
+
+            font-size: 14px;
 
         }
 
 
-        input {
+        input[type="text"],
+        input[type="password"] {
 
             width: 100%;
 
-            padding: 12px;
-
-            margin-bottom: 18px;
+            padding: 13px 14px;
 
             border:
-                1px solid #ccc;
+                1px solid
+                #d5d9e0;
 
-            border-radius: 6px;
+            border-radius: 8px;
 
             font-size: 15px;
 
+            background: #fff;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+
         }
 
 
-        input:focus {
+        input[type="text"]:focus,
+        input[type="password"]:focus {
 
             outline: none;
 
-            border-color: #151c5a;
+            border-color: #0d6efd;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(13, 110, 253, 0.12);
 
         }
 
 
-        button {
+        /* ================================================
+           PASSWORD AREA
+        ================================================= */
 
-            width: 100%;
+        .password-wrapper {
 
-            padding: 13px;
+            position: relative;
 
-            background: #151c5a;
+        }
 
-            color: white;
+
+        .password-wrapper input {
+
+            padding-right: 65px;
+
+        }
+
+
+        .password-toggle {
+
+            position: absolute;
+
+            right: 12px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            background: transparent;
 
             border: none;
 
-            border-radius: 6px;
+            width: auto;
 
-            font-size: 16px;
+            padding: 5px;
+
+            margin: 0;
+
+            color: #0d6efd;
+
+            font-size: 13px;
+
+            font-weight: bold;
 
             cursor: pointer;
 
         }
 
 
-        button:hover {
+        .password-toggle:hover {
 
-            opacity: 0.9;
-
-        }
-
-
-        .register-link {
-
-            text-align: center;
-
-            margin-top: 20px;
+            opacity: 0.75;
 
         }
 
 
-        .register-link a {
-
-            color: #0d6efd;
-
-            text-decoration: none;
-
-            font-weight: bold;
-
-        }
-
-
-        .register-link a:hover {
-
-            text-decoration: underline;
-
-        }
-
+        /* ================================================
+           FORGOT PASSWORD
+        ================================================= */
 
         .forgot-password {
 
             text-align: right;
 
-            margin-top: -8px;
-
-            margin-bottom: 18px;
+            margin:
+                -5px
+                0
+                20px;
 
         }
 
@@ -222,53 +458,285 @@
         }
 
 
-        .error {
+        /* ================================================
+           LOGIN BUTTON
+        ================================================= */
 
-            background: #f8d7da;
+        .login-button {
 
-            color: #842029;
+            width: 100%;
 
-            padding: 12px;
+            padding: 14px;
 
-            border-radius: 6px;
+            background:
+                linear-gradient(
+                    135deg,
+                    #151c5a,
+                    #243b8f
+                );
 
-            margin-bottom: 20px;
+            color: white;
+
+            border: none;
+
+            border-radius: 8px;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                opacity 0.2s ease;
 
         }
 
 
-        .message {
+        .login-button:hover {
 
-            background: #d1e7dd;
+            transform: translateY(-1px);
 
-            color: #0f5132;
-
-            padding: 12px;
-
-            border-radius: 6px;
-
-            margin-bottom: 20px;
+            box-shadow:
+                0 7px 18px
+                rgba(21, 28, 90, 0.25);
 
         }
 
 
-        .offline-status {
+        .login-button:disabled {
 
-            display: none;
+            cursor: not-allowed;
 
-            background: #fff3cd;
+            opacity: 0.6;
 
-            color: #664d03;
+            transform: none;
 
-            padding: 10px;
+            box-shadow: none;
 
-            margin-bottom: 15px;
+        }
 
-            border-radius: 6px;
+
+        /* ================================================
+           REGISTER
+        ================================================= */
+
+        .register-link {
 
             text-align: center;
 
+            margin-top: 22px;
+
+            color: #666;
+
+            font-size: 14px;
+
+        }
+
+
+        .register-link a {
+
+            color: #0d6efd;
+
+            text-decoration: none;
+
             font-weight: bold;
+
+        }
+
+
+        .register-link a:hover {
+
+            text-decoration: underline;
+
+        }
+
+
+        /* ================================================
+           DIVIDER
+        ================================================= */
+
+        .divider {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin:
+                24px
+                0
+                18px;
+
+            color: #999;
+
+            font-size: 12px;
+
+        }
+
+
+        .divider::before,
+        .divider::after {
+
+            content: "";
+
+            flex: 1;
+
+            height: 1px;
+
+            background: #e6eaf0;
+
+        }
+
+
+        /* ================================================
+           BACK HOME
+        ================================================= */
+
+        .home-link {
+
+            display: block;
+
+            width: 100%;
+
+            padding: 12px;
+
+            border:
+                1px solid
+                #dfe3ea;
+
+            border-radius: 8px;
+
+            text-align: center;
+
+            text-decoration: none;
+
+            color: #151c5a;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            background: #f8f9fc;
+
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease;
+
+        }
+
+
+        .home-link:hover {
+
+            background: #eef2ff;
+
+            border-color: #151c5a;
+
+        }
+
+
+        /* ================================================
+           PROTECTED FEATURE MESSAGE
+        ================================================= */
+
+        .redirect-notice {
+
+            background: #eef4ff;
+
+            border:
+                1px solid
+                #d7e5ff;
+
+            color: #243b8f;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            margin-bottom: 20px;
+
+            text-align: center;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+
+        }
+
+
+        /* ================================================
+           FOOTER
+        ================================================= */
+
+        .login-footer {
+
+            text-align: center;
+
+            margin-top: 20px;
+
+            color:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.8
+                );
+
+            font-size: 12px;
+
+        }
+
+
+        /* ================================================
+           MOBILE
+        ================================================= */
+
+        @media (max-width: 500px) {
+
+            body {
+
+                padding: 20px 12px;
+
+                align-items: flex-start;
+
+            }
+
+
+            .container {
+
+                margin-top: 20px;
+
+            }
+
+
+            .card {
+
+                padding:
+                    28px
+                    20px;
+
+                border-radius: 14px;
+
+            }
+
+
+            h1 {
+
+                font-size: 25px;
+
+            }
+
+
+            .brand-icon {
+
+                width: 55px;
+
+                height: 55px;
+
+            }
 
         }
 
@@ -282,8 +750,30 @@
 
 <div class="container">
 
+
     <div class="card">
 
+
+        <!-- =============================================
+             BRAND
+        ============================================== -->
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                A
+            </div>
+
+            <div class="brand-name">
+                A-DEVS CGPA CALCULATOR
+            </div>
+
+        </div>
+
+
+        <!-- =============================================
+             HEADING
+        ============================================== -->
 
         <h1>
             Student Login
@@ -292,12 +782,34 @@
 
         <p class="description">
 
-            Login to access your academic dashboard.
+            Login to access your academic dashboard
+            and student tools.
 
         </p>
 
 
-        <!-- OFFLINE STATUS -->
+        <!-- =============================================
+             PROTECTED PAGE NOTICE
+        ============================================== -->
+
+        {% if next %}
+
+            <div class="redirect-notice">
+
+                🔒 This feature requires a student account.
+
+                <br>
+
+                Login to continue.
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- =============================================
+             OFFLINE STATUS
+        ============================================== -->
 
         <div
             id="offlineStatus"
@@ -306,10 +818,14 @@
 
             📡 You are currently offline.
 
+            Login requires an internet connection.
+
         </div>
 
 
-        <!-- ERROR -->
+        <!-- =============================================
+             OLD ERROR VARIABLE
+        ============================================== -->
 
         {% if error %}
 
@@ -322,13 +838,17 @@
         {% endif %}
 
 
-        <!-- DJANGO MESSAGES -->
+        <!-- =============================================
+             DJANGO MESSAGES
+        ============================================== -->
 
         {% if messages %}
 
             {% for message in messages %}
 
-                <div class="message">
+                <div
+                    class="message {{ message.tags|default:'info' }}"
+                >
 
                     {{ message }}
 
@@ -339,44 +859,100 @@
         {% endif %}
 
 
-        <!-- LOGIN FORM -->
+        <!-- =============================================
+             LOGIN FORM
+        ============================================== -->
 
-        <form method="POST">
+        <form
+            method="POST"
+            id="loginForm"
+        >
 
             {% csrf_token %}
 
 
-            <label for="matric_number">
+            <!--
+                Preserve the protected page that sent
+                the visitor to login.
+            -->
 
-                Matric Number
+            {% if next %}
 
-            </label>
+                <input
+                    type="hidden"
+                    name="next"
+                    value="{{ next }}"
+                >
 
-
-            <input
-                type="text"
-                id="matric_number"
-                name="matric_number"
-                placeholder="Enter your matric number"
-                required
-            >
-
-
-            <label for="password">
-
-                Password
-
-            </label>
+            {% endif %}
 
 
-            <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="Enter your password"
-                required
-            >
+            <!-- MATRIC NUMBER -->
 
+            <div class="form-group">
+
+                <label for="matric_number">
+
+                    Matric Number
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="matric_number"
+                    name="matric_number"
+                    placeholder="Enter your matric number"
+                    autocomplete="username"
+                    autocapitalize="none"
+                    spellcheck="false"
+                    required
+                    autofocus
+                >
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="password">
+
+                    Password
+
+                </label>
+
+
+                <div class="password-wrapper">
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+
+                    <button
+                        type="button"
+                        id="passwordToggle"
+                        class="password-toggle"
+                        aria-label="Show password"
+                    >
+
+                        Show
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- FORGOT PASSWORD -->
 
             <div class="forgot-password">
 
@@ -389,7 +965,13 @@
             </div>
 
 
-            <button type="submit">
+            <!-- LOGIN BUTTON -->
+
+            <button
+                type="submit"
+                id="loginButton"
+                class="login-button"
+            >
 
                 Login
 
@@ -397,6 +979,10 @@
 
         </form>
 
+
+        <!-- =============================================
+             REGISTER
+        ============================================== -->
 
         <div class="register-link">
 
@@ -411,7 +997,36 @@
         </div>
 
 
+        <!-- =============================================
+             PUBLIC HOME
+        ============================================== -->
+
+        <div class="divider">
+
+            or
+
+        </div>
+
+
+        <a
+            href="{% url 'home' %}"
+            class="home-link"
+        >
+
+            ← Back to Public Home
+
+        </a>
+
+
     </div>
+
+
+    <div class="login-footer">
+
+        A-DEVS CGPA Calculator
+
+    </div>
+
 
 </div>
 
@@ -419,10 +1034,78 @@
 <script>
 
     // =====================================================
+    // PASSWORD SHOW / HIDE
+    // =====================================================
+
+    const passwordInput =
+        document.getElementById(
+            "password"
+        );
+
+
+    const passwordToggle =
+        document.getElementById(
+            "passwordToggle"
+        );
+
+
+    if (
+        passwordInput
+        &&
+        passwordToggle
+    ) {
+
+        passwordToggle.addEventListener(
+            "click",
+            function () {
+
+                if (
+                    passwordInput.type ===
+                    "password"
+                ) {
+
+                    passwordInput.type =
+                        "text";
+
+                    passwordToggle.textContent =
+                        "Hide";
+
+                    passwordToggle.setAttribute(
+                        "aria-label",
+                        "Hide password"
+                    );
+
+                }
+
+                else {
+
+                    passwordInput.type =
+                        "password";
+
+                    passwordToggle.textContent =
+                        "Show";
+
+                    passwordToggle.setAttribute(
+                        "aria-label",
+                        "Show password"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // =====================================================
     // SERVICE WORKER
     // =====================================================
 
-    if ("serviceWorker" in navigator) {
+    if (
+        "serviceWorker"
+        in navigator
+    ) {
 
         window.addEventListener(
             "load",
@@ -439,6 +1122,7 @@
                                     scope: "/"
                                 }
                             );
+
 
                     console.log(
                         "Service Worker registered:",
@@ -472,12 +1156,34 @@
         );
 
 
+    const loginButton =
+        document.getElementById(
+            "loginButton"
+        );
+
+
     function updateConnectionStatus() {
+
+        if (!offlineStatus) {
+            return;
+        }
+
 
         if (navigator.onLine) {
 
             offlineStatus.style.display =
                 "none";
+
+
+            if (loginButton) {
+
+                loginButton.disabled =
+                    false;
+
+                loginButton.textContent =
+                    "Login";
+
+            }
 
         }
 
@@ -485,6 +1191,17 @@
 
             offlineStatus.style.display =
                 "block";
+
+
+            if (loginButton) {
+
+                loginButton.disabled =
+                    true;
+
+                loginButton.textContent =
+                    "Login Unavailable Offline";
+
+            }
 
         }
 
@@ -504,6 +1221,45 @@
 
 
     updateConnectionStatus();
+
+
+    // =====================================================
+    // LOGIN FORM SUBMISSION
+    // =====================================================
+
+    const loginForm =
+        document.getElementById(
+            "loginForm"
+        );
+
+
+    if (loginForm) {
+
+        loginForm.addEventListener(
+            "submit",
+            function () {
+
+                if (!navigator.onLine) {
+
+                    return;
+
+                }
+
+
+                if (loginButton) {
+
+                    loginButton.disabled =
+                        true;
+
+                    loginButton.textContent =
+                        "Logging in...";
+
+                }
+
+            }
+        );
+
+    }
 
 </script>
 

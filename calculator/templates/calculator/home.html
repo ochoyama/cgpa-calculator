@@ -466,6 +466,16 @@
         .feature-icon { width:48px; height:48px; display:grid; place-items:center; border-radius:13px; background:#edf4ff; font-size:22px; margin-bottom:16px; }
         .feature-card h3 { margin:0 0 8px; }
         .feature-card p { margin:0; color:#6b7280; }
+
+        .feature-card { display:flex; flex-direction:column; }
+        .feature-card p { flex:1; }
+        .feature-action { display:inline-flex; align-items:center; justify-content:center; width:fit-content; margin-top:18px; padding:10px 14px; border-radius:9px; background:#151c5a; color:white; text-decoration:none; font-size:13px; font-weight:800; }
+        .feature-action:hover { opacity:.92; }
+        .feature-action.locked { background:#eef2ff; color:#151c5a; border:1px solid #dbe3ff; }
+        .feature-action.public { background:#198754; }
+        .guest-calculator-note { margin:0 0 22px; padding:14px 16px; border-radius:10px; background:#eef4ff; border:1px solid #d7e5ff; color:#243b8f; line-height:1.55; }
+        .guest-result-note { margin-top:18px; padding:14px 16px; border-radius:9px; background:#fff3cd; color:#664d03; line-height:1.5; }
+
         #calculator { scroll-margin-top:90px; }
         .container { margin:0 auto 50px !important; padding-top:76px; }
         .calculator-card { background:white !important; border-radius:18px !important; box-shadow:0 16px 40px rgba(17,24,39,.08) !important; }
@@ -491,7 +501,9 @@
 </head>
 
 
-<body>
+<body
+    data-student-logged-in="{% if user.is_authenticated and student %}true{% else %}false{% endif %}"
+>
 
 
 <!-- =====================================================
@@ -540,17 +552,24 @@
   <div class="hero-inner">
     <div>
       <span class="eyebrow">🎓 Built for university students</span>
-      <h1>Take control of your academic performance.</h1>
-      <p>Calculate your GPA and CGPA, save semester results, track academic progress and make better decisions about your studies.</p>
-      <div class="hero-actions">
-        <a href="#calculator" class="hero-btn primary">Calculate CGPA</a>
-        {% if user.is_authenticated and student %}
+
+      {% if user.is_authenticated and student %}
+        <h1>Welcome back. Keep building your academic progress.</h1>
+        <p>Calculate your GPA and CGPA, review your saved results and continue using your academic planning tools.</p>
+        <div class="hero-actions">
+          <a href="#calculator" class="hero-btn primary">Calculate CGPA</a>
           <a href="{% url 'dashboard' student.matric_number %}" class="hero-btn secondary">My Dashboard</a>
-        {% else %}
+        </div>
+      {% else %}
+        <h1>Take control of your academic performance.</h1>
+        <p>Calculate your GPA and CGPA for free. Create a student account when you are ready to save results, track progress and use advanced academic tools.</p>
+        <div class="hero-actions">
+          <a href="#calculator" class="hero-btn primary">Calculate CGPA Free</a>
           <a href="{% url 'register' %}" class="hero-btn secondary">Create Free Account</a>
-        {% endif %}
-      </div>
+        </div>
+      {% endif %}
     </div>
+
     <div class="hero-card">
       <h3>Your academic progress in one place</h3>
       <p>More than a calculator — A-DEVS helps you organize, understand and plan your academic journey.</p>
@@ -558,21 +577,148 @@
         <div class="mini-card"><strong>GPA</strong><span>Calculate semester performance</span></div>
         <div class="mini-card"><strong>CGPA</strong><span>Track overall progress</span></div>
         <div class="mini-card"><strong>Goals</strong><span>Plan toward your target</span></div>
-        <div class="mini-card"><strong>Offline</strong><span>Save drafts without internet</span></div>
+        <div class="mini-card"><strong>Offline</strong><span>Keep drafts on your device</span></div>
       </div>
     </div>
   </div>
 </section>
 
 <section class="landing-section" id="features">
-  <div class="section-heading"><h2>Everything you need to understand your results</h2><p>Simple academic tools designed to help students calculate, track and improve their performance.</p></div>
+  <div class="section-heading">
+    <h2>Academic tools that grow with you</h2>
+    <p>The calculator is public and free to use. Sign in to save academic data and access your personal student tools.</p>
+  </div>
+
   <div class="feature-grid">
-    <div class="feature-card"><div class="feature-icon">📊</div><h3>CGPA Tracking</h3><p>Save semester results and monitor your cumulative academic performance over time.</p></div>
-    <div class="feature-card"><div class="feature-icon">🎯</div><h3>Goal Planner</h3><p>Estimate the performance you may need to work toward your target CGPA.</p></div>
-    <div class="feature-card"><div class="feature-icon">🧪</div><h3>Grade Simulator</h3><p>Test different grade scenarios and see how future results may affect your CGPA.</p></div>
-    <div class="feature-card"><div class="feature-icon">📚</div><h3>Academic Records</h3><p>Keep courses, units, grades and semester results organized in one account.</p></div>
-    <div class="feature-card"><div class="feature-icon">🔔</div><h3>Academic Reminders</h3><p>Stay aware of important exams and academic activities.</p></div>
-    <div class="feature-card"><div class="feature-icon">📱</div><h3>Offline Support</h3><p>Temporarily save result information on your device when your connection drops.</p></div>
+
+    <div class="feature-card">
+      <div class="feature-icon">🧮</div>
+      <h3>CGPA Calculator</h3>
+      <p>Calculate a semester GPA without creating an account. Logged-in students can also save results to their records.</p>
+      <a href="#calculator" class="feature-action public">Use Free Calculator</a>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>CGPA Progress</h3>
+      <p>View how your cumulative academic performance changes across your saved semesters.</p>
+      {% if user.is_authenticated and student %}
+        <a href="{% url 'cgpa_progress_chart' %}" class="feature-action">Open Progress Chart</a>
+      {% else %}
+        <a href="{% url 'login' %}?next={% url 'cgpa_progress_chart' %}" class="feature-action locked">🔒 Login to Use</a>
+      {% endif %}
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <h3>Goal Planner</h3>
+      <p>Estimate the performance you may need to work toward your target CGPA.</p>
+      {% if user.is_authenticated and student %}
+        <a href="{% url 'cgpa_goal_planner' %}" class="feature-action">Open Goal Planner</a>
+      {% else %}
+        <a href="{% url 'login' %}?next={% url 'cgpa_goal_planner' %}" class="feature-action locked">🔒 Login to Use</a>
+      {% endif %}
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">🧪</div>
+      <h3>Grade Simulator</h3>
+      <p>Test different grade scenarios and see how future results may affect your CGPA.</p>
+      {% if user.is_authenticated and student %}
+        <a href="{% url 'grade_scenario_simulator' %}" class="feature-action">Open Simulator</a>
+      {% else %}
+        <a href="{% url 'login' %}?next={% url 'grade_scenario_simulator' %}" class="feature-action locked">🔒 Login to Use</a>
+      {% endif %}
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">🎓</div>
+      <h3>Graduation Predictor</h3>
+      <p>Estimate possible graduation CGPA outcomes using your saved academic performance.</p>
+      {% if user.is_authenticated and student %}
+        <a href="{% url 'graduation_cgpa_predictor' %}" class="feature-action">Open Predictor</a>
+      {% else %}
+        <a href="{% url 'login' %}?next={% url 'graduation_cgpa_predictor' %}" class="feature-action locked">🔒 Login to Use</a>
+      {% endif %}
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">🧠</div>
+      <h3>Smart Academic Advisor</h3>
+      <p>Use your academic records to receive personalized academic observations and planning support.</p>
+      {% if user.is_authenticated and student %}
+        <a href="{% url 'smart_academic_advisor' %}" class="feature-action">Open Advisor</a>
+      {% else %}
+        <a href="{% url 'login' %}?next={% url 'smart_academic_advisor' %}" class="feature-action locked">🔒 Login to Use</a>
+      {% endif %}
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">📅</div>
+      <h3>Academic Planner</h3>
+      <p>Organize academic tasks and keep track of what you need to complete.</p>
+      {% if user.is_authenticated and student %}
+        <a href="{% url 'academic_planner' %}" class="feature-action">Open Planner</a>
+      {% else %}
+        <a href="{% url 'login' %}?next={% url 'academic_planner' %}" class="feature-action locked">🔒 Login to Use</a>
+      {% endif %}
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">📈</div>
+      <h3>Academic Analytics</h3>
+      <p>Review useful statistics and patterns from your saved academic records.</p>
+      {% if user.is_authenticated and student %}
+        <a href="{% url 'academic_analytics' %}" class="feature-action">Open Analytics</a>
+      {% else %}
+        <a href="{% url 'login' %}?next={% url 'academic_analytics' %}" class="feature-action locked">🔒 Login to Use</a>
+      {% endif %}
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">🔁</div>
+      <h3>Retake Tracker</h3>
+      <p>Keep track of carryover or retake courses alongside your academic records.</p>
+      {% if user.is_authenticated and student %}
+        <a href="{% url 'retake_tracker' %}" class="feature-action">Open Retake Tracker</a>
+      {% else %}
+        <a href="{% url 'login' %}?next={% url 'retake_tracker' %}" class="feature-action locked">🔒 Login to Use</a>
+      {% endif %}
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">🔔</div>
+      <h3>Exam Reminders</h3>
+      <p>Keep important exams and academic dates visible inside your student account.</p>
+      {% if user.is_authenticated and student %}
+        <a href="{% url 'exam_reminders' %}" class="feature-action">Open Reminders</a>
+      {% else %}
+        <a href="{% url 'login' %}?next={% url 'exam_reminders' %}" class="feature-action locked">🔒 Login to Use</a>
+      {% endif %}
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">📚</div>
+      <h3>Academic Record</h3>
+      <p>Keep your courses, units, grades and semester results organized in one student account.</p>
+      {% if user.is_authenticated and student %}
+        <a href="{% url 'academic_record' student.matric_number %}" class="feature-action">View Academic Record</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="feature-action locked">🔒 Login to Use</a>
+      {% endif %}
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">📄</div>
+      <h3>Academic Report</h3>
+      <p>Download a PDF summary generated from your saved academic records.</p>
+      {% if user.is_authenticated and student %}
+        <a href="{% url 'download_academic_report' %}" class="feature-action">Download Report</a>
+      {% else %}
+        <a href="{% url 'login' %}?next={% url 'download_academic_report' %}" class="feature-action locked">🔒 Login to Use</a>
+      {% endif %}
+    </div>
+
   </div>
 </section>
 
@@ -625,6 +771,24 @@
                 {{ result.error }}
             </div>
 
+        {% endif %}
+
+
+
+        {% if user.is_authenticated and student %}
+            <div class="guest-calculator-note">
+                ✅ You are signed in. Valid semester results submitted here can be saved to your academic record.
+            </div>
+        {% else %}
+            <div class="guest-calculator-note">
+                🧮 <strong>Free public calculator:</strong>
+                calculate your semester GPA without creating an account.
+                Guest calculations are not saved to an academic record.
+                <a href="{% url 'login' %}" style="color:#151c5a;font-weight:800;">Login</a>
+                or
+                <a href="{% url 'register' %}" style="color:#151c5a;font-weight:800;">create an account</a>
+                to save and track your results.
+            </div>
         {% endif %}
 
 
@@ -802,7 +966,11 @@
                     class="calculate-btn"
                     id="calculateBtn"
                 >
-                    Calculate & Save Result
+                    {% if user.is_authenticated and student %}
+                        Calculate & Save Result
+                    {% else %}
+                        Calculate GPA
+                    {% endif %}
                 </button>
 
 
@@ -811,7 +979,11 @@
                     class="offline-save-btn"
                     id="saveOfflineBtn"
                 >
-                    📥 Save Result for Sync
+                    {% if user.is_authenticated and student %}
+                        📥 Save Result for Sync
+                    {% else %}
+                        💾 Save Draft on Device
+                    {% endif %}
                 </button>
 
             </div>
@@ -916,24 +1088,29 @@
                 </div>
 
 
-                <div class="result-buttons">
+                {% if user.is_authenticated and student %}
+                    <div class="result-buttons">
+                        <a
+                            href="{% url 'academic_record' student.matric_number %}"
+                            class="view-record"
+                        >
+                            View Academic Record
+                        </a>
 
-                    <a
-                        href="{% url 'academic_record' student.matric_number %}"
-                        class="view-record"
-                    >
-                        View Academic Record
-                    </a>
-
-
-                    <a
-                        href="{% url 'dashboard' student.matric_number %}"
-                        class="view-dashboard"
-                    >
-                        Go to Dashboard
-                    </a>
-
-                </div>
+                        <a
+                            href="{% url 'dashboard' student.matric_number %}"
+                            class="view-dashboard"
+                        >
+                            Go to Dashboard
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="guest-result-note">
+                        This was a guest calculation and was not added to an academic record.
+                        <a href="{% url 'register' %}"><strong>Create a free account</strong></a>
+                        to save future semester results and use the student tools.
+                    </div>
+                {% endif %}
 
             </div>
 
@@ -944,11 +1121,11 @@
 
 
     <section class="landing-section" id="how-it-works">
-      <div class="section-heading"><h2>How it works</h2><p>Calculate and save your academic result in three simple steps.</p></div>
+      <div class="section-heading"><h2>How it works</h2><p>Calculate your academic result in three simple steps. Sign in if you want to save it to your student record.</p></div>
       <div class="steps-grid">
         <div class="step-card"><div class="step-number">1</div><h3>Select your semester</h3><p>Choose your academic level and semester.</p></div>
         <div class="step-card"><div class="step-number">2</div><h3>Enter your courses</h3><p>Add each course code, credit unit and grade.</p></div>
-        <div class="step-card"><div class="step-number">3</div><h3>See your result</h3><p>Get your semester GPA, updated CGPA and class of degree.</p></div>
+        <div class="step-card"><div class="step-number">3</div><h3>See your result</h3><p>Get your semester GPA and performance estimate. Signed-in students can also update their saved CGPA record.</p></div>
       </div>
     </section>
 
@@ -987,7 +1164,7 @@
           <div class="footer-links">
             {% if user.is_authenticated and student %}
               <a href="{% url 'dashboard' student.matric_number %}">Dashboard</a>
-            {% else %}
+            {% elif not user.is_authenticated %}
               <a href="{% url 'login' %}">Login</a>
               <a href="{% url 'register' %}">Register</a>
             {% endif %}
@@ -1036,6 +1213,8 @@
     const SYNC_URL =
         "{% url 'sync_offline_result' %}";
 
+    const STUDENT_LOGGED_IN =
+        document.body.dataset.studentLoggedIn === "true";
 
     // =====================================================
     // ELEMENTS
@@ -1941,6 +2120,21 @@
 
     function updateQueueStatus() {
 
+        // Guests use only local drafts. Do not expose or
+        // process an account sync queue while logged out.
+        if (!STUDENT_LOGGED_IN) {
+
+            queueStatus.style.display =
+                "none";
+
+            queueStatus.textContent =
+                "";
+
+            return;
+
+        }
+
+
         const queue =
             getSyncQueue();
 
@@ -1952,6 +2146,8 @@
             queueStatus.style.display =
                 "none";
 
+            queueStatus.textContent =
+                "";
 
             return;
 
@@ -1973,6 +2169,36 @@
     // =====================================================
 
     function saveCurrentResultToQueue() {
+
+        if (!STUDENT_LOGGED_IN) {
+
+            const guestData =
+                collectCalculatorFormData();
+
+            if (
+                !hasMeaningfulDraft(
+                    guestData
+                )
+            ) {
+
+                alert(
+                    "Enter at least one calculator value before saving a draft."
+                );
+
+                return;
+
+            }
+
+
+            saveCalculatorFormLocally();
+
+            alert(
+                "Your calculator draft has been saved on this device. Login or create an account to save semester results to an academic record."
+            );
+
+            return;
+
+        }
 
         const data =
             collectCalculatorFormData();
@@ -2071,6 +2297,10 @@
     // =====================================================
 
     async function syncQueuedResults() {
+
+        if (!STUDENT_LOGGED_IN) {
+            return;
+        }
 
         if (
             !navigator.onLine ||
@@ -2408,7 +2638,9 @@
 
 
         connectionStatus.textContent =
-            "📡 You are offline. You can enter results and use 'Save Result for Sync' to store them safely on this device.";
+            STUDENT_LOGGED_IN
+                ? "📡 You are offline. You can enter results and use 'Save Result for Sync' to store them safely on this device."
+                : "📡 You are offline. You can continue entering your courses and use 'Save Draft on Device'. Online calculation will be available when your connection returns.";
 
 
         connectionStatus.className =
@@ -2450,11 +2682,17 @@
 
 
         const queuedResults =
-            getSyncQueue();
+            STUDENT_LOGGED_IN
+                ? getSyncQueue()
+                : [];
 
 
         connectionStatus.textContent =
-            queuedResults.length > 0
+            (
+                STUDENT_LOGGED_IN
+                &&
+                queuedResults.length > 0
+            )
                 ? "✅ Internet connection restored. Synchronizing saved results..."
                 : "✅ Internet connection restored.";
 
@@ -2546,7 +2784,9 @@
 
 
                 alert(
-                    "You are offline. Use 'Save Result for Sync' to store this result until your internet connection returns."
+                    STUDENT_LOGGED_IN
+                        ? "You are offline. Use 'Save Result for Sync' to store this result until your internet connection returns."
+                        : "You are offline. Use 'Save Draft on Device' to keep your entries, then calculate when your internet connection returns."
                 );
 
 
@@ -2601,7 +2841,11 @@
 
             showOnlineStatus();
 
-            syncQueuedResults();
+            if (STUDENT_LOGGED_IN) {
+
+                syncQueuedResults();
+
+            }
 
         }
     );
@@ -2625,7 +2869,11 @@
                 navigator.onLine
             ) {
 
-                syncQueuedResults();
+                if (STUDENT_LOGGED_IN) {
+
+                    syncQueuedResults();
+
+                }
 
             }
 

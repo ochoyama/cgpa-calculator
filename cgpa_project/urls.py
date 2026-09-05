@@ -3,7 +3,6 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
-from django.shortcuts import render, redirect
 
 from calculator import views
 
@@ -21,18 +20,49 @@ urlpatterns = [
 
 
     # =====================================================
-    # HOME / CGPA CALCULATOR
+    # PUBLIC PAGES
     # =====================================================
 
+    # This is the FIRST page visitors see.
     path(
         "",
         views.home,
         name="home"
     ),
 
+    path(
+        "about/",
+        views.about,
+        name="about"
+    ),
+
+    path(
+        "contact/",
+        views.contact,
+        name="contact"
+    ),
+
+    path(
+        "faq/",
+        views.faq,
+        name="faq"
+    ),
+
+    path(
+        "privacy/",
+        views.privacy,
+        name="privacy"
+    ),
+
+    path(
+        "terms/",
+        views.terms,
+        name="terms"
+    ),
+
 
     # =====================================================
-    # STUDENT REGISTRATION
+    # AUTHENTICATION
     # =====================================================
 
     path(
@@ -41,21 +71,11 @@ urlpatterns = [
         name="register"
     ),
 
-
-    # =====================================================
-    # STUDENT LOGIN
-    # =====================================================
-
     path(
         "login/",
         views.login_view,
         name="login"
     ),
-
-
-    # =====================================================
-    # STUDENT LOGOUT
-    # =====================================================
 
     path(
         "logout/",
@@ -85,110 +105,6 @@ urlpatterns = [
         name="dashboard"
     ),
 
-    # =====================================================
-    # CGPA GOAL PLANNER
-    # =====================================================
-
-    path(
-    "cgpa-goal-planner/",
-    views.cgpa_goal_planner,
-    name="cgpa_goal_planner"
-    ),
-
-    # =====================================================
-    # GRADE SCENARIO SIMULATOR
-    # =====================================================
-
-path(
-    "grade-simulator/",
-    views.grade_scenario_simulator,
-    name="grade_scenario_simulator"
-),
-
-path(
-    "cgpa-progress/",
-    views.cgpa_progress_chart,
-    name="cgpa_progress_chart"
-),
-
-# =====================================================
-# GRADUATION CGPA PREDICTOR
-# =====================================================
-
-path(
-    "graduation-predictor/",
-    views.graduation_cgpa_predictor,
-    name="graduation_cgpa_predictor"
-),
-
-# =====================================================
-# CARRYOVER / RETAKE TRACKER
-# =====================================================
-
-path(
-    "retake-tracker/",
-    views.retake_tracker,
-    name="retake_tracker"
-),
-
-# =====================================================
-# ACADEMIC REPORT PDF
-# =====================================================
-
-path(
-    "download-academic-report/",
-    views.download_academic_report,
-    name="download_academic_report"
-),
-
-# =====================================================
-# SMART ACADEMIC ADVISOR
-# =====================================================
-
-path(
-    "academic-advisor/",
-    views.smart_academic_advisor,
-    name="smart_academic_advisor"
-),
-
-# =====================================================
-# ACADEMIC PLANNER
-# =====================================================
-
-path(
-    "academic-planner/",
-    views.academic_planner,
-    name="academic_planner"
-),
-
-path(
-    "academic-planner/add/",
-    views.add_academic_task,
-    name="add_academic_task"
-),
-
-path(
-    "academic-planner/complete/<int:task_id>/",
-    views.complete_academic_task,
-    name="complete_academic_task"
-),
-
-path(
-    "academic-planner/delete/<int:task_id>/",
-    views.delete_academic_task,
-    name="delete_academic_task"
-),
-
-# =====================================================
-# ACADEMIC ANALYTICS
-# =====================================================
-
-path(
-    "academic-analytics/",
-    views.academic_analytics,
-    name="academic_analytics"
-),
-
 
     # =====================================================
     # ACADEMIC RECORD
@@ -202,7 +118,7 @@ path(
 
 
     # =====================================================
-    # ADD SEMESTER
+    # SEMESTERS
     # =====================================================
 
     path(
@@ -210,11 +126,6 @@ path(
         views.add_semester,
         name="add_semester"
     ),
-
-
-    # =====================================================
-    # DELETE SEMESTER
-    # =====================================================
 
     path(
         "delete-semester/<int:semester_id>/",
@@ -224,7 +135,7 @@ path(
 
 
     # =====================================================
-    # EDIT COURSE
+    # COURSES
     # =====================================================
 
     path(
@@ -232,11 +143,6 @@ path(
         views.edit_course,
         name="edit_course"
     ),
-
-
-    # =====================================================
-    # DELETE COURSE
-    # =====================================================
 
     path(
         "delete-course/<int:course_id>/",
@@ -246,25 +152,193 @@ path(
 
 
     # =====================================================
-    # PASSWORD RECOVERY
+    # CGPA GOAL PLANNER
     # =====================================================
-    # Student enters their email address here.
-    # Django sends the password reset email.
 
-   path(
-    "password-reset/",
-    auth_views.PasswordResetView.as_view(
-        template_name="calculator/password_reset.html",
-        email_template_name="registration/password_reset_email.html",
-        subject_template_name="registration/password_reset_subject.txt",
+    path(
+        "cgpa-goal-planner/",
+        views.cgpa_goal_planner,
+        name="cgpa_goal_planner"
     ),
-    name="password_reset"
-),
 
 
     # =====================================================
-    # PASSWORD RESET EMAIL SENT
+    # GRADE SCENARIO SIMULATOR
     # =====================================================
+
+    path(
+        "grade-simulator/",
+        views.grade_scenario_simulator,
+        name="grade_scenario_simulator"
+    ),
+
+
+    # =====================================================
+    # CGPA PROGRESS CHART
+    # =====================================================
+
+    path(
+        "cgpa-progress/",
+        views.cgpa_progress_chart,
+        name="cgpa_progress_chart"
+    ),
+
+
+    # =====================================================
+    # GRADUATION CGPA PREDICTOR
+    # =====================================================
+
+    path(
+        "graduation-predictor/",
+        views.graduation_cgpa_predictor,
+        name="graduation_cgpa_predictor"
+    ),
+
+
+    # =====================================================
+    # CARRYOVER / RETAKE TRACKER
+    # =====================================================
+
+    path(
+        "retake-tracker/",
+        views.retake_tracker,
+        name="retake_tracker"
+    ),
+
+
+    # =====================================================
+    # SMART ACADEMIC ADVISOR
+    # =====================================================
+
+    path(
+        "academic-advisor/",
+        views.smart_academic_advisor,
+        name="smart_academic_advisor"
+    ),
+
+
+    # =====================================================
+    # ACADEMIC PLANNER
+    # =====================================================
+
+    path(
+        "academic-planner/",
+        views.academic_planner,
+        name="academic_planner"
+    ),
+
+    path(
+        "academic-planner/add/",
+        views.add_academic_task,
+        name="add_academic_task"
+    ),
+
+    path(
+        "academic-planner/complete/<int:task_id>/",
+        views.complete_academic_task,
+        name="complete_academic_task"
+    ),
+
+    path(
+        "academic-planner/delete/<int:task_id>/",
+        views.delete_academic_task,
+        name="delete_academic_task"
+    ),
+
+
+    # =====================================================
+    # ACADEMIC ANALYTICS
+    # =====================================================
+
+    path(
+        "academic-analytics/",
+        views.academic_analytics,
+        name="academic_analytics"
+    ),
+
+
+    # =====================================================
+    # ACADEMIC REPORT PDF
+    # =====================================================
+
+    path(
+        "download-academic-report/",
+        views.download_academic_report,
+        name="download_academic_report"
+    ),
+
+
+    # =====================================================
+    # NOTIFICATIONS
+    # =====================================================
+
+    path(
+        "notifications/",
+        views.notifications_view,
+        name="notifications"
+    ),
+
+    path(
+        "notifications/read/<int:notification_id>/",
+        views.mark_notification_read,
+        name="mark_notification_read"
+    ),
+
+    path(
+        "notifications/read-all/",
+        views.mark_all_notifications_read,
+        name="mark_all_notifications_read"
+    ),
+
+    path(
+        "notifications/delete/<int:notification_id>/",
+        views.delete_notification,
+        name="delete_notification"
+    ),
+
+
+    # =====================================================
+    # EXAM REMINDERS
+    # =====================================================
+
+    path(
+        "exams/",
+        views.exam_reminders,
+        name="exam_reminders"
+    ),
+
+    path(
+        "exams/add/",
+        views.add_exam_reminder,
+        name="add_exam_reminder"
+    ),
+
+    path(
+        "exams/complete/<int:exam_id>/",
+        views.complete_exam,
+        name="complete_exam"
+    ),
+
+    path(
+        "exams/delete/<int:exam_id>/",
+        views.delete_exam_reminder,
+        name="delete_exam_reminder"
+    ),
+
+
+    # =====================================================
+    # PASSWORD RESET
+    # =====================================================
+
+    path(
+        "password-reset/",
+        auth_views.PasswordResetView.as_view(
+            template_name="calculator/password_reset.html",
+            email_template_name="registration/password_reset_email.html",
+            subject_template_name="registration/password_reset_subject.txt",
+        ),
+        name="password_reset"
+    ),
 
     path(
         "password-reset/done/",
@@ -274,11 +348,6 @@ path(
         name="password_reset_done"
     ),
 
-
-    # =====================================================
-    # CREATE NEW PASSWORD
-    # =====================================================
-
     path(
         "reset/<uidb64>/<token>/",
         auth_views.PasswordResetConfirmView.as_view(
@@ -286,11 +355,6 @@ path(
         ),
         name="password_reset_confirm"
     ),
-
-
-    # =====================================================
-    # PASSWORD RESET COMPLETE
-    # =====================================================
 
     path(
         "reset/done/",
@@ -300,105 +364,35 @@ path(
         name="password_reset_complete"
     ),
 
+
+    # =====================================================
+    # PWA / OFFLINE SUPPORT
+    # =====================================================
+
     path(
-    "notifications/",
-    views.notifications_view,
-    name="notifications"
-),
+        "offline/",
+        views.offline_view,
+        name="offline"
+    ),
 
-path(
-    "notifications/read/<int:notification_id>/",
-    views.mark_notification_read,
-    name="mark_notification_read"
-),
+    path(
+        "service-worker.js",
+        views.service_worker,
+        name="service_worker"
+    ),
 
-path(
-    "notifications/read-all/",
-    views.mark_all_notifications_read,
-    name="mark_all_notifications_read"
-),
-
-path(
-    "notifications/delete/<int:notification_id>/",
-    views.delete_notification,
-    name="delete_notification"
-),
-
-path(
-    "exams/",
-    views.exam_reminders,
-    name="exam_reminders"
-),
-
-path(
-    "exams/add/",
-    views.add_exam_reminder,
-    name="add_exam_reminder"
-),
-
-path(
-    "exams/complete/<int:exam_id>/",
-    views.complete_exam,
-    name="complete_exam"
-),
-
-path(
-    "exams/delete/<int:exam_id>/",
-    views.delete_exam_reminder,
-    name="delete_exam_reminder"
-),
-
-path(
-    "offline/",
-    views.offline_view,
-    name="offline"
-),
-
-path(
-    "service-worker.js",
-    views.service_worker,
-    name="service_worker"
-),
-
-path(
-    "sync-offline-result/",
-    views.sync_offline_result,
-    name="sync_offline_result"
-),
-
-path("about/", views.about, name="about"),
-
-path(
-    "about/",
-    views.about,
-    name="about"
-),
-
-path(
-    "contact/",
-    views.contact,
-    name="contact"
-),
-
-path(
-    "faq/",
-    views.faq,
-    name="faq"
-),
-
-path(
-    "privacy/",
-    views.privacy,
-    name="privacy"
-),
-
-path(
-    "terms/",
-    views.terms,
-    name="terms"
-),
+    path(
+        "sync-offline-result/",
+        views.sync_offline_result,
+        name="sync_offline_result"
+    ),
 
 ]
+
+
+# =========================================================
+# DEVELOPMENT MEDIA FILES
+# =========================================================
 
 if settings.DEBUG:
     urlpatterns += static(
